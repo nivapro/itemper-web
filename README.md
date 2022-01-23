@@ -1,4 +1,4 @@
-# vue-lab
+# iTemper Web
 
 ## Project setup
 ```
@@ -29,6 +29,30 @@ npm run lint
 ```
 npm run test:unit
 ```
+
+### Release distro to docker
+The build machine must have docker, npm and cloned itemper-web repo 
+```
+npm run build
+docker build . --file Dockerfile --tag itemper-web
+docker login --username tova
+9298dc0d-ed6f-483b-aa7c-bf732bfa657f
+$gittag=git describe --tags --long
+docker tag itemper-web tova/itemper-web:$gittag
+docker tag itemper-web tova/itemper-web:latest 
+docker push tova/itemper-web:$gittag
+docker push tova/itemper-web:latest
+```
+### Deploy distro from docker
+Deployment machine must have docker and cloned itemper-backend repo, ite,per-nginx service running
+```
+echo <Docker Access Token> > ~/.docker-pwd.txt
+cat  ~/.docker-pwd.txt | docker login --username tova --password-stdin
+docker pull tova/itemper-web
+docker run --rm --volumes-from itemper-nginx tova/itemper-web:latest cp -r -u /itemper /usr/share/nginx/html
+```
+Remember to clean the browser cache
+
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).

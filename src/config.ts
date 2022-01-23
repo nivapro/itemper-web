@@ -15,8 +15,8 @@ function configure(): Config {
     } else {
         return {
             development: !production,
-            iTemperAPI: 'https://api.itemper.io/',
-            iTemperWS: 'wss://device.itemper.io/ws',
+            iTemperAPI: 'https://userapi.itemper.io/',
+            iTemperWS: 'wss://logsapi.itemper.io/ws',
         };
     }
 
