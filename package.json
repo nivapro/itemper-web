@@ -5,9 +5,9 @@
     "scripts": {
         "serve": "vue-cli-service serve --https",
         "serve-prod": "vue-cli-service serve --mode production",
-        "build": "vue-cli-service build",
+        "build": "npm run --if-present rm -r dist && vue-cli-service build",
         "wc": "vue-cli-service build --target wc --name itemper-device ./src/web-components/itemper-device-wc.vue",
-        "dev": "vue-cli-service build --mode development",
+        "dev": "npm run --if-present rm -r dist && vue-cli-service build --mode development",
         "lint": "vue-cli-service lint",
         "test:unit": "vue-cli-service test:unit"
     },
