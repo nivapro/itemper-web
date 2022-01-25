@@ -27,9 +27,11 @@ export function useBluetooth() {
         }
     });
     const reset = () => {
+        log.debug('useBluetooth.reset');
         btStatus.value = BtStatus.Disconnected;
         btName.value = '';
         if (!service) {
+            log.debug('useBluetooth.reset: binding onChanged');
             service = new BtService(onChanged.bind(onChanged));
         }
     };
@@ -45,11 +47,14 @@ export function useBluetooth() {
 
     async function connect(): Promise<BtStatus> {
         try {
+            log.debug('useBluetooth.connect: resetting');
             reset();
             characteristics = await service.getCharacteristics();
             btStatus.value = BtStatus.Connected;
+            log.debug('useBluetooth.connect: getCharacteristics done');
             return btStatus.value;
         } catch (e) {
+            log.debug('useBluetooth.connect: catched error. btStatus=Disconnected');
             return BtStatus.Disconnected;
         }
     }

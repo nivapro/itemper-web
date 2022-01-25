@@ -29,13 +29,17 @@ export class BtService {
 
   public async getCharacteristics(): Promise<BtCharacteristics> {
       try {
+        log.debug('useBluetooth.getCharacteristics: Pairing device');
         this.setStatus(BtStatus.Paring);
         this.btDevice = await this.pairDevice();
-
+        log.debug('useBluetooth.getCharacteristics: Device paired');
         this.setStatus(BtStatus.Connecting);
+        log.debug('useBluetooth.getCharacteristics: getting services');
         const server = await this.connectServer(this.btDevice);
+        log.debug('useBluetooth.getCharacteristics: BLE server connected');
         const services = await this.getServices(server);
-        if (services.length > 1) {
+        log.info('bluetooth-service.getCharacteristics: #services=' + services.length);
+        if (services.length > 0) {
           const service = services[0];
           const device = await this.getDevice(service);
           const deviceName = await this.getDeviceName(service);
@@ -45,6 +49,7 @@ export class BtService {
           this.setStatus(BtStatus.Connected);
           return { device, deviceName, current, available };
         } else {
+
           this.setStatus(BtStatus.Disconnecting);
           this.disconnect();
           throw Error('Cannot get Bluetooth characteristics');
@@ -95,7 +100,7 @@ export class BtService {
         log.info('bluetooth-service.getCharacteristics: successfully paired device ' + btDevice.name);
         return btDevice;
       } catch (e) {
-        log.error('bluetooth-service.pairDevice: ' + e);
+        log.error('bluetooth-service.pairDevice: catched error');
         throw new Error ('Cannot pair bluetooth device');
     }
   }
@@ -108,6 +113,7 @@ export class BtService {
       btDevice.addEventListener('gattserverdisconnected', this.onDisconnected.bind(this));
       return server;
     } catch (e) {
+      log.info('bluetooth-service.connectServer: catched error');
       throw Error(e);
     }
 }
@@ -117,13 +123,15 @@ export class BtService {
       throw Error('No GATT server');
     }
     try {
-      log.info('bluetooth-service.connect: connecting to GATT server, connected=' + btDevice.gatt.connected);
+      log.info('bluetooth-service.getService: connecting to GATT server, connected=' + btDevice.gatt.connected);
       const server = await btDevice.gatt.connect();
-      log.info('bluetooth-service.connect: GATT server connected=' + server.connected);
-      const service = await server.getPrimaryService(DeviceServiceUUID);
-      log.info('bluetooth-service.connect: connected to GATT service');
+      log.info('bluetooth-service.getService: GATT server connected=' + server.connected);
+      const PrimaryService = 'fff1';
+      const service = await server.getPrimaryService(PrimaryService);
+      log.info('bluetooth-service.getService: connected to GATT service');
       return service;
     } catch (e) {
+      log.info('bluetooth-service.getService: catched error');
       throw Error(e);
     }
 }
@@ -139,14 +147,18 @@ export class BtService {
       });
       return services;
     } catch (e) {
+      log.info('bluetooth-service.getServices: catched error');
       throw Error(e);
     }
 }
   private async getDevice(service: BluetoothRemoteGATTService): Promise<DeviceCharacteristic> {
     try {
+      log.debug('useBluetooth.getDevice: Getting Device info');
       const characteristic = await service.getCharacteristic(DeviceCharacteristicUUID);
+      log.debug('useBluetooth.getDevice: Device info characteristic found');
       return new DeviceCharacteristic(characteristic);
     } catch {
+      log.info('bluetooth-service.getDevice: catched error');
       throw new Error ('Cannot get device info characteristics');
     }
   }
@@ -155,6 +167,7 @@ export class BtService {
       const characteristic = await service.getCharacteristic(DeviceNameCharacteristicUUID);
       return new DeviceNameCharacteristic(characteristic);
     } catch {
+      log.info('bluetooth-service.getDevice: catched error');
       throw new Error ('Cannot get device info characteristics');
     }
   }
@@ -163,6 +176,7 @@ export class BtService {
       const characteristic = await service.getCharacteristic(CurrentWiFiCharacteristicUUID);
       return new CurrentWiFiCharacteristic(characteristic);
     } catch {
+      log.info('bluetooth-service.getCurrentWiFi: catched error');
       throw new Error ('Cannot get current WiFi characteristics');
     }
   }
@@ -172,6 +186,7 @@ export class BtService {
       const characteristic = await service.getCharacteristic(AvailableWiFiCharacteristicUUID);
       return new AvailableWiFiCharacteristic(characteristic);
     } catch {
+      log.info('bluetooth-service.getAvailableWiFi: catched error');
       throw new Error ('Cannot get available network characteristics');
     }
   }
@@ -181,6 +196,7 @@ export class BtService {
       log.debug('bluetooth-service.getCharacteristic: ' + characteristicUUID);
       return await service.getCharacteristic(characteristicUUID);
     } catch {
+      log.info('bluetooth-service.getCharacteristic: catched error');
       throw new Error ('Cannot get itemper Bluetooth characteristic: ' + characteristicUUID);
     }
 

@@ -9,14 +9,14 @@ function configure(): Config {
     if (!production) {
         return {
             development: !production,
-            iTemperAPI: 'https://localhost:3000/',
-            iTemperWS: 'wss://localhost:3000/ws',
+            iTemperAPI: 'http://localhost:3000/',
+            iTemperWS: 'ws://localhost:3000/ws',
         };
     } else {
         return {
             development: !production,
             iTemperAPI: 'https://userapi.itemper.io/',
-            iTemperWS: 'wss://logsapi.itemper.io/ws',
+            iTemperWS: 'wss://userapi.itemper.io/ws',
         };
     }
 
