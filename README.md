@@ -60,3 +60,14 @@ Remember to clean the browser cache
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## BLE
+### Device configuration
+ ble.init.setServices: advertisingStart=
+    {"uuid":"a449e701-371a-48b4-a8a5-e8105127c123",
+     "characteristics":[
+         {"uuid":"a449e702-371a-48b4-a8a5-e8105127c123","properties":["read"],"secure":[],"value":null,"descriptors":[], "_events":{},"_eventsCount":6},
+         {"uuid":"a449e705-371a-48b4-a8a5-e8105127c123","properties":["read","notify"],"secure":[],"value":null,
+            "descriptors":[{"uuid":"2901","value":"Available wireless networks"}],"_events":{},"_eventsCount":6,"isSubscription":false,"maxValueSize":0,"Interval":20000},
+        {"uuid":"a449e703-371a-48b4-a8a5-e8105127c123","properties":["read","write"],"secure":[],"value":null,"descriptors":[{"uuid":"2901","value":"Current WiFi"}],"_events":{},"_eventsCount":6},{"uuid":"a449e704-371a-48b4-a8a5-e8105127c123","properties":["read","write"],"secure":[],"value":null,"descriptors":[{"uuid":"2901","value":"Device settings"}],"_events":{},"_eventsCount":6}]
+    }

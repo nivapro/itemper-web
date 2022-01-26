@@ -4,6 +4,7 @@ import { CurrentWiFiCharacteristicUUID, CurrentWiFiCharacteristic} from './curre
 import { DeviceCharacteristicUUID, DeviceCharacteristic} from './device-characteristic';
 import { DeviceNameCharacteristicUUID, DeviceNameCharacteristic} from './device-name-characteristic';
 import { UUID_Designator, getUuid } from './ble-uuid';
+import { json } from '@/helpers';
 const DeviceServiceUUID = getUuid(UUID_Designator.DeviceInfoService);
 
 const DeviceOptions = {
@@ -100,12 +101,13 @@ export class BtService {
         log.info('bluetooth-service.getCharacteristics: successfully paired device ' + btDevice.name);
         return btDevice;
       } catch (e) {
-        log.error('bluetooth-service.pairDevice: catched error');
+        log.error('bluetooth-service.pairDevice: catched error' + e);
         throw new Error ('Cannot pair bluetooth device');
     }
   }
   private async connectServer(btDevice: BluetoothDevice): Promise<BluetoothRemoteGATTServer> {
     if (!btDevice.gatt) {
+      log.info('bluetooth-service.connectServer: No GATT server available');
       throw Error('No GATT server');
     }
     try {
@@ -113,8 +115,8 @@ export class BtService {
       btDevice.addEventListener('gattserverdisconnected', this.onDisconnected.bind(this));
       return server;
     } catch (e) {
-      log.info('bluetooth-service.connectServer: catched error');
-      throw Error(e);
+      log.info('bluetooth-service.connectServer: catched error' + e);
+      throw Error('Cannot connect to BLE GATT server');
     }
 }
   // request connection to a device remote GATT service

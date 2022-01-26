@@ -19,14 +19,14 @@ export enum UUID_Designator {
 export function getUuid(designator: UUID_Designator) {
     switch (designator) {
         case UUID_Designator.DeviceInfoService:
-            return 'eeb26b8b4b04884a1e1b13c0c957805';
+            return 'a449e701-371a-48b4-a8a5-e8105127c123';
         case UUID_Designator.DeviceName:
-            return 'a449e702-371a-48b4-a8a5-e8105127c123';
+            return 'a449e702-371a-48b4-a8a5-e8105127c123'; // Checked
         case UUID_Designator.CurrentWiFi:
-            return '00e5394a2d994c2c9c44d752b618fc9b';
+            return 'a449e703-371a-48b4-a8a5-e8105127c123'; // Checked
         case UUID_Designator.Device:
-            return 'a449e704-371a-48b4-a8a5-e8105127c123';
+            return 'a449e704-371a-48b4-a8a5-e8105127c123'; // Checked
         case UUID_Designator.AvailableWiFi:
-            return 'cdd1fc106d5e425488864d4130897b55';
+            return 'a449e705-371a-48b4-a8a5-e8105127c123'; // Checked
     }
 }
