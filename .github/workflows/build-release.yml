@@ -1,0 +1,45 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Pre-merge
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Build, test and publish itemper backend services
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install dependencies in package-lock.json
+      run: npm ci
+    - name: Build itemper web front-end
+      run: npm run build --if-present
+      env: 
+        VUE_APP_iTEMPER_API:https://itemper.io/
+        VUE_APP_iTEMPER_API_WS:wss://userapi.itemper.io/ws
+    - name: Login to Docker hub
+      run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+    - name: Build docker image
+      run: docker build . --file Dockerfile --tag itemper
+    - name: Tag image with github SHA and latest
+      run: |
+          docker tag itemper ${{ secrets.DOCKER_USER }}/itemper-web:${{ github.sha }}
+          docker tag itemper ${{ secrets.DOCKER_USER }}/itemper-web:latest
+    - name: Push image to Docker hub
+      run: |
+          docker push ${{ secrets.DOCKER_USER }}/itemper-web:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USER }}/itemper-web:latest
+
