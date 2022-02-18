@@ -8,88 +8,9 @@
             :color="newDeviceColor"
             v-model="newDevice"
             @created="deviceCreated"/>
-            <v-alert
-              :value="alert"
-              color="pink"
-              dark
-              border="top"
-              icon="mdi-home"
-              transition="scale-transition"
-            >{{ alertMessage }}</v-alert>
-            <div v-if="connected && isActionsDone">
-                <v-card-title  class="headline">
-                    <v-row>
-                      <v-col cols="1"><v-icon color="blue">fab fa-bluetooth</v-icon></v-col>
-                      <v-col> New device found</v-col>
-                    </v-row>    
-                </v-card-title>
-                <v-card-text>
-                    <v-icon color="green">fa-check</v-icon> You paired with a device<span v-if="btName !==''"> ({{btName}})</span>. 
-                    You can change the configuration follwing this guide.
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn text color="primary" :loading="disconnecting"  @click="disconnect">Disconnect</v-btn>
-                </v-card-actions>
-            </div>
-            <div v-else>
-                <v-card-title  class="headline">
-                  <v-row>
-                    <v-col cols="1"><v-icon color="blue">fab fa-bluetooth-b</v-icon></v-col>
-                    <v-col>
-                        <span v-if="btName !==''">{{btName}}</span>
-                        <span v-else>Search for device</span>
-                    </v-col>
-                  </v-row>
-                  </v-card-title>
-                <v-card-text>
-                    <span v-if="disconnected">Turn on your iTemper device. Click Scan and pair a device.</span>
-                    <span v-else>Please wait until the connection is complete. This may take up to 60 seconds.</span>
-                    
-                    <v-list flat v-if="!disconnected && isFirstActionStarted && !isActionsDone">
-                      <v-subheader>Progress</v-subheader>
-                      <v-list-item-group v-model="activity" color="primary">
-                        <v-list-item
-                          v-for="(action, i) in actions"
-                          :key="i"
-                        >
-                          <v-list-item-icon v-if="!isActionStarted(i) || action.loading">
-                            <v-progress-circular
-                              :indeterminate="action.loading"
-                              color="grey"
-                            ></v-progress-circular>
-                          </v-list-item-icon>
-                          <v-list-item-icon v-if="action.done">
-                            <v-icon  color="green">fa-check</v-icon>
-                          </v-list-item-icon>
-                          <v-list-item-icon v-if="action.error">
-                            <v-icon  color="red">fa-times</v-icon>
-                          </v-list-item-icon>
-                          <v-list-item-content v-if="!action.error">
-                            <v-list-item-title v-text="action.text"></v-list-item-title>
-                          </v-list-item-content>
-                          <v-list-item-content v-else>
-                            <v-list-item-title v-text="action.errorText"></v-list-item-title>
-                          </v-list-item-content>
-                        </v-list-item>
-                      </v-list-item-group>
-                    </v-list>
-                </v-card-text>
-                <v-card-actions>
-                </v-card-actions>
-            </div>
+            <v-card-actions>
+            </v-card-actions>
         </v-card>
-        <v-btn @click="cancel" text>Cancel</v-btn>
-        <v-btn :disabled="connecting" color="primary" @click="scan()">
-            Scan
-            <template v-slot:loader>
-              <span class="custom-loader">
-                <v-icon>fa-sync</v-icon>
-              </span>
-            </template>
-        </v-btn>
-        <v-btn @click="nextStep" text>Continue</v-btn>
-
-        </v-stepper-content>
 </template>
 
 <script lang="ts">
@@ -119,7 +40,7 @@ export default defineComponent({
   setup(props, context) {
     const { deviceState, resetDeviceState } = useDeviceState();
     const  { btStatus, btName, connecting, connected, connect, disconnected,
-              disconnect, disconnecting, current, device, available } = useBluetooth();
+              disconnect, disconnecting, current, device, available, deviceName } = useBluetooth();
     const newDevice = ref(false);
     const alert = ref(false);
     const  alertMessage = ref('');
@@ -236,7 +157,7 @@ export default defineComponent({
         }
       } catch (e) {
         actionError(e);
-        log.info('device-stepper-content-step1.scan Cannot connect to BLE device, error=' + e);
+        log.info('device-stepper-content-step1.scan Cannot connect to BLE device');
       }
     }
     async function connectDevice(): Promise<BtStatus> {
@@ -248,8 +169,8 @@ export default defineComponent({
         try {
           const deviceConfig = await device().readValue();
           log.info('device-stepper-content-step1.retriveDeviceData: device data read');
-       //   const name = await deviceName().readValue();
-       //   log.info('device-stepper-content-step1.retriveDeviceData, devicename: ' + name);
+          const name = await deviceName().readValue();
+          log.info('device-stepper-content-step1.retriveDeviceData, devicename: ' + name);
           resetDeviceState();
           // Device data
           deviceState.deviceData.name = deviceConfig.name;

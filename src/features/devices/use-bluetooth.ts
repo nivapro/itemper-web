@@ -3,7 +3,7 @@ import { log } from '@/services/logger';
 
 import { AvailableWiFiCharacteristic} from '../bluetooth-device/available-wifi-characteristics';
 import { CurrentWiFiCharacteristic} from '../bluetooth-device/current-wifi-characteristic';
-import { DeviceCharacteristic} from '../bluetooth-device/device-characteristic';
+import { DeviceCharacteristic} from '../bluetooth-device/device-info-characteristic';
 
 import { BtCharacteristics, BtService, BtStatus } from '@/features/bluetooth-device/bluetooth-service';
 

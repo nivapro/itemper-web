@@ -40,7 +40,7 @@ export class SensorService implements ISensorService {
         private getSensors(path: string): Promise<SensorData[]> {
                 log.debug('SensorService.getSensors: path=' + path);
                 const method: Method = 'get';
-                return new Promise<SensorData[]> ((resolve, reject) => {
+                return new Promise<SensorData[]> ((resolve) => {
                         this.api.request(method, path)
                         .then ((data) => {
                                 log.debug('SensorService.getSensors: response=' + json(data));
@@ -49,7 +49,10 @@ export class SensorService implements ISensorService {
                                 } else {
                                         log.error('SensorService.getSensors: received invalid sensor data');
                                         resolve([]);
-                                }
+                        }})
+                        .catch ((e) => {
+                                log.error('SensorService.getSensors: cannot get sensor data');
+                                resolve([]);
                         });
                 });
         }

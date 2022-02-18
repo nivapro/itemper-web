@@ -3,7 +3,7 @@ import * as ble from './bluetooth-service';
 import { DeviceData } from '@/features/devices/device-data';
 import { isDeviceDataValid } from '@/features/devices/device-data-validators';
 import { getUuid, UUID_Designator} from './ble-uuid';
-export const DeviceCharacteristicUUID = getUuid(UUID_Designator.Device);
+export const DeviceCharacteristicUUID = getUuid(UUID_Designator.DeviceInfo);
 
 export class DeviceCharacteristic {
   private characteristic: BluetoothRemoteGATTCharacteristic;
