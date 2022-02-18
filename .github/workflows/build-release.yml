@@ -28,8 +28,8 @@ jobs:
     - name: Build itemper web front-end
       run: npm run build --if-present
       env: 
-        VUE_APP_iTEMPER_API:https://itemper.io/
-        VUE_APP_iTEMPER_API_WS:wss://userapi.itemper.io/ws
+        VUE_APP_iTEMPER_API: https://itemper.io/
+        VUE_APP_iTEMPER_API_WS: wss://userapi.itemper.io/ws
     - name: Login to Docker hub
       run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
     - name: Build docker image
