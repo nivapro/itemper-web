@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -yq \
     && rm -rf /var/lib/apt/lists/*
 
 # Defines our working directory in container
-WORKDIR /itemper
+WORKDIR /itemper-web
 
 COPY package*.json ./
 
@@ -15,4 +15,4 @@ COPY . .
 
 RUN npm run build
 
-CMD ["cp", "-r ./dist /usr/share/nginx/html/itemper"]
+CMD ["echo", "cp -r -u /itemper-web/dist /usr/share/nginx/html"]
