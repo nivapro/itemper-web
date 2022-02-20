@@ -8,4 +8,4 @@ WORKDIR /itemper
 
 COPY ./dist .
 
-CMD ["echo", "itemper web distro"]
+CMD ["cp", "-r /itemper /usr/share/nginx/html/"]
