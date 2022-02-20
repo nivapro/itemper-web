@@ -10,8 +10,9 @@ COPY package*.json ./
 
 RUN npm install --production
 
+# copy project files and folders to the current working directory
+COPY . .
+
 RUN npm run build
 
-COPY ./dist .
-
-CMD ["cp", "-r /itemper /usr/share/nginx/html/"]
+CMD ["cp", "-r ./dist /usr/share/nginx/html/itemper"]
