@@ -14,7 +14,7 @@ import { Vue } from 'vue-property-decorator';
 import { defineComponent, onMounted } from '@vue/composition-api';
 
 import { SensorData, Category } from '@/models/sensor-data';
-import { useSensors } from './sensors-store';
+import { useSensors } from '../features/sensors/sensors-store';
 
 import { log } from '@/services/logger';
 

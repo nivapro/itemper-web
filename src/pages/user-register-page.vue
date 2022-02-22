@@ -1,11 +1,11 @@
 <template>
-    <register-card  @onRegister="register" @onLogin="swap"></register-card>
+    <user-register-card  @onRegister="register" @onLogin="swap"></user-register-card>
 </template>
 
 <script lang="ts">
 // Vue
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import RegisterCard from '@/features/user/user-register-card.vue';
+import UserRegisterCard from '@/features/user/user-register-card.vue';
 
 // Store
 import { store } from '@/store/store';
@@ -20,9 +20,9 @@ type BooleanOrString = boolean | string;
 type ValidationFunction = (value: string) => BooleanOrString;
 
 @Component({components: {
-    RegisterCard,
+    UserRegisterCard,
 }})
-export default class RegisterPage extends Vue {
+export default class UserRegisterPage extends Vue {
     public store = Vue.$store;
     public returnUrl: any;
 

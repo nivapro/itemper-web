@@ -21,10 +21,10 @@ import { useState } from '@/store/store';
 
 // Services
 import { log } from '@/services/logger';
-import { loginRequired, isPublicPath } from '@/helpers/router';
+import { loginRequired, isPublicPath } from '@/pages/router';
 
 // Child components
-import LocationCard from './location-card.vue';
+import LocationCard from '../features/locations/location-card.vue';
 
 
 export default defineComponent({

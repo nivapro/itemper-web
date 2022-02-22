@@ -1,7 +1,7 @@
 <template>
 <div id='app'>
     <v-app>
-        <Toolbar></Toolbar>
+        <AppToolbar></AppToolbar>
         <v-main>
             <v-container fluid>
                 <router-view transition='scale-transition'></router-view>
@@ -20,24 +20,24 @@ import { init } from '@/store/store';
 init();
 
 // Components
-
-import SensorsPage from '@/components/sensors-page.vue';
-import Toolbar from '@/components/toolbar.vue';
+import AppToolbar from '@/components/app-toolbar.vue';
 
 // Features
-import AdminPage from '@/features/admin/admin-page.vue';
-import DevicesPage from '@/features/devices/devices-page.vue';
-import LocationPage from '@/features/locations/location-page.vue';
-import LoginPage from '@/features/user/user-login-page.vue';
-import RegisterPage from '@/features/user/user-register-page.vue';
+import AdminPage from '@/pages/admin-page.vue';
+import DevicesPage from '@/pages/devices-page.vue';
+import LocationPage from '@/pages/location-page.vue';
+import SensorsPage from '@/pages/sensors-page.vue';
+import UserLoginPage from '@/pages/user-login-page.vue';
+import UserRegisterPage from '@/pages/user-register-page.vue';
 
 @Component( {components: {
         AdminPage,
         DevicesPage,
         LocationPage,
-        LoginPage,
-        RegisterPage,
-        Toolbar,
+        SensorsPage,
+        UserLoginPage,
+        UserRegisterPage,
+        AppToolbar,
     }})
 export default class App extends Vue {
 

@@ -87,7 +87,7 @@ type BooleanOrString = boolean | string;
 type ValidationFunction = (value: string) => BooleanOrString;
 
 @Component({})
-export default class RegisterCard extends Vue {
+export default class UserRegisterCard extends Vue {
     public showPassword: boolean = false;
 
     public cred = Vue.$store.user.credentials;

@@ -46,33 +46,37 @@ export function useState(moduleName: string) {
     const timer = ref(timeoutSet);
     const retrievingState = computed (() => timer.value);
 
-    const sampleCount = 2;
-    const startRetrieveState = () => {
-        log.info('store.useState.startRetrieveState');
-
-        // make sure we have some values from all sensors before loading locations
-        retrieveState();
-    };
     const retrieveState = () => {
         log.info('store.useState.retrieveState');
-        state.sensors.getSensorsSamples(sampleCount);
-        state.sensors.loadSensors(sampleCount)
-        .then(() => {
-            state.locations.getLocations();
-            state.devices.getDevices();
-            state.sensors.getSensorsLast24h();
-            timeout = setInterval(() => retrieveState(),
-                        1000 * state.settings.interval);
+        if (timer.value) {
+            // Make sure we have some values from all sensors before loading locations
+            const sampleCount = 2;
+            state.sensors.loadSensors(sampleCount)
+            .then(() => {
+                state.locations.getLocations();
+                state.devices.getDevices();
+                state.sensors.getSensorsLast24h();
+            });
+        }
+    };
+
+    const startRetrieveState = () => {
+        log.info('store.useState.startRetrieveState');
+        if (!timer.value) {
+            retrieveState();
+            // And then do it at regular intervals
+            timeout = setInterval(() => retrieveState(), 1000 * state.settings.interval);
             timer.value = true;
-        });
+        }
     };
     const stopRetrieveState = () => {
+        log.info('store.useState.stopRetrieveState');
         if (timer.value) {
-            log.info('store.useState.stopRetrieveState');
             clearInterval(timeout);
             timer.value = false;
         }
     };
+
     const resetState = () => {
         state.admin.reset();
         state.devices.reset();

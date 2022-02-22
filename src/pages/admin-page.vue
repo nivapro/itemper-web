@@ -24,8 +24,8 @@ import { log } from '@/services/logger';
 
 // Vue
 import { Vue, Component } from 'vue-property-decorator';
-import AdminConfigCard from './admin-config-card.vue';
-import AdminLogLevelCard from './admin-log-level-card.vue';
+import AdminConfigCard from '../features/admin/admin-config-card.vue';
+import AdminLogLevelCard from '../features/admin/admin-log-level-card.vue';
 
 @Component({components: {
     AdminConfigCard,

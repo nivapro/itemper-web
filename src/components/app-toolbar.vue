@@ -1,8 +1,11 @@
 <template>
     <div>
-        <v-navigation-drawer v-if="state.user.isLoggedIn()" transition="scale-transition" nudge-left=16 nudge-top=5 
-        v-model="drawer"
-        app
+        <v-navigation-drawer 
+            v-if="state.user.isLoggedIn()"
+            transition="scale-transition" 
+            nudge-left=16 nudge-top=5 
+            v-model="drawer"
+            app
         >
             <v-list dense nav>
                 <v-list-item v-for="item in menuItems" :key="item.title" @click="menuItemClicked(item)">
@@ -16,15 +19,14 @@
             </v-list>
         </v-navigation-drawer>
         <v-app-bar
-        app
-        color="indigo"
-        dark
+            app
+            color="indigo"
+            dark
         >
             <v-app-bar-nav-icon v-if="state.user.isLoggedIn()" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
             <v-toolbar-title>iTemper</v-toolbar-title>
-            <new-dialogue v-if="state.user.isLoggedIn()"/>
             <admin-node-env-label v-if="development"/>
-            <toolbar-label color="green">{{activeState}}</toolbar-label>
+            <app-toolbar-label color="green">{{activeState}}</app-toolbar-label>
             <v-spacer></v-spacer>
             <v-btn  v-if="state.user.isLoggedOut()" outlined class="signlog" @click="signup">Sign up</v-btn>
             <v-btn  v-if="state.user.isLoggedOut()" transition="scale-transition" outlined class="signlog" @click="login">Login</v-btn>
@@ -38,23 +40,29 @@
                     <v-icon>fa-user</v-icon>
                     {{state.user.credentials.mEmail}}
             </v-chip>
+            <template v-if="state.user.isLoggedIn()" v-slot:extension>
+                <v-tabs v-model="tabs" align-with-title>
+                <v-tab v-for="tab in tabItems" :key="tab.title" @click="menuItemClicked(tab)">
+                   {{ tab.title }}
+                </v-tab>
+                <v-tabs-slider color="pink"></v-tabs-slider>
+                </v-tabs>
+            </template>
         </v-app-bar>
     </div>
 </template>
 <script lang="ts">
 import {config} from '@/config';
-import { Vue, Component, Prop } from 'vue-property-decorator';
 import { computed, defineComponent, ref } from '@vue/composition-api';
 import { router, isPublicPath } from '@/helpers';
 import { log } from '@/services/logger';
-import { json } from '@/helpers';
 
 import { Status } from '@/store/user';
 import { useState } from '@/store/store';
 
-import NewDialogue from '@/components/new-dialogue.vue';
-import ToolbarLabel from '@/components/toolbar-label.vue';
 import AdminNodeEnvLabel from '@/features/admin/admin-node-env-label.vue';
+import AppToolbarLabel from '@/components/app-toolbar-label.vue';
+import NewDialogue from '@/components/new-dialogue.vue';
 
 type BooleanOrString = boolean | string;
 type ValidationFunction = (value: string) => BooleanOrString;
@@ -65,40 +73,50 @@ interface MenuItem {
     color: string;
     route: string;
 }
+interface Tab {
+    action: string;
+    title: string;
+    route: string;
+}
+interface Tabs {
+    [name: string]: MenuItem;
+}
 export default defineComponent({
-    name: 'Toolbar',
+    name: 'AppToolbar',
     components: {
             NewDialogue,
             AdminNodeEnvLabel,
-            ToolbarLabel,
+            AppToolbarLabel,
         },
 
     setup(props, context) {
         const { state, startRetrieveState, stopRetrieveState, retrievingState, resetState } = useState('toolbar');
         const development = config.development;
         const drawer = ref(false);
-        const showNewDeviceDialogue = ref(false);
-        const showNewLocationDialogue = ref(true);
+        const tabs = ref(-1);
         const  menuItems = [
+            { action: 'fa-home', title: 'Hem',  color: 'blue-grey darken-2', route: 'home' },
             { action: 'fa-home', title: 'Platser',  color: 'blue-grey darken-2', route: 'locations' },
             { action: 'fa-hockey-puck', title: 'Enheter',  color: 'blue-grey darken-2', route: 'devices' },
             { action: 'fa-wifi', title: 'Givare',  color: 'blue-grey darken-2', route: 'sensors' },
             { action: 'fa-cog', title: 'Inställningar', color: 'blue-grey darken-2', route: 'settings' },
             { action: 'fa-hammer', title: 'System', color: 'blue-grey darken-2', route: 'admin' },
-            { action: 'fa-sign-out-alt', title: 'Logout', color: 'blue darken-2', route: 'login'},
+            { action: 'fa-sign-out-alt', title: 'Logout', color: 'blue darken-2', route: 'logout'},
         ];
+
+        const tabItems = computed(() => menuItems.slice(0, 4));
+
         const name = computed(() => state.user.credentials.mEmail);
+
         const menuItemClicked = (item: MenuItem) => {
-            showNewDeviceDialogue.value = (item.route === 'devices') ? true : false;
-            showNewLocationDialogue.value = (item.route === 'locations') ? true : false;
-            if (item.action === 'logout') {
+            if (item.route === 'logout') {
                 logout();
             } else {
                 router.push({name: item.route});
             }
         };
         const status = computed(() => Status[state.user.status].replace('_', ' ').toLocaleLowerCase());
-        const activeState = computed(() => retrievingState.value ? 'online' : 'stopped' );
+        const activeState = computed(() => retrievingState.value ? 'online' : 'offline' );
         const signup = () => {
             state.user.status =  Status.LOGGING_IN;
             router.push({name: 'register'});
@@ -109,7 +127,6 @@ export default defineComponent({
         };
         const logout = () => {
             log.debug('Toolbar.logout()' );
-            showNewDeviceDialogue.value = false;
             state.user.logout().then(() => {
                 stopRetrieveState();
                 resetState();
@@ -131,10 +148,17 @@ export default defineComponent({
             }
             next();
         });
-
+        const showFab = computed(() => tabs.value === 1 || tabs.value === 2);
+        const activeFab = computed (() => {
+            switch (tabs.value) {
+            case 1 : return { color: 'red', icon: 'fa-plus' };
+            case 2 : return { color: 'blue', icon: 'fa-plus' };
+            default: return { };
+            }
+        });
         return  {
-                    activeState, development, drawer, login, logout, menuItemClicked, menuItems, name,
-                    showNewDeviceDialogue, showNewLocationDialogue, state, status, signup,
+                    activeFab, activeState, development, drawer, login, logout, menuItemClicked, menuItems, name,
+                    state, status, signup, showFab, tabs, tabItems,
                     retrievingState,
                 };
     },

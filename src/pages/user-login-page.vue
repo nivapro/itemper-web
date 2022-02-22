@@ -1,13 +1,13 @@
 <template>
 <div height="1500">
-    <login-card @onLogin="login" @onRegister="swap"></login-card>
+    <user-login-card @onLogin="login" @onRegister="swap"></user-login-card>
 </div>
 </template>
 
 <script lang="ts">
 // Vue
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import LoginCard from '@/features/user/user-login-card.vue';
+import UserLoginCard from '@/features/user/user-login-card.vue';
 import Notice from '@/components/notice.vue';
 
 // Store
@@ -20,10 +20,10 @@ import { router } from '@/helpers';
 @Component({
     components: {
         Notice,
-        LoginCard,
+        UserLoginCard,
     },
 })
-export default class LoginPage extends Vue {
+export default class UserLoginPage extends Vue {
     public store = Vue.$store;
     public returnUrl = '/';
 

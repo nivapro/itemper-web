@@ -1,2 +1,2 @@
-export * from './router';
+export * from '../pages/router';
 export * from './utils';

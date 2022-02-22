@@ -17,7 +17,7 @@
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
-    name: 'ToolbarLabel',
+    name: 'AppToolbarLabel',
     inheritAttrs: false,
     props: {
     color: {
