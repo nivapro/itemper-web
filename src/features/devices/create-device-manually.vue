@@ -28,7 +28,7 @@ import { BtStatus } from '@/features/bluetooth-device/bluetooth-service';
 import { log } from '@/services/logger';
 import { error } from 'console';
 
-import NewDevice from './new-device.vue';
+import NewDevice from './create-device-dialog.vue';
 enum SavedStatus { NotSaved, Saving, Saved}
 type BooleanOrString = boolean | string;
 type ValidationFunction = (value: string) => BooleanOrString;
@@ -156,7 +156,7 @@ export default defineComponent({
           nextStep();
         }
       } catch (e) {
-        actionError(e);
+        actionError(e as string);
         log.info('device-stepper-content-step1.scan Cannot connect to BLE device');
       }
     }
@@ -179,7 +179,7 @@ export default defineComponent({
           deviceState.deviceData.color = deviceConfig.color;
         } catch (e) {
               log.error('device-stepper-content-step1.retriveDeviceData: invalid device data');
-              actionError(e);
+              actionError(e as string);
         }
     }
     async function retrieveCurrentWiFiNetwork() {
@@ -214,7 +214,7 @@ export default defineComponent({
           });
         } catch (e) {
               log.error('device-stepper-content-step1.retrieveAvailableWiFiNetworks: invalid device configuration');
-              actionError(e);
+              actionError(e as string);
         }
     }
     const writeDeviceConfiguration = () => {

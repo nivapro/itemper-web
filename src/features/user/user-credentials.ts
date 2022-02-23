@@ -1,24 +1,22 @@
 import { Storage } from '@/services/storage-service';
 
-export interface ICredentials {
+export interface IUserCredentialsStorage {
     email: string;
     password: string;
-    token: string;
+    token?: string;
 }
 
-export class Credentials {
+export class UserCredentials implements IUserCredentialsStorage {
     public mEmail: string = '';
     public mPassword: string = '';
     public mConfirmPassword: string = '';
     public mToken: string = '';
 
-    private mStorage: Storage<Credentials>;
+    private mStorage: Storage<IUserCredentialsStorage>;
 
-    constructor(email: string = '', password: string = '') {
-        this.mEmail = email;
-        this.mPassword = password;
+    constructor() {
         this.mToken = '';
-        this.mStorage = new Storage<Credentials>('itemper-key');
+        this.mStorage = new Storage<IUserCredentialsStorage>('itemper-key');
         const item =  this.mStorage.getItem();
         if (item) {
             this.mEmail = item.email;

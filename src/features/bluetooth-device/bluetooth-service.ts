@@ -187,16 +187,6 @@ export class BtService {
 
   }
 
-  private watchAvailability(availability: (isAvailable: boolean) => void): void {
-    log.debug('bluetooth-service.watchAvailability');
-    navigator.permissions.query({name: 'bluetooth'}).then((status: PermissionStatus) => {
-      availability(status.state !== 'denied');
-      // Bluetooth is blocked, listen for change in PermissionStatus.
-      status.onchange = () => {
-          availability(status.state !== 'denied');
-      };
-    });
-  }
   // handler to run when device successfully disconnects
 }
 async function run<T>(MaxRetries: number, fn: (...args: any[]) => Promise<T>, ...args: any[]): Promise<T> {

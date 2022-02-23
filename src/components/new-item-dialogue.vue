@@ -18,17 +18,6 @@
     </v-dialog>
 </template>
 <script lang="ts">
-                // <v-fab-transition v-if="showFab">
-                //     <v-btn
-                //         :key="activeFab.icon"
-                //         :color="activeFab.color"
-                //         fab
-                //         small
-                //         dark
-                //     >
-                //         <v-icon>{{ activeFab.icon }}</v-icon>
-                //     </v-btn>
-                // </v-fab-transition>
 import { ref, defineComponent, watch, computed, watchEffect } from '@vue/composition-api';
 import { log } from '@/services/logger';
 
@@ -40,7 +29,6 @@ export default defineComponent({
         const showFabButton =  ref(true);
         const closeDialog = () => {
             dialog.value = false;
-
         };
 
         return { closeDialog, dialog, showFabButton};

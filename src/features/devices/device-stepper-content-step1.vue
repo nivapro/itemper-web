@@ -3,80 +3,83 @@
         <v-card
           class="mb-12"
         >
-          <new-device
+          <CreateDeviceDialog
             :name="newDeviceName"
             :color="newDeviceColor"
             v-model="newDevice"
-            @created="deviceCreated"/>
-            <v-alert
-              :value="alert"
-              color="pink"
-              dark
-              border="top"
-              icon="mdi-home"
-              transition="scale-transition"
-            >{{ alertMessage }}</v-alert>
-            <div v-if="connected && isActionsDone">
-                <v-card-title  class="headline">
-                    <v-row>
-                      <v-col cols="1"><v-icon color="blue">fab fa-bluetooth</v-icon></v-col>
-                      <v-col> New device found</v-col>
-                    </v-row>    
-                </v-card-title>
-                <v-card-text>
-                    <v-icon color="green">fa-check</v-icon> You paired with a device<span v-if="btName !==''"> ({{btName}})</span>. 
-                    You can change the configuration follwing this guide.
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn text color="primary" :loading="disconnecting"  @click="disconnect">Disconnect</v-btn>
-                </v-card-actions>
-            </div>
-            <div v-else>
-                <v-card-title  class="headline">
+            @created="deviceCreated"
+          />
+          <v-alert
+            :value="alert"
+            color="pink"
+            dark
+            border="top"
+            icon="mdi-home"
+            transition="scale-transition"
+          >
+            {{ alertMessage }}
+          </v-alert>
+          <div v-if="connected && isActionsDone">
+              <v-card-title  class="headline">
                   <v-row>
-                    <v-col cols="1"><v-icon color="blue">fab fa-bluetooth-b</v-icon></v-col>
-                    <v-col>
-                        <span v-if="btName !==''">{{btName}}</span>
-                        <span v-else>Search for device</span>
-                    </v-col>
-                  </v-row>
-                  </v-card-title>
-                <v-card-text>
-                    <span v-if="disconnected">Turn on your iTemper device. Click Scan and pair a device.</span>
-                    <span v-else>Please wait until the connection is complete. This may take up to 60 seconds.</span>
-                    
-                    <v-list flat v-if="!disconnected && isFirstActionStarted && !isActionsDone">
-                      <v-subheader>Progress</v-subheader>
-                      <v-list-item-group v-model="activity" color="primary">
-                        <v-list-item
-                          v-for="(action, i) in actions"
-                          :key="i"
-                        >
-                          <v-list-item-icon v-if="!isActionStarted(i) || action.loading">
-                            <v-progress-circular
-                              :indeterminate="action.loading"
-                              color="grey"
-                            ></v-progress-circular>
-                          </v-list-item-icon>
-                          <v-list-item-icon v-if="action.done">
-                            <v-icon  color="green">fa-check</v-icon>
-                          </v-list-item-icon>
-                          <v-list-item-icon v-if="action.error">
-                            <v-icon  color="red">fa-times</v-icon>
-                          </v-list-item-icon>
-                          <v-list-item-content v-if="!action.error">
-                            <v-list-item-title v-text="action.text"></v-list-item-title>
-                          </v-list-item-content>
-                          <v-list-item-content v-else>
-                            <v-list-item-title v-text="action.errorText"></v-list-item-title>
-                          </v-list-item-content>
-                        </v-list-item>
-                      </v-list-item-group>
-                    </v-list>
-                </v-card-text>
-                <v-card-actions>
-                </v-card-actions>
-            </div>
+                    <v-col cols="1"><v-icon color="blue">fab fa-bluetooth</v-icon></v-col>
+                    <v-col> New device found</v-col>
+                  </v-row>    
+              </v-card-title>
+              <v-card-text>
+                  <v-icon color="green">fa-check</v-icon> You paired with a device<span v-if="btName !==''"> ({{btName}})</span>. 
+                  You can change the configuration following this guide.
+              </v-card-text>
+              <v-card-actions>
+                <v-btn text color="primary" :loading="disconnecting"  @click="disconnect">Disconnect</v-btn>
+              </v-card-actions>
+          </div>
+          <div v-else>
+              <v-card-title  class="headline">
+                <v-row>
+                  <v-col cols="1"><v-icon color="blue">fab fa-bluetooth-b</v-icon></v-col>
+                  <v-col>
+                      <span v-if="btName !==''">{{btName}}</span>
+                      <span v-else>Search for device</span>
+                  </v-col>
+                </v-row>
+                </v-card-title>
+              <v-card-text>
+                  <span v-if="disconnected">Turn on your iTemper device, click Scan and pair the device.</span>
+                  <span v-else>Please wait until the connection is complete. This may take a while</span>
+                  
+                  <v-list flat v-if="!disconnected && isFirstActionStarted && !isActionsDone">
+                    <v-subheader>Progress</v-subheader>
+                    <v-list-item-group v-model="activity" color="primary">
+                      <v-list-item
+                        v-for="(action, i) in actions"
+                        :key="i"
+                      >
+                        <v-list-item-icon v-if="!isActionStarted(i) && action.loading">
+                          <v-progress-circular
+                            :indeterminate="action.loading"
+                            color="grey"
+                          ></v-progress-circular>
+                        </v-list-item-icon>
+                        <v-list-item-icon v-if="action.done">
+                          <v-icon  color="green">fa-check</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-icon v-if="action.error">
+                          <v-icon  color="red">fa-times</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-content v-if="!action.error">
+                          <v-list-item-title v-text="action.text"></v-list-item-title>
+                        </v-list-item-content>
+                        <v-list-item-content v-else>
+                          <v-list-item-title v-text="action.errorText"></v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list-item-group>
+                  </v-list>
+              </v-card-text>
+              <v-card-actions>
+              </v-card-actions>
+          </div>
         </v-card>
         <v-btn @click="cancel" text>Cancel</v-btn>
         <v-btn :disabled="connecting" color="primary" @click="scan()">
@@ -107,14 +110,14 @@ import { BtStatus } from '@/features/bluetooth-device/bluetooth-service';
 import { log } from '@/services/logger';
 import { error } from 'console';
 
-import NewDevice from './new-device.vue';
+import CreateDeviceDialog from './create-device-dialog.vue';
 enum SavedStatus { NotSaved, Saving, Saved}
 type BooleanOrString = boolean | string;
 type ValidationFunction = (value: string) => BooleanOrString;
 
 export default defineComponent({
   name: 'DeviceStepperContentStep1',
-  components: { NewDevice },
+  components: { CreateDeviceDialog },
 
   setup(props, context) {
     const { deviceState, resetDeviceState } = useDeviceState();
@@ -235,7 +238,7 @@ export default defineComponent({
           nextStep();
         }
       } catch (e) {
-        actionError(e);
+        actionError(e as string);
         log.info('device-stepper-content-step1.scan Cannot connect to BLE device, error=' + e);
       }
     }
@@ -258,7 +261,7 @@ export default defineComponent({
           deviceState.deviceData.color = deviceConfig.color;
         } catch (e) {
               log.error('device-stepper-content-step1.retriveDeviceData: invalid device data');
-              actionError(e);
+              actionError(e as string);
         }
     }
     async function retrieveCurrentWiFiNetwork() {
@@ -293,7 +296,7 @@ export default defineComponent({
           });
         } catch (e) {
               log.error('device-stepper-content-step1.retrieveAvailableWiFiNetworks: invalid device configuration');
-              actionError(e);
+              actionError(e as string);
         }
     }
     const writeDeviceConfiguration = () => {

@@ -55,7 +55,7 @@ import { computed, defineComponent, onMounted, reactive, Ref, ref, UnwrapRef, wa
 import BaseTextField from '@/components/base-text-field.vue';
 
 export default defineComponent({
-    name: 'NewDevice',
+    name: 'CreateDeviceDialog',
     components: { BaseTextField },
     inheritAttrs: false,
     props: {
