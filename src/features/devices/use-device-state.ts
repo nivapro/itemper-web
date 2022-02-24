@@ -20,7 +20,7 @@ class UseDeviceState {
 
 let deviceState: UseDeviceState;
 
-export default function useDeviceState() {
+export function useDeviceState() {
     const resetDeviceState = () => {
         deviceState = new UseDeviceState(
             reactive({name: ref(''), color: ref(''), key: ref(''), deviceID: ref('')}),

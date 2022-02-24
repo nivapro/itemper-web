@@ -16,7 +16,36 @@ export function isDeviceNameValid(raw: unknown): boolean {
     }
     return valid;
 }
-
+export function isDeviceColorValid(raw: unknown): boolean {
+    const m = 'device-data-validators.isDeviceColorValid - ';
+    let valid = isObject(raw);
+    if (!valid) {
+        log.error(m + 'not an object');
+    } else {
+        const data = raw as Partial<{color: string}>;
+        valid = valid
+        && 'color' in data && typeof data.color === 'string'
+        if (!valid) {
+            log.error(m + 'not valid');
+        }
+    }
+    return valid;
+}
+export function isDeviceKeyValid(raw: unknown): boolean {
+    const m = 'device-data-validators.isDeviceKeyValid - ';
+    let valid = isObject(raw);
+    if (!valid) {
+        log.error(m + 'not an object');
+    } else {
+        const data = raw as Partial<{key: string}>;
+        valid = valid
+        && 'key' in data && typeof data.key === 'string'
+        if (!valid) {
+            log.error(m + 'not valid');
+        }
+    }
+    return valid;
+}
 export function isDeviceDataValid(raw: unknown): boolean {
     let valid = isObject(raw);
     if (!valid) {

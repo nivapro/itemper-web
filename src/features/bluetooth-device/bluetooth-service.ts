@@ -1,7 +1,11 @@
 import { log } from '@/services/logger';
 import { AvailableWiFiCharacteristicUUID, AvailableWiFiCharacteristic} from './available-wifi-characteristics';
 import { CurrentWiFiCharacteristicUUID, CurrentWiFiCharacteristic} from './current-wifi-characteristic';
-import { DeviceCharacteristicUUID, DeviceCharacteristic} from './device-info-characteristic';
+import { DeviceInfoUUID, DeviceCharacteristic} from './device-info-characteristic';
+import { DeviceNameUUID, DeviceNameCharacteristic} from './device-name-characteristic';
+import { DeviceColorUUID, DeviceColorCharacteristic} from './device-color-characteristic';
+import { DeviceKeyUUID, DeviceKeyCharacteristic} from './device-key-characteristic';
+
 import { UUID_Designator, getUuid } from './ble-uuid';
 import { json } from '@/helpers';
 const PrimaryService = getUuid(UUID_Designator.PrimaryService);
@@ -26,9 +30,11 @@ const DeviceOptions = {
 };
 export interface BtCharacteristics {
   device: DeviceCharacteristic;
-  // deviceName: DeviceNameCharacteristic;
   current: CurrentWiFiCharacteristic;
   available: AvailableWiFiCharacteristic;
+  deviceName: DeviceNameCharacteristic;
+  deviceColor: DeviceColorCharacteristic;
+  deviceKey: DeviceKeyCharacteristic;
 }
 export enum BtStatus {Disconnected, Paring, Connecting, Connected, Disconnecting}
 
@@ -58,8 +64,14 @@ export class BtService {
           log.debug('useBluetooth.getCharacteristics: Current WiFi characteristic read');
           const available = await this.getAvailableWiFi(service);
           log.debug('useBluetooth.getCharacteristics: Available WiFi characteristic read');
+          const deviceName = await this.getDeviceName(service);
+          log.debug('useBluetooth.getCharacteristics: DeviceName characteristic read');
+          const deviceColor = await this.getDeviceColor(service);
+          log.debug('useBluetooth.getCharacteristics: DeviceColor characteristic read');
+          const deviceKey = await this.getDeviceKey(service);
+          log.debug('useBluetooth.getCharacteristics: DeviceKey characteristic read');
           this.setStatus(BtStatus.Connected);
-          return { device, current, available };
+          return { device, current, available, deviceName, deviceColor, deviceKey};
       } catch (e) {
         log.error('bluetooth-service.getCharacteristics: ' + e);
         const errorMsg = e? e : 'Cannot retreive bluetooth characteristics';
@@ -140,23 +152,41 @@ export class BtService {
   private async getDevice(service: BluetoothRemoteGATTService): Promise<DeviceCharacteristic> {
     try {
       log.debug('useBluetooth.getDevice: Getting Device info');
-      const characteristic = await service.getCharacteristic(DeviceCharacteristicUUID);
+      const characteristic = await service.getCharacteristic(DeviceInfoUUID);
       log.debug('useBluetooth.getDevice: Device info characteristic found');
       return new DeviceCharacteristic(characteristic);
     } catch (e) {
       log.info('bluetooth-service.getDevice: error=' + e);
-      throw new Error ('Cannot get device info characteristics');
+      throw new Error ('Cannot get device info characteristic');
     }
   }
-  // private async getDeviceName(service: BluetoothRemoteGATTService): Promise<DeviceNameCharacteristic> {
-  //   try {
-  //     const characteristic = await service.getCharacteristic(DeviceNameCharacteristicUUID);
-  //     return new DeviceNameCharacteristic(characteristic);
-  //   } catch {
-  //     log.info('bluetooth-service.getDevice: catched error');
-  //     throw new Error ('Cannot get device info characteristics');
-  //   }
-  // }
+  private async getDeviceName(service: BluetoothRemoteGATTService): Promise<DeviceNameCharacteristic> {
+    try {
+      const characteristic = await service.getCharacteristic(DeviceNameUUID);
+      return new DeviceNameCharacteristic(characteristic);
+    } catch {
+      log.info('bluetooth-service.getDeviceName: catched error');
+      throw new Error ('Cannot get device name characteristic');
+    }
+  }
+  private async getDeviceColor(service: BluetoothRemoteGATTService): Promise<DeviceColorCharacteristic> {
+    try {
+      const characteristic = await service.getCharacteristic(DeviceColorUUID);
+      return new DeviceColorCharacteristic(characteristic);
+    } catch {
+      log.info('bluetooth-service.getDeviceColor: catched error');
+      throw new Error ('Cannot get device color characteristic');
+    }
+  }
+  private async getDeviceKey(service: BluetoothRemoteGATTService): Promise<DeviceKeyCharacteristic> {
+    try {
+      const characteristic = await service.getCharacteristic(DeviceKeyUUID);
+      return new DeviceKeyCharacteristic(characteristic);
+    } catch {
+      log.info('bluetooth-service.getDeviceKey: catched error');
+      throw new Error ('Cannot get device key characteristic');
+    }
+  }
   private async getCurrentWiFi(service: BluetoothRemoteGATTService): Promise<CurrentWiFiCharacteristic> {
     try {
       const characteristic = await service.getCharacteristic(CurrentWiFiCharacteristicUUID);

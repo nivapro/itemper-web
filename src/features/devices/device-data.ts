@@ -2,6 +2,12 @@ import { SensorData } from '@/models/sensor-data';
 export interface DeviceName {
      name: string;
 }
+export interface DeviceColor {
+     color: string ;
+}
+export interface DeviceKey {
+     key: string ;
+}  
 export interface DeviceData {
      name: string ;
      deviceID: string ;

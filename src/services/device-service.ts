@@ -27,12 +27,12 @@ export class DeviceService implements IDeviceService {
         return this.api.request(method, this.path, {name, color});
     }
     public renameDevice(name: string, device: Device): Promise<DeviceData> {
-        const path = this.path + '/' + device.deviceID;
+        const path = this.path + '/' + device.deviceID + '/name';
         const method: Method = 'put';
         return this.api.request(method, path, {name});
     }
     public updateColor(color: string, device: Device): Promise<DeviceData> {
-        const path = this.path + '/' + device.deviceID;
+        const path = this.path + '/' + device.deviceID + '/color';
         const method: Method = 'put';
         return this.api.request(method, path, {color});
     }

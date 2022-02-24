@@ -3,7 +3,7 @@ import * as ble from './bluetooth-service';
 import { DeviceData } from '@/features/devices/device-data';
 import { isDeviceDataValid } from '@/features/devices/device-data-validators';
 import { getUuid, UUID_Designator} from './ble-uuid';
-export const DeviceCharacteristicUUID = getUuid(UUID_Designator.DeviceInfo);
+export const DeviceInfoUUID = getUuid(UUID_Designator.DeviceInfo);
 
 export class DeviceCharacteristic {
   private characteristic: BluetoothRemoteGATTCharacteristic;
@@ -26,10 +26,10 @@ export class DeviceCharacteristic {
         reject('Cannot retrieve device info');
       });
     });
-
   }
   public async writeValue(value: DeviceData): Promise<void> {
-    log.debug('device-info-characteristic.writeValue');
-    return  this.characteristic.writeValue(ble.encode(JSON.stringify(value)));
+    const valueStr = JSON.stringify(value);
+    log.debug('device-info-characteristic.writeValue ' + valueStr);
+    return  this.characteristic.writeValue(ble.encode(valueStr));
   }
 }

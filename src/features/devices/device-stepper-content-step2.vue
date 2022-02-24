@@ -56,7 +56,7 @@ export default defineComponent({
 
   setup(props, context) {
     const { deviceState } = useDeviceState();
-    const  { current, device, available } = useBluetooth();
+    const  { current, deviceName, deviceColor, available } = useBluetooth();
     const loading = ref(false);
     const updated = ref(false);
 
@@ -65,7 +65,7 @@ export default defineComponent({
       try {
             loading.value = true;
             deviceState.deviceData.color = event.slice();
-            await device().writeValue(deviceState.deviceData);
+            await deviceColor().writeValue({color: deviceState.deviceData.color});
         } catch {
             deviceState.deviceData.color = cached;
         } finally {
@@ -77,7 +77,7 @@ export default defineComponent({
       try {
             loading.value = true;
             deviceState.deviceData.name = event.slice();
-            await device().writeValue(deviceState.deviceData);
+            await deviceName().writeValue({name: deviceState.deviceData.name});
         } catch {
             deviceState.deviceData.color = cached;
         } finally {

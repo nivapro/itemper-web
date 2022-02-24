@@ -3,6 +3,9 @@ import { log } from '@/services/logger';
 import { AvailableWiFiCharacteristic} from '../bluetooth-device/available-wifi-characteristics';
 import { CurrentWiFiCharacteristic} from '../bluetooth-device/current-wifi-characteristic';
 import { DeviceCharacteristic} from '../bluetooth-device/device-info-characteristic';
+import { DeviceNameCharacteristic} from '../bluetooth-device/device-name-characteristic';
+import { DeviceColorCharacteristic} from '../bluetooth-device/device-color-characteristic';
+import { DeviceKeyCharacteristic} from '../bluetooth-device/device-key-characteristic';
 
 import { BtCharacteristics, BtService, BtStatus } from '@/features/bluetooth-device/bluetooth-service';
 
@@ -63,17 +66,22 @@ export function useBluetooth() {
     const device = (): DeviceCharacteristic => {
         return characteristics.device;
     };
-    const deviceName = (): DeviceCharacteristic => {
-        return characteristics.device;
-    };
     const current = (): CurrentWiFiCharacteristic => {
         return characteristics.current;
     };
     const available = (): AvailableWiFiCharacteristic => {
         return characteristics.available;
     };
-
+    const deviceName = (): DeviceNameCharacteristic => {
+        return characteristics.deviceName;
+    };
+    const deviceColor = (): DeviceColorCharacteristic => {
+        return characteristics.deviceColor;
+    };
+    const deviceKey = (): DeviceKeyCharacteristic => {
+        return characteristics.deviceKey;
+    };
     return { btStatus, btName, connecting, connected, connect, disconnected, disconnect, disconnecting,
-        current, device, available, deviceName};
+        current, device, available, deviceName, deviceColor, deviceKey};
 
 }

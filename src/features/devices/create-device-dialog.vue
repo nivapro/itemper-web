@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="value" persistent max-width="500">
+    <v-dialog v-model="deviceKey" persistent max-width="500">
         <v-card>
             <v-card-title class="headline">New Device</v-card-title>
             <v-card-text>
@@ -63,7 +63,6 @@ export default defineComponent({
     setup(props, context) {
         const deviceKey = ref('');
         const valid =  ref(false);
-        const value = false;
         const submitted = ref(false);
         const errorMsg = ref('');
         const submit = () => {
@@ -88,7 +87,7 @@ export default defineComponent({
                 submitted.value = false;
                 deviceKey.value = device.key;
                 Vue.$store.notice.publish('Device ' + name + ' created');
-                context.emit('created', device);
+                context.emit('input', deviceKey.value);
                 close();
             })
             .catch((err) => {
@@ -120,8 +119,7 @@ export default defineComponent({
             errorMsg,
             valid,
             submit,
-            close,
-            value
+            close
         };
     },
 });
