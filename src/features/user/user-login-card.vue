@@ -8,7 +8,7 @@
                 <v-text-field
                     label="E-mail"
                     prepend-icon="fa-envelope"
-                    v-model="cred.email"
+                    v-model="email"
                     :rules="emailRules"
                     required
                     clearable
@@ -19,7 +19,7 @@
                     :type="showPassword ? 'text' : 'password'"
                     prepend-icon="fa-lock"
                     @click="showPassword = !showPassword"
-                    v-model="cred.password"
+                    v-model="password"
                     :rules="passwordRules"
                     required
                     clearable
@@ -64,6 +64,8 @@ export default class UserLoginCard extends Vue {
     public status = Vue.$store.user.status;
     public user = Vue.$store.user;
 
+    public email = '';
+    public password = '';
     public valid: boolean =  false;
     public checkbox: boolean = false;
     public select: string = '';

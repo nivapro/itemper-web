@@ -1,4 +1,4 @@
-import { Credentials } from '@/models/credentials';
+import { UserCredentials } from '@/features/user/user-credentials';
 import { IApiService } from '@/services/api-service';
 import { Vue  } from 'vue-property-decorator';
 import { log } from '@/services/logger';
@@ -12,19 +12,19 @@ export enum Status {
 export class User  {
     public mFirstName: string = '';
     public mLastName: string = '';
-    public credentials: Credentials;
+    public credentials: UserCredentials;
     private mStatus: Status = Status.LOGGED_OUT;
     private api: IApiService;
 
     constructor(apiService: IApiService) {
         log.debug('user.ts constructor' + JSON.stringify(apiService));
         this.api = apiService;
-        this.credentials = new Credentials();
+        this.credentials = new UserCredentials();
     }
     public reset(): void {
         this.mFirstName = '';
         this.mLastName = '';
-        this.credentials = new Credentials();
+        this.credentials = new UserCredentials();
         this.status = Status.LOGGED_OUT;
     }
     public isLoggedIn(): boolean {
