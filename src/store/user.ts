@@ -16,7 +16,6 @@ export class User  {
     private api: IApiService;
 
     constructor(apiService: IApiService) {
-        log.debug('user.ts constructor' + JSON.stringify(apiService));
         this.api = apiService;
         this.credentials = new UserCredentials();
     }

@@ -42,27 +42,28 @@ export class BtService {
 
   public async getCharacteristics(): Promise<BtCharacteristics> {
       try {
-        log.debug('useBluetooth.getCharacteristics: Pairing device');
-        this.setStatus(BtStatus.Paring);
-        this.btDevice = await this.pairDevice();
-        log.debug('useBluetooth.getCharacteristics: Device paired');
-        this.setStatus(BtStatus.Connecting);
-        log.debug('useBluetooth.getCharacteristics: connecting GATT server');
-        const server = await this.connectServer(this.btDevice);
-        log.debug('useBluetooth.getCharacteristics: GATT server connected, get primary service');
-        const service = await this.getService(server);
-        log.debug('useBluetooth.getCharacteristics: Primary service found, read characteristics');
-        const device = await this.getDevice(service);
-        log.debug('useBluetooth.getCharacteristics: Device info characteristic read');
-        const current = await this.getCurrentWiFi(service);
-        log.debug('useBluetooth.getCharacteristics: Current WiFi characteristic read');
-        const available = await this.getAvailableWiFi(service);
-        log.debug('useBluetooth.getCharacteristics: Available WiFi characteristic read');
-        this.setStatus(BtStatus.Connected);
-        return { device, current, available };
+          log.debug('useBluetooth.getCharacteristics: Pairing device');
+          this.setStatus(BtStatus.Paring);
+          this.btDevice = await this.pairDevice();
+          log.debug('useBluetooth.getCharacteristics: Device paired');
+          this.setStatus(BtStatus.Connecting);
+          log.debug('useBluetooth.getCharacteristics: connecting GATT server');
+          const server = await this.connectServer(this.btDevice);
+          log.debug('useBluetooth.getCharacteristics: GATT server connected, get primary service');
+          const service = await this.getService(server);
+          log.debug('useBluetooth.getCharacteristics: Primary service found, read characteristics');
+          const device = await this.getDevice(service);
+          log.debug('useBluetooth.getCharacteristics: Device info characteristic read');
+          const current = await this.getCurrentWiFi(service);
+          log.debug('useBluetooth.getCharacteristics: Current WiFi characteristic read');
+          const available = await this.getAvailableWiFi(service);
+          log.debug('useBluetooth.getCharacteristics: Available WiFi characteristic read');
+          this.setStatus(BtStatus.Connected);
+          return { device, current, available };
       } catch (e) {
         log.error('bluetooth-service.getCharacteristics: ' + e);
-        throw Error('Cannot get Bluetooth characteristics');
+        const errorMsg = e? e : 'Cannot retreive bluetooth characteristics';
+        throw Error(errorMsg as string);
       }
   }
   public get name() {

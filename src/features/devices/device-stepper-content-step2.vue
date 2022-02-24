@@ -35,7 +35,7 @@
 import { ref, defineComponent} from '@vue/composition-api';
 import { WiFiWriteData } from './device-data';
 import { useBluetooth } from './use-bluetooth';
-import useDeviceState from './use-device-state';
+import { useDeviceState } from './use-device-state';
 
 import DeviceSettingsList from '@/features/device-settings/device-settings-list.vue';
 import DeviceNameSetting from '@/features/device-settings/device-name-setting.vue';

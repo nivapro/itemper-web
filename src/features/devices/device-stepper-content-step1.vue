@@ -3,7 +3,7 @@
         <v-card
           class="mb-12"
         >
-          <CreateDeviceDialog
+          <CreateDeviceDialog v-if="newDevice"
             :name="newDeviceName"
             :color="newDeviceColor"
             v-model="newDevice"
@@ -48,14 +48,14 @@
                   <span v-if="disconnected">Turn on your iTemper device, click Scan and pair the device.</span>
                   <span v-else>Please wait until the connection is complete. This may take a while</span>
                   
-                  <v-list flat v-if="!disconnected && isFirstActionStarted && !isActionsDone">
+                  <v-list flat>
                     <v-subheader>Progress</v-subheader>
                     <v-list-item-group v-model="activity" color="primary">
                       <v-list-item
                         v-for="(action, i) in actions"
                         :key="i"
                       >
-                        <v-list-item-icon v-if="!isActionStarted(i) && action.loading">
+                        <v-list-item-icon v-if="isActionStarted(i) && action.loading">
                           <v-progress-circular
                             :indeterminate="action.loading"
                             color="grey"
@@ -101,10 +101,9 @@ import { Vue } from 'vue-property-decorator';
 import { defineComponent, computed } from '@vue/composition-api';
 
 import { WiFiNetwork } from './device-data';
-import { Device } from '@/features/devices/device';
-import useDeviceState from './use-device-state';
+import { Device } from './device';
+import { useDeviceState } from './use-device-state';
 import { useBluetooth } from './use-bluetooth';
-import { BtStatus } from '@/features/bluetooth-device/bluetooth-service';
 
 import { log } from '@/services/logger';
 
@@ -116,28 +115,34 @@ export default defineComponent({
 
   setup(props, context) {
     const { deviceState, resetDeviceState } = useDeviceState();
+
     const  { btName, connecting, connected, connect, disconnected,
               disconnect, disconnecting, current, device, available } = useBluetooth();
+
     const newDevice = ref(false);
     const alert = ref(false);
     const  alertMessage = ref('');
     const currentAction = ref(-1);
     const activity = ref(1);
     const actions = reactive([
-      reactive(
-        { text: ref('Connecting to Bluetooth services'),
-          loading: ref(false),
-          done: ref(false),
-          error: ref(false),
-          errorText: ref('Cannot establish Bluetooth connection')},
-        ),
-      reactive(
-        { text: ref('Retrieving device configuration'),
-          loading: ref(false),
-          done: ref(false),
-          error: ref(false),
-          errorText: ref('Cannot retrieve device configuration')},
-        ),
+        { text: 'Paring with Bluetooth device',
+          loading: false,
+          done: false,
+          error: false,
+          errorText: 'Cannot connect to device'
+        },
+        { text: 'Reading device information',
+          loading: false,
+          done: false,
+          error: false,
+          errorText: 'Cannot retrieve device information'
+        },
+        { text: 'Reading WiFi information',
+          loading: false,
+          done: false,
+          error: false,
+          errorText: 'Cannot retrieve WiFi information'
+          },
       ]);
 
     const resetActions = ()  => {
@@ -148,14 +153,16 @@ export default defineComponent({
         i.error = false;
       });
     };
-    const startActions = () => {
+    const startFirstAction = () => {
       resetActions();
       nextAction();
     };
     const nextAction = () => {
-      currentAction.value = currentAction.value + 1;
+      if (currentAction.value < actions.length) {
+      currentAction.value++;
       actionStarted();
       log.info('device-stepper-content-step1, nextAction= ' + currentAction.value);
+      }
     };
     const actionStarted = () => {
       log.info('device-stepper-content-step1, actionStarted= %s', currentAction.value);
@@ -168,9 +175,6 @@ export default defineComponent({
       actions[currentAction.value].loading = false;
       actions[currentAction.value].done = true;
       actions[currentAction.value].error = false;
-      if (currentAction.value < actions.length - 1) {
-        nextAction();
-      }
     };
     const actionError = (errorMessage: string) => {
       log.info('device-stepper-content-step1, actionError= %s', currentAction.value);
@@ -190,14 +194,14 @@ export default defineComponent({
       actions.forEach((i) => done = done && i.done);
       return done;
     });
+    const isActionStarted = (index: number) => {
+      const thisAction = actions[index];
+      return thisAction.loading || thisAction.done || thisAction.error;
+    };
     const deviceIDOf = (key: string) => {
       const deviceID = key.slice(0, key.indexOf(':'));
       log.info('device-stepper-content-step1.deviceIDOf=' + deviceID);
       return key.slice(0, key.indexOf(':'));
-    };
-    const isActionStarted = (index: number) => {
-      const thisAction = actions[index];
-      return thisAction.loading || thisAction.done || thisAction.error;
     };
     const showAlert = (text: string) => {
       alertMessage.value = text;
@@ -205,42 +209,38 @@ export default defineComponent({
       setTimeout(() => {
         alert.value = false;
         alertMessage.value = '';
-      }, 3_000);
+      }, 4_000);
     };
     async function scan() {
       try {
-        startActions();
-        const status = await connectDevice();
-        if (status !== BtStatus.Connected) {
-          showAlert('Cannot connect device');
-          return;
-        }
+         // Action 0:
+        startFirstAction(); 
+        await connect();
         actionDone();
+        // Action 1: DeviceInfo
+        nextAction();
         await retriveDeviceData();
+        actionDone();
+        // Action 2: WiFi
+        nextAction();
+        await retrieveCurrentWiFiNetwork();
+        await retrieveAvailableWiFiNetworks();
+        actionDone();
         const existingDevice = Vue.$store.devices.all
         .filter((dev) => dev.deviceID === deviceState.deviceData.deviceID );
         if (existingDevice.length === 0) {
           log.info('device-stepper-content-step1.scan: - create a new device?');
           newDevice.value = true;
-        } else {
-          log.debug('device-stepper-content-step1.scan: retrieve network configuration for an existing device:' +
-                    JSON.stringify(existingDevice));
-          await retrieveCurrentWiFiNetwork();
-          await retrieveAvailableWiFiNetworks();
-          actionDone();
-          nextStep();
         }
+        nextStep(); 
       } catch (e) {
+        showAlert(e as string);
         actionError(e as string);
         log.info('device-stepper-content-step1.scan Cannot connect to BLE device, error=' + e);
       }
     }
-    async function connectDevice(): Promise<BtStatus> {
-        log.info('device-stepper-content-step1.connectDevice');
-        const status = await connect();
-        return status;
-    }
-    async function retriveDeviceData() {
+
+    async function retriveDeviceData(): Promise<void> {
         try {
           const deviceConfig = await device().readValue();
           log.info('device-stepper-content-step1.retriveDeviceData: device data read');
@@ -254,7 +254,6 @@ export default defineComponent({
           deviceState.deviceData.color = deviceConfig.color;
         } catch (e) {
               log.error('device-stepper-content-step1.retriveDeviceData: invalid device data');
-              actionError(e as string);
         }
     }
     async function retrieveCurrentWiFiNetwork() {
@@ -292,13 +291,6 @@ export default defineComponent({
               actionError(e as string);
         }
     }
-    const writeDeviceConfiguration = () => {
-      try {
-        device().writeValue(deviceState.deviceData);
-      } catch {
-        log.error('device-stepper-content-step1: cannot write deviceData=' + JSON.stringify(deviceState.deviceData));
-      }
-    };
     const nextStep = () => {
       log.info('device-stepper-content-step1.nextstep');
       context.emit('forward', deviceState);
@@ -306,13 +298,10 @@ export default defineComponent({
     async function deviceCreated(event: Device) {
       deviceState.deviceData.deviceID = event.deviceID;
       deviceState.deviceData.key = event.key;
-      await writeDeviceConfiguration();
-      await retrieveCurrentWiFiNetwork();
-      await retrieveAvailableWiFiNetworks();
-      actionDone();
       nextStep();
     }
     const ready = computed(() => isActionsDone && connected);
+
     const cancel = () => {
       disconnect();
       resetActions();

@@ -44,17 +44,17 @@ export function useBluetooth() {
     const disconnected = computed(() => btStatus.value === BtStatus.Disconnected);
     const disconnecting = computed(() => btStatus.value === BtStatus.Disconnecting);
 
-    async function connect(): Promise<BtStatus> {
+    async function connect(): Promise<void> {
         try {
-            log.debug('useBluetooth.connect: resetting');
             reset();
             characteristics = await service.getCharacteristics();
             btStatus.value = BtStatus.Connected;
             log.debug('useBluetooth.connect: getCharacteristics done');
-            return btStatus.value;
         } catch (e) {
-            log.debug('useBluetooth.connect: catched error. btStatus=Disconnected');
-            return BtStatus.Disconnected;
+            btStatus.value = BtStatus.Disconnected;
+            log.debug('useBluetooth.connect: catched error.');
+            const errorMsg = e ? e : 'Cannot connect to bluetooth device'
+            throw new Error(errorMsg as string);
         }
     }
     const disconnect = () => {

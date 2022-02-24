@@ -21,12 +21,10 @@ import { defineComponent, onMounted, watchEffect, computed } from '@vue/composit
 import { SensorData, Category } from '@/models/sensor-data';
 import { DeviceData, DeviceState, DeviceWiFiData, WiFiNetwork } from './device-data';
 import { Device } from '@/features/devices/device';
-import useDeviceState from './use-device-state';
+import { useDeviceState } from './use-device-state';
 import { useBluetooth } from './use-bluetooth';
-import { BtStatus } from '@/features/bluetooth-device/bluetooth-service';
 
 import { log } from '@/services/logger';
-import { error } from 'console';
 
 import NewDevice from './create-device-dialog.vue';
 enum SavedStatus { NotSaved, Saving, Saved}
@@ -135,11 +133,6 @@ export default defineComponent({
     async function scan() {
       try {
         startActions();
-        const status = await connectDevice();
-        if (status !== BtStatus.Connected) {
-          showAlert('Cannot connect device');
-          return;
-        }
         actionDone();
         await retriveDeviceData();
         const existingDevice = Vue.$store.devices.all
@@ -153,17 +146,15 @@ export default defineComponent({
           await retrieveCurrentWiFiNetwork();
           await retrieveAvailableWiFiNetworks();
           actionDone();
-          nextStep();
         }
       } catch (e) {
         actionError(e as string);
         log.info('device-stepper-content-step1.scan Cannot connect to BLE device');
       }
     }
-    async function connectDevice(): Promise<BtStatus> {
+    async function connectDevice(): Promise<void> {
         log.info('device-stepper-content-step1.connectDevice');
-        const status = await connect();
-        return status;
+        await connect();
     }
     async function retriveDeviceData() {
         try {
