@@ -20,7 +20,7 @@
     </device-setting>
 </template>
 <script lang="ts">
-import { computed, defineComponent, ref, watch, watchEffect } from '@vue/composition-api';
+import { computed, defineComponent, ref } from '@vue/composition-api';
 import { log } from '@/services/logger';
 import DeviceSetting from './device-setting.vue';
 import BaseTextField from '@/components/base-text-field.vue';
@@ -51,7 +51,7 @@ export default defineComponent({
     const settingValid = ref(false);
     const nameRules: ValidationFunction[] = [
           (v) => !!v || 'Enter name',
-          (v) => /^[a-zA-Z0-9\-]+$/.test(v) && !!v && v.length >= 4  || 'Must be at least 4-32 characters, alphanumeric and hyphen characters allowed',
+          (v) => /^[a-zA-Z0-9-]+$/.test(v) && !!v && v.length >= 4  || 'Must be at least 4-32 characters, alphanumeric and hyphen characters allowed',
         ];
     const syncSetting = () => {
         if (setting.value !== newSetting.value) {

@@ -10,9 +10,6 @@
 // Config
 import {config} from '@/config';
 
-// Services
-import { log } from '@/services/logger';
-
 // Vue
 import { Vue, Component} from 'vue-property-decorator';
 import AdminConfigCard from '@/features/admin/admin-config-card.vue';

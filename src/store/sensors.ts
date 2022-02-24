@@ -26,11 +26,11 @@ import { Vue  } from 'vue-property-decorator';
 export class Sensors  {
     // Reactive
     public mAll: Sensor[] = [];
-    private mError: boolean = false;
-    private mErrorMessage: string = '';
+    private mError = false;
+    private mErrorMessage = '';
 
     // Not reactive
-    private firstTime: boolean = true;
+    private firstTime = true;
 
     constructor(private sensorService: ISensorService) {
         this.sensorService.addListener(this.parseSensorLog.bind(this));
@@ -99,7 +99,6 @@ export class Sensors  {
     public find(desc: Descriptor): Sensor | undefined {
         const found = this.all.find((s) =>
         s.desc.SN === desc.SN && s.desc.port === desc.port);
-        const isSensor = found && 'attr' in found;
 
         if (!found) {
             log.debug('sensors.find: nothing found');
@@ -138,7 +137,6 @@ export class Sensors  {
         this.getSensorsLast(period);
     }
     public getSensorsLast(period: number) {
-        const self = this;
         this.sensorService.getSensorsFrom(Date.now() - period)
         .then ((response: SensorData[]) => {
             if (this.firstTime ) {
@@ -146,7 +144,7 @@ export class Sensors  {
             }
             this.parseSensorData(response);
         })
-        .catch((error: any) => {
+        .catch((error) => {
             log.debug('getSensorData' + JSON.stringify(error));
         });
     }

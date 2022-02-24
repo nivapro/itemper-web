@@ -44,23 +44,18 @@
 </template>
 <script lang="ts">
 
-import * as moment from 'moment-timezone';
 
-import {Vue, Component, Watch, Prop} from 'vue-property-decorator';
+import {Vue, Component} from 'vue-property-decorator';
 
 // Models
 // import * as locations from '@/models/locations'
-import { Device } from '@/features/devices';
+
 
 import { log } from '@/services/logger';
-import {json, copyToClipboard } from '@/helpers';
+import {json } from '@/helpers';
 
 import { Location } from '@/features/locations';
-interface FileSelection {
-    name: string;
-    size: number;
-    type: string;
-}
+
 type BooleanOrString = boolean | string;
 type ValidationFunction = (value: string) => BooleanOrString;
 type FileValidationFunction = (value: any) => BooleanOrString;
@@ -68,11 +63,11 @@ type FileValidationFunction = (value: any) => BooleanOrString;
 export default class NewLocationCard extends Vue {
 
     public settings = Vue.$store.settings;
-    public locationName: string = '';
-    public locationKey: string = '';
+    public locationName = '';
+    public locationKey = '';
     public locationImage: File = new File([''], '', {type: 'text/plain'});
     public location: Location = new Location('', '#e39900' );
-    public color: string = '#e39900';
+    public color = '#e39900';
     public swatches =  [
         ['#e39900', '#990ae3', '#990000'],
         ['#0a99e3', '#000a99', '#00e31e'],
@@ -80,10 +75,10 @@ export default class NewLocationCard extends Vue {
         ['#00FFFF', '#00AAAA', '#005555'],
         ['#0000FF', '#0000AA', '#000055'],
       ];
-    public valid: boolean =  false;
-    public submitted: boolean = false;
+    public valid =  false;
+    public submitted = false;
     public errorMsg = '';
-    public timeout: number = 5_000;
+    public timeout = 5_000;
     public nameRules: ValidationFunction[] = [
           (v) => !!v || 'Enter name',
           (v) => /^[a-öA-Ö0-9]+$/.test(v) && v.length >= 4  && v.length <= 32 || 'Must be 4-32 characters, no white spaces or special characters allowed',
@@ -91,9 +86,9 @@ export default class NewLocationCard extends Vue {
     public Filerules: FileValidationFunction[] = [
         (v) => !v || v.size < 2_000_000 || 'File size should be less than 2 MB!',
       ];
-    public red: string = '';
-    public green: string = '';
-    public blue: string = '';
+    public red = '';
+    public green = '';
+    public blue = '';
     public store = Vue.$store;
     public locations = Vue.$store.locations;
     public data() {

@@ -3,7 +3,7 @@ interface Config {
     iTemperAPI: string;
     iTemperWS: string;
     defaultUser?: string;
-    password?: string;
+    password: string;
 }
 
 function configure(): Config {

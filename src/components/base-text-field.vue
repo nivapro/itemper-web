@@ -23,8 +23,7 @@
     </div>
 </template>
 <script lang="ts">
-import { Vue } from 'vue-property-decorator';
-import { computed, defineComponent, onMounted, reactive, Ref, ref, UnwrapRef, watch, watchEffect } from '@vue/composition-api';
+import { computed, defineComponent, ref, watchEffect } from '@vue/composition-api';
 import { log } from '@/services/logger';
 
 export default defineComponent({
@@ -40,6 +39,7 @@ export default defineComponent({
             if (!props.readonly) {
             log.debug('Base-text-field: onEdit');
             edit.value = true;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             cached = Object.assign({}, props.value);
             }
         };

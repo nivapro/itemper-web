@@ -1,10 +1,14 @@
 import { IDeviceService } from '@/services/device-service';
 import { Device, DeviceData } from '../features/devices/';
-import { log } from '@/services/logger';
 import { Vue  } from 'vue-property-decorator';
 
+interface  ErrorMessage {
+    response?: {data: string}
+    request?: unknown;
+    message?: string
+}
 export class Devices  {
-    public mError: string = '';
+    public mError = '';
     public mDevices: Device[] = [];
     private deviceService: IDeviceService;
 
@@ -93,7 +97,6 @@ export class Devices  {
         .then((response: DeviceData) => {
             const index = this.all.indexOf(device);
             if (index >= 0 && this.all[index].deviceID === response.deviceID) {
-                const deleted = this.all[index];
                 this.all.splice(index, 1);
             }
         })
@@ -102,13 +105,15 @@ export class Devices  {
     private resetError() {
         this.mError = '';
     }
-    private handleError(e: any) {
+    private handleError(e: ErrorMessage ) {
         if (e.response) {
             this.mError = e.response.data;
         } else if (e.request) {
             this.mError = 'No response from server';
-        } else {
+        } else if (e.message) {
             this.mError = e.message;
+        } else {
+            this.mError = 'Something went wrong';
         }
         setTimeout(this.resetError, 1000 * 5);
     }

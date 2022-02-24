@@ -1,7 +1,6 @@
 import { ref, reactive, UnwrapRef } from '@vue/composition-api';
 import { SensorData } from '@/models/sensor-data';
 import { DeviceData, WiFiNetwork } from './device-data';
-import { log } from '@/services/logger';
 class UseDeviceState {
     public networks: UnwrapRef<{current: UnwrapRef<WiFiNetwork>, available: Array<UnwrapRef<WiFiNetwork>>}>;
     constructor(    public deviceData: UnwrapRef<DeviceData>,
@@ -20,7 +19,6 @@ class UseDeviceState {
 }
 
 let deviceState: UseDeviceState;
-const sensorsState = Array<UnwrapRef<SensorData>>();
 
 export default function useDeviceState() {
     const resetDeviceState = () => {
@@ -35,6 +33,3 @@ export default function useDeviceState() {
 
     return { deviceState: reactive(deviceState), resetDeviceState };
 }
-
-
-

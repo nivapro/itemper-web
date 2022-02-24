@@ -1,4 +1,4 @@
-export function json(o: any) {
+export function json(o: unknown) {
     return JSON.stringify(o);
 }
 

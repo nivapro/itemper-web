@@ -5,7 +5,7 @@ import { Locations } from '@/features/locations';
 import { Notice } from '@/store/notice';
 import { Sensors } from '@/store/sensors';
 import { Settings } from '@/store/settings';
-import { User, Status } from '@/store/user';
+import { User } from '@/store/user';
 
 import { Vue } from 'vue-property-decorator';
 import { computed, reactive, ref } from '@vue/composition-api';
@@ -32,48 +32,51 @@ export class Store implements IStore {
     public settings: Settings = new Settings();
     public user: User  = new User(this.itemper.apiService);
 }
-export let store: Store = new Store();
+export const store: Store = new Store();
 
 export function init() {
     Vue.$store = store;
 }
-let timeout: NodeJS.Timeout;
-let timeoutSet: boolean;
+let timer: NodeJS.Timer;
+let timerStarted = false;
 export function useState(moduleName: string) {
     log.info('store.useState: reactive store in ' + moduleName);
     const state = reactive(store);
-    timeoutSet = false;
-    const timer = ref(timeoutSet);
-    const retrievingState = computed (() => timer.value);
+    const started = ref(timerStarted);
+    const counter = ref(0)
+    const lastTime = ref(Date.now());
+    const retrievingState = computed (() => started.value);
+    const Count = computed(() => counter.value)
+    const Age = computed(() => Date.now() - lastTime.value)
 
     const retrieveState = () => {
         log.info('store.useState.retrieveState');
-        if (timer.value) {
             // Make sure we have some values from all sensors before loading locations
-            const sampleCount = 2;
-            state.sensors.loadSensors(sampleCount)
-            .then(() => {
-                state.locations.getLocations();
-                state.devices.getDevices();
-                state.sensors.getSensorsLast24h();
-            });
-        }
+        const sampleCount = 2;
+        state.sensors.loadSensors(sampleCount)
+        .then(() => {
+            lastTime.value = Date.now(); 
+            counter.value++;
+            state.locations.getLocations();
+            state.devices.getDevices();
+            state.sensors.getSensorsLast24h();
+        });
     };
 
     const startRetrieveState = () => {
         log.info('store.useState.startRetrieveState');
-        if (!timer.value) {
+        if (!started.value) {
             retrieveState();
             // And then do it at regular intervals
-            timeout = setInterval(() => retrieveState(), 1000 * state.settings.interval);
-            timer.value = true;
+            timer = setInterval(() => retrieveState(), 1000 * state.settings.interval);
+            timerStarted = true;
         }
     };
     const stopRetrieveState = () => {
         log.info('store.useState.stopRetrieveState');
-        if (timer.value) {
-            clearInterval(timeout);
-            timer.value = false;
+        if (started.value) {
+            clearInterval(timer);
+            started.value = false;
         }
     };
 
@@ -85,7 +88,7 @@ export function useState(moduleName: string) {
         state.user.reset();
     };
 
-    return { state, startRetrieveState, stopRetrieveState, resetState, retrievingState };
+    return { Age, Count, state, startRetrieveState, stopRetrieveState, resetState, retrievingState };
 }
 export function reset() {
     Vue.$store.admin.reset();

@@ -7,16 +7,16 @@ class Debug {
   constructor(m: string) {
     this.m = m;
   }
-  public debug(str: string, ...args: any[]) {
+  public debug(str: string, ...args: unknown[]) {
     this.log(Level.Debug, str, ...args);
   }
-  public info(str: string, ...args: any[]) {
+  public info(str: string, ...args: unknown[]) {
     this.log(Level.Info, str, ...args);
   }
-  public error(str: string, ...args: any[]) {
+  public error(str: string, ...args: unknown[]) {
     this.log(Level.Error, str, ...args);
   }
-  public log(level: Level, str: string, ...args: any[]) {
+  public log(level: Level, str: string, ...args: unknown[]) {
     const msg = util.format(str, ...args);
     if (this.logging) {
         console.log(Level[level] + ' ' + new Date().toISOString() + ' ' + this.m + ' ' + msg);

@@ -54,7 +54,7 @@
 <script lang="ts">
 import {config} from '@/config';
 import { computed, defineComponent, ref } from '@vue/composition-api';
-import { router, isPublicPath } from '@/helpers';
+import { router, isPublicPath } from '@/router';
 import { log } from '@/services/logger';
 
 import { Status } from '@/store/user';
@@ -62,10 +62,7 @@ import { useState } from '@/store/store';
 
 import AdminNodeEnvLabel from '@/features/admin/admin-node-env-label.vue';
 import AppToolbarLabel from '@/components/app-toolbar-label.vue';
-import NewDialogue from '@/components/new-dialogue.vue';
 
-type BooleanOrString = boolean | string;
-type ValidationFunction = (value: string) => BooleanOrString;
 
 interface MenuItem {
     action: string;
@@ -73,18 +70,10 @@ interface MenuItem {
     color: string;
     route: string;
 }
-interface Tab {
-    action: string;
-    title: string;
-    route: string;
-}
-interface Tabs {
-    [name: string]: MenuItem;
-}
+
 export default defineComponent({
     name: 'AppToolbar',
     components: {
-            NewDialogue,
             AdminNodeEnvLabel,
             AppToolbarLabel,
         },

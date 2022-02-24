@@ -13,16 +13,15 @@
     </v-container>
 </template>
 <script lang="ts">
-import {Vue, Component, Prop} from 'vue-property-decorator';
-import {router} from '@/helpers';
-import {log} from '@/services/logger';
+import {Vue, Component} from 'vue-property-decorator';
+
 
 @Component({})
 export default class Notice extends Vue {
-      public sticky: boolean = false;
-      public singleLine: boolean = true;
-      public icon: string = 'fa-comment';
-      public elevation: number = 4;
+      public sticky= false;
+      public singleLine = true;
+      public icon = 'fa-comment';
+      public elevation = 4;
       public notice = Vue.$store.notice;
 
       public show(): boolean {

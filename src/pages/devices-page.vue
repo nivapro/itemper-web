@@ -19,9 +19,7 @@
 </template>
 
 <script lang="ts">
-import * as moment from 'moment-timezone';
-import {Vue, Component, Watch} from 'vue-property-decorator';
-import { ref, computed, defineComponent, onMounted } from '@vue/composition-api';
+import { ref, computed, defineComponent } from '@vue/composition-api';
 
 // Store
 import { useState } from '@/store/store';
@@ -36,7 +34,7 @@ export default defineComponent({
   name: 'DevicesPage',
   components: { DeviceCard, NewItemDialogue, NewDeviceStepper },
 
-  setup(props, context) {
+  setup() {
     const { state } = useState('device-page');
     const dialog = ref(false);
 

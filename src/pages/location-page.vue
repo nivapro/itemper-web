@@ -13,15 +13,13 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, defineComponent, computed, watch, toRefs, toRef, onMounted, watchEffect } from '@vue/composition-api';
+import { defineComponent, computed} from '@vue/composition-api';
 
 // Store
-import { Status } from '@/store/user';
 import { useState } from '@/store/store';
 
 // Services
 import { log } from '@/services/logger';
-import { loginRequired, isPublicPath } from '@/pages/router';
 
 // Child components
 import LocationCard from '../features/locations/location-card.vue';
@@ -31,9 +29,9 @@ export default defineComponent({
   name: 'LocationPage',
   components: { LocationCard },
 
-  setup(props, context) {
+  setup() {
 
-    const {state, startRetrieveState, stopRetrieveState, retrievingState } = useState('location-page');
+    const {state } = useState('location-page');
 
     const locationCount = computed(() => state.locations.all.length);
 

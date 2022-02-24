@@ -105,7 +105,7 @@
         </device-setting>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, watch, watchEffect, PropType  } from '@vue/composition-api';
+import { computed, defineComponent, ref, watchEffect, PropType  } from '@vue/composition-api';
 import { log } from '@/services/logger';
 import DeviceSetting from './device-setting.vue';
 import { WiFiNetwork } from '../devices//device-data';
@@ -125,15 +125,12 @@ export default defineComponent({
     connecting: { type: Boolean, default: false},
     },
   setup(props, context) {
-    const open = ref(false);
     const dialog =  ref(false);
     const newSetting = ref(-1);
     const selectedNetworkIndex = ref(-1);
     const setting = computed(() => props.value);
     const settingIconColor = computed(() => settingOn.value ? 'green' : 'gray');
     const settingName = ref('WiFi');
-    const settingOffValue = ref('Off');
-    const settingLabel = ref('Choose a network');
     const settingIcon = ref('mdi-wifi');
     const settingOn = ref(false);
     const password = ref('');
@@ -152,11 +149,6 @@ export default defineComponent({
                                             : {ssid: '', security: '', quality: 0, channel: 0 });
     const secured = computed (() => selectedNetwork.value.security !== '' &&
                                     selectedNetwork.value.security !== 'Open' );
-    const securityIcon = (net: WiFiNetwork) => {
-          return net.security === 'Open'
-          ? 'mdi-lock-open-outline'
-          : 'mdi-lock-outline';
-    };
     const isSecured = (security: string) => {
         return security !== '' && security !== 'Open';
     };

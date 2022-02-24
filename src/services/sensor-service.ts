@@ -7,8 +7,6 @@ import { log } from '@/services/logger';
 import { IApiService, Method } from '@/services/api-service';
 import { IWebSocketService } from '@/services/websocket-service';
 
-import axios, { AxiosInstance } from 'axios';
-
 export type SensorLogListener = (data: SensorLog) => void;
 export interface ISensorService {
         addListener(listener: SensorLogListener): void;
@@ -19,7 +17,7 @@ export interface ISensorService {
 export class SensorService implements ISensorService {
         private static listeners: Set<SensorLogListener> = new Set();
 
-        private path: string = '/sensors';
+        private path = '/sensors';
         constructor(private api: IApiService, private wss: IWebSocketService) {
                 this.ListenOnSensorLog();
 
@@ -29,7 +27,7 @@ export class SensorService implements ISensorService {
                         SensorService.listeners.add(listener);
                 }
         }
-        public getSensorsSamples(samples: number = 1): Promise<SensorData[]> {
+        public getSensorsSamples(samples = 1): Promise<SensorData[]> {
                 const path = this.path + '?samples=' + samples;
                 return this.getSensors(path);
         }
@@ -50,7 +48,7 @@ export class SensorService implements ISensorService {
                                         log.error('SensorService.getSensors: received invalid sensor data');
                                         resolve([]);
                         }})
-                        .catch ((e) => {
+                        .catch (() => {
                                 log.error('SensorService.getSensors: cannot get sensor data');
                                 resolve([]);
                         });

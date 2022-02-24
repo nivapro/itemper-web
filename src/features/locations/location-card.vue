@@ -163,11 +163,11 @@
 import { iTemperAPI } from '@/config';
 import hexToRgba from 'hex-to-rgba';
 
-import {Vue, Component, Watch, Prop} from 'vue-property-decorator';
+import {Vue, Component, Prop} from 'vue-property-decorator';
 
 // Models
 // import * as locations from '@/models/locations'
-import { SensorLog, Sample, Descriptor } from '@/models/sensor-data';
+import { Descriptor } from '@/models/sensor-data';
 import { Sensor } from '@/models/sensor';
 import { Location, Locations } from '@/features/locations';
 import { Settings } from '@/store/settings';
@@ -221,20 +221,20 @@ export default class LocationCard extends Vue {
     public sensors: Sensors = Vue.$store.sensors;
     public locations: Locations =  Vue.$store.locations;
 
-    public showConfiguration: boolean = false;
-    public editName: boolean = false;
-    public editColor: boolean = false;
-    public editFile: boolean = false;
-    public fileFormValid: boolean = false;
-    public editSensors: boolean = false;
+    public showConfiguration= false;
+    public editName = false;
+    public editColor = false;
+    public editFile = false;
+    public fileFormValid = false;
+    public editSensors = false;
 
-    public locationName: string = '';
-    public locationColor: string = '';
+    public locationName = '';
+    public locationColor = '';
     public newImage: File = new File([''], 'current');
 
-    public submitted: boolean = false;
+    public submitted = false;
     public errorMsg = '';
-    public timeout: number = 2_000;
+    public timeout = 2_000;
 
     public toggleConfiguration() {
         this.showConfiguration = !this.showConfiguration;
@@ -295,12 +295,11 @@ export default class LocationCard extends Vue {
         log.debug('location-card.submitSensors: update sensors='  + JSON.stringify(this.seletedSensors));
         this.submitted = true;
         this.locations.updateSensors(this.seletedSensors, this.location)
-        .then((location) => {
-
+        .then(() => {
             this.submitted = false;
             this.editSensors = false;
         })
-        .catch((err: any) => {
+        .catch((err) => {
             this.submitted = false;
             this.displayError('error (' + err.status + '): ' + err.message);
         });
@@ -327,7 +326,7 @@ export default class LocationCard extends Vue {
                 this.location.path = location.path;
                 this.newImage = new File([''], 'current');
             })
-            .catch((err: any) => {
+            .catch((err) => {
                 this.submitted = false;
                 this.displayError('error (' + err.status + '): ' + err.message);
             });
@@ -364,11 +363,11 @@ export default class LocationCard extends Vue {
             log.debug('location-card.submitColor: update overlay color');
             this.submitted = true;
             this.locations.updateColor(this.location.color, this.location)
-            .then((location) => {
+            .then(() => {
                 this.submitted = false;
                 this.editColor = false;
             })
-            .catch((err: any) => {
+            .catch((err) => {
                 this.submitted = false;
                 this.displayError('error (' + err.status + '): ' + err.message);
             });
@@ -384,7 +383,7 @@ export default class LocationCard extends Vue {
     }
     public deleteLocation() {
             this.locations.deleteLocation(this.location)
-            .then((received) => {
+            .then(() => {
                 this.submitted = false;
             })
             .catch((err) => {
@@ -465,4 +464,3 @@ export default class LocationCard extends Vue {
 }
 
 </style>
-

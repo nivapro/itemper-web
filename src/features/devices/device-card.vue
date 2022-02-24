@@ -90,19 +90,16 @@
 
 <script lang="ts">
 
-import * as moment from 'moment-timezone';
-
-import {Vue, Component, Watch, Prop} from 'vue-property-decorator';
+import {Vue, Component, Prop} from 'vue-property-decorator';
 
 // Models
-import { Location } from '@/features/locations';
+
 import { Device } from '@/features/devices';
 import { Sensor } from '@/models/sensor';
-import { Descriptor } from '@/models/sensor-data';
+
+import {  copyToClipboard} from '@/helpers';
 
 import { log } from '@/services/logger';
-import {json, copyToClipboard } from '@/helpers';
-import { Monitor } from '@/services/monitor';
 
 type BooleanOrString = boolean | string;
 type ValidationFunction = (value: string) => BooleanOrString;
@@ -115,15 +112,15 @@ export default class DeviceCard extends Vue {
     public sensors = Vue.$store.sensors;
     public devices = Vue.$store.devices;
     public locations = Vue.$store.locations;
-    public showConfiguration: boolean = false;
-    public newName: string = '';
-    public editName: boolean = false;
-    public submitted: boolean = false;
+    public showConfiguration = false;
+    public newName = '';
+    public editName = false;
+    public submitted = false;
     public errorMsg = '';
 
     public nameRules: ValidationFunction[] = [
           (v) => !!v || 'Enter name',
-          (v) => /^[a-zA-Z0-9\-\_]+$/.test(v) && v.length >= 4 || 'Must be at least 4 characters a-z, A-Z, 0-9, - or _, no white spaces or other special characters allowed',
+          (v) => /^[a-zA-Z0-9\-_]+$/.test(v) && v.length >= 4 || 'Must be at least 4 characters a-z, A-Z, 0-9, - or _, no white spaces or other special characters allowed',
         ];
     public headers = [
         {

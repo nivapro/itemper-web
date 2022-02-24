@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, {  Method, AxiosInstance, AxiosRequestConfig } from 'axios';
 
 import { iTemperAPI } from '@/config';
@@ -11,7 +12,8 @@ export interface IApiService {
     register(email: string, password: string, confirmPassword: string): Promise<boolean>;
     login(email: string, password: string): Promise<boolean>;
     logout(): void;
-    request(method: Method, url: string, body?: any, config?: AxiosRequestConfig): Promise<any>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    request(method: Method, url: string, body?: unknown, config?: AxiosRequestConfig): Promise<any>;
     Authorization(): { value: string };
 }
 
@@ -24,7 +26,7 @@ export { Method } from 'axios';
 
 export class ApiService implements IApiService {
     private static listeners: Set<ApiListener> = new Set();
-    public mIsLoggedIn: boolean = false;
+    public mIsLoggedIn = false;
 
     private io: AxiosInstance;
     private token: string | undefined = undefined;

@@ -12,9 +12,9 @@
 </template>
 
 <script lang="ts">
-import {Vue, Component, Watch, Prop} from 'vue-property-decorator';
+import {Vue, Component, Prop} from 'vue-property-decorator';
 
-import { Category, SensorLog } from '@/models/sensor-data';
+import { Category } from '@/models/sensor-data';
 import { Sensor } from '@/models/sensor';
 import { Settings } from '@/store/settings';
 
@@ -64,7 +64,6 @@ export default class SensorTable extends Vue {
                 return Category[sensor.attr.category];
             }
         }
-        return sensor.desc.SN + '/' +  sensor.desc.port;
     }
     public unit(category: Category): string {
         return this.settings.unit(category);
@@ -89,7 +88,6 @@ export default class SensorTable extends Vue {
         const lastSample = sensor.samples.length;
         if (lastSample > 0) {
             const category = sensor.attr.category;
-            const multiplier = Math.pow(10, this.settings.resolution || 0);
             const value = this.unitFactor(category) * sensor.samples[lastSample - 1].value;
             return this.decimalComma(this.roundedValue(value, category)) + ' ' + this.unit(category);
         } else {

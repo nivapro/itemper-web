@@ -1,4 +1,3 @@
-import { DeviceState } from './device-data';
 import { log } from '@/services/logger';
 
 import { AvailableWiFiCharacteristic} from '../bluetooth-device/available-wifi-characteristics';
@@ -12,7 +11,7 @@ import { computed, ref, watch } from '@vue/composition-api';
 let service: BtService;
 let characteristics: BtCharacteristics;
 const status: BtStatus = BtStatus.Disconnected;
-const name: string = '';
+const name = '';
 
 export function useBluetooth() {
     const btStatus = ref(status);

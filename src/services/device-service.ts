@@ -1,8 +1,5 @@
-import { iTemperAPI } from '@/config';
 import { Device, DeviceData } from '@/features/devices';
 
-import {json} from '@/helpers';
-import { log } from '@/services/logger';
 import { IApiService, Method } from '@/services/api-service';
 
 export interface IDeviceService {
@@ -16,7 +13,7 @@ export interface IDeviceService {
 export class DeviceService implements IDeviceService {
 
     private api: IApiService;
-    private path: string = '/devices';
+    private path = '/devices';
     constructor(apiService: IApiService) {
         this.api = apiService;
     }

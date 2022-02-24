@@ -10,7 +10,7 @@ export default defineComponent({
   name: 'DeviceSettingList',
   components: {},
 
-  setup(props, context) {
+  setup() {
     log.debug('device-settings-list.setup');
     return {};
   },

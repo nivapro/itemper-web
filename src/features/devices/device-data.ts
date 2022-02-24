@@ -1,5 +1,4 @@
 import { SensorData } from '@/models/sensor-data';
-import { ComputedRef } from '@vue/composition-api';
 export interface DeviceName {
      name: string;
 }

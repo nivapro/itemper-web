@@ -2,15 +2,19 @@ import { Location } from '@/features/locations';
 import { Sensor } from '@/models/sensor';
 import { store } from '@/store/store';
 import { LocationData, ILocationService } from '@/features/locations/';
-import { Status } from '@/store/user';
+
 import { Vue  } from 'vue-property-decorator';
 
 import { log } from '@/services/logger';
-import { LogLevel } from '@/models/admin';
-import { Sensors } from './sensors';
+
+interface  ErrorMessage {
+    response?: {data: string}
+    request?: unknown;
+    message?: string
+}
 export class Locations {
     private mLocations: Location[] = [];
-    private mError: string = '';
+    private mError = '';
 
     constructor(private locationService: ILocationService) {
     }
@@ -97,7 +101,7 @@ export class Locations {
                     resolve(location);
                 }
             })
-            .catch((e: any) => reject(e));
+            .catch((e) => reject(e));
         });
     }
 
@@ -114,7 +118,7 @@ export class Locations {
                     resolve(location);
                 }
             })
-            .catch((e: any) => reject(e));
+            .catch((e) => reject(e));
         });
     }
     public updateColor(newColor: string, location: Location): Promise<Location> {
@@ -130,7 +134,7 @@ export class Locations {
                     resolve(location);
                 }
             })
-            .catch((e: any) => reject(e));
+            .catch((e) => reject(e));
         });
     }
     public updateSensors(newSensors: Sensor[], location: Location): Promise<Location> {
@@ -149,7 +153,7 @@ export class Locations {
                     resolve(thisLocation);
                 }
             })
-            .catch((e: any) => reject(e));
+            .catch((e) => reject(e));
         });
     }
     public locationOf(id: string): Location | undefined {
@@ -184,13 +188,15 @@ export class Locations {
     private resetError() {
         this.mError = '';
     }
-    private handleError(e: any) {
+    private handleError(e: ErrorMessage ) {
         if (e.response) {
             this.mError = e.response.data;
         } else if (e.request) {
             this.mError = 'No response from server';
-        } else {
+        } else if (e.message) {
             this.mError = e.message;
+        } else {
+            this.mError = 'Something went wrong';
         }
         setTimeout(this.resetError, 1000 * 5);
     }

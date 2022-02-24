@@ -2,7 +2,7 @@
     <v-list two-line subheader>
         <v-subheader class="title">Inställningar</v-subheader>
         <v-divider></v-divider>
-            <v-list-tile @click="">
+            <v-list-tile>
                 <v-list-tile-content>
                     <v-list-tile-title class="subheading">Temperatur</v-list-tile-title>
                     <v-list-tile-sub-title class="subheading" >
@@ -13,7 +13,7 @@
                     <v-icon :color="'teal'">fa-check-circle</v-icon>
                 </v-list-tile-action>
             </v-list-tile>
-            <v-list-tile @click="">
+            <v-list-tile>
                 <v-list-tile-content>
                     <v-list-tile-title class="subheading">Larm</v-list-tile-title>
                     <v-list-tile-sub-title class="subheading" >
@@ -24,7 +24,7 @@
                     <v-icon :color="'teal'">fa-check-circle</v-icon>
                 </v-list-tile-action>
             </v-list-tile>
-            <v-list-tile @click="">
+            <v-list-tile>
                 <v-list-tile-content>
                     <v-list-tile-title class="subheading">Noggrannhet</v-list-tile-title>
                     <v-list-tile-sub-title class="subheading" >
@@ -35,7 +35,7 @@
                     <v-icon :color="'teal'">fa-check-circle</v-icon>
                 </v-list-tile-action>
             </v-list-tile>
-            <v-list-tile@click="">
+            <v-list-tile>
                 <v-list-tile-content>
                     <v-list-tile-title class="subheading">Uppdatering</v-list-tile-title>
                     <v-list-tile-sub-title class="subheading" >
@@ -46,7 +46,7 @@
                     <v-icon :color="'teal'">fa-check-circle</v-icon>
                 </v-list-tile-action>
             </v-list-tile>
-            <v-list-tile@click="">
+            <v-list-tile>
                 <v-list-tile-content>
                     <v-list-tile-title class="subheading">Tidszon</v-list-tile-title>
                     <v-list-tile-sub-title class="subheading" >

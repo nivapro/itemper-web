@@ -21,7 +21,6 @@ export default defineComponent({
     inheritAttrs: false,
     props: ['value', 'readonly'],
     setup(props, context) {
-        const color  = ref('#e39900');
         const swatches =  ref([
             ['#e39900', '#990ae3', '#990000'],
             ['#0a99e3', '#000a99', '#00e31e'],

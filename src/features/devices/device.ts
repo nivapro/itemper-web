@@ -4,11 +4,11 @@ import { Vue } from 'vue-property-decorator';
 import { DeviceData } from './device-data';
 
 export class Device {
-    private mName: string = '';
-    private mDeviceID: string = '';
-    private mKey: string = '';
-    private mColor: string = '';
-    private mColorID: number = 0;
+    private mName = '';
+    private mDeviceID = '';
+    private mKey = '';
+    private mColor = '';
+    private mColorID = 0;
     private keyStorage: Storage<string>;
 
     constructor(name: string, color: string, id: string) {

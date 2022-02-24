@@ -7,10 +7,10 @@ export interface IUserCredentialsStorage {
 }
 
 export class UserCredentials implements IUserCredentialsStorage {
-    public mEmail: string = '';
-    public mPassword: string = '';
-    public mConfirmPassword: string = '';
-    public mToken: string = '';
+    public mEmail = '';
+    public mPassword = '';
+    public mConfirmPassword = '';
+    public mToken = '';
 
     private mStorage: Storage<IUserCredentialsStorage>;
 
@@ -19,8 +19,8 @@ export class UserCredentials implements IUserCredentialsStorage {
         this.mStorage = new Storage<IUserCredentialsStorage>('itemper-key');
         const item =  this.mStorage.getItem();
         if (item) {
-            this.mEmail = item.email;
-            this.mPassword = item.password;
+            this.mEmail = item.email ? item.email : '';
+            this.mPassword = item.password ? item.password: '';
         }
     }
 
@@ -30,7 +30,7 @@ export class UserCredentials implements IUserCredentialsStorage {
 
     public set email(value: string) {
         this.mEmail = value;
-        this.mStorage.setItem(this);
+        this.store();
     }
 
     public get password(): string {
@@ -39,7 +39,7 @@ export class UserCredentials implements IUserCredentialsStorage {
 
     public set password(value: string) {
         this.mPassword = value;
-        this.mStorage.setItem(this);
+        this.store();
     }
 
     public get confirmPassword(): string {
@@ -63,7 +63,11 @@ export class UserCredentials implements IUserCredentialsStorage {
 
     public set token(value: string) {
         this.mToken = value;
-        this.mStorage.setItem(this);
+        this.store();
+    }
+    private store() {
+        const item = {email: this.email, password: this.password, token: this.token};
+        this.mStorage.setItem(item);
     }
 
 }

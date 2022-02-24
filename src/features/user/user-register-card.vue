@@ -71,16 +71,10 @@
 
 <script lang="ts">
 // Vue
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 
 // Store
-import * as itemper from '@/services/itemper';
-import { store } from '@/store/store';
 import { Status } from '@/store/user';
-
-// Services & helpers
-import {log} from '@/services/logger';
-import {json} from '@/helpers';
 
 // Field validation types
 type BooleanOrString = boolean | string;
@@ -88,16 +82,16 @@ type ValidationFunction = (value: string) => BooleanOrString;
 
 @Component({})
 export default class UserRegisterCard extends Vue {
-    public showPassword: boolean = false;
+    public showPassword= false;
 
     public cred = Vue.$store.user.credentials;
     public status = Vue.$store.user.status;
     public user = Vue.$store.user;
 
-    public valid: boolean =  false;
-    public checkbox: boolean = false;
-    public select: string = '';
-    public submitted: boolean = false;
+    public valid =  false;
+    public checkbox = false;
+    public select = '';
+    public submitted = false;
 
     public errorMsg = '';
 
@@ -112,7 +106,7 @@ export default class UserRegisterCard extends Vue {
 
     public emailRules: ValidationFunction[] = [
           (v) => !!v || 'Enter E-mail address',
-          (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Invalid E-mail address',
+          (v) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Invalid E-mail address',
         ];
     public nameRules: ValidationFunction[] = [
           (v) => !!v || 'Enter name',
@@ -138,7 +132,7 @@ export default class UserRegisterCard extends Vue {
     }
     public submit() {
         if (!this.valid) {
-            this.displayError('Register form not vallid, please enter all information');
+            this.displayError('Register form not valid, please enter all information');
             return;
         } else {
             this.submitted = true;

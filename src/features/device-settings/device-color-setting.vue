@@ -26,8 +26,7 @@ import { computed, defineComponent, ref } from '@vue/composition-api';
 import { log } from '@/services/logger';
 import DeviceSetting from './device-setting.vue';
 import ColorPicker from '@/components/color-picker.vue';
-type BooleanOrString = boolean | string;
-type ValidationFunction = (value: string) => BooleanOrString;
+
 
 export default defineComponent({
   name: 'DeviceColorSetting',
@@ -41,7 +40,6 @@ export default defineComponent({
   },
   setup(props, context) {
     const open = ref(false);
-    const syncingSetting = ref(false);
     const setting = computed(() => props.value);
     const newSetting = ref('');
     const settingIcon = ref('fa-tint');
@@ -50,7 +48,6 @@ export default defineComponent({
     const settingLabel = ref('Choose a color');
     const settingIconColor = computed(() => 'orange');
     const settingOn = computed(() => setting.value !== '');
-    const settingValid = ref(false);
     const syncSetting = () => {
         if (setting.value !== newSetting.value) {
             context.emit('input', newSetting.value);

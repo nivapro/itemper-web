@@ -3,7 +3,7 @@ import { LogLevel } from '@/models/admin';
 import { IAdminService } from '@/services/admin-service';
 export class Admin {
 
-    public mError: string = '';
+    public mError = '';
     private mLevel: LogLevel = LogLevel.error;
     private adminService: IAdminService;
 
@@ -38,7 +38,7 @@ export class Admin {
                     resolve(true);
                 }
             })
-            .catch((e: any) => reject(e));
+            .catch((e) => reject(e));
         });
     }
 
@@ -55,7 +55,7 @@ export class Admin {
                    resolve(true);
                 }
             })
-            .catch((e: any) => reject(e));
+            .catch((e) => reject(e));
         });
     }
     private resetError() {

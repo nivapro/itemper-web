@@ -17,9 +17,6 @@
 </template>
 
 <script lang="ts">
-// Models
-import { LogLevel } from '@/models/admin';
-
 // Services
 import { log } from '@/services/logger';
 

@@ -4,27 +4,22 @@
 
 <script lang="ts">
 // Vue
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import UserRegisterCard from '@/features/user/user-register-card.vue';
 
 // Store
-import { store } from '@/store/store';
 import { Status } from '@/store/user';
 
 // Services & helpers
 import { log } from '@/services/logger';
-import { router } from '@/helpers';
-
-// Field validation types
-type BooleanOrString = boolean | string;
-type ValidationFunction = (value: string) => BooleanOrString;
+import { router } from '@/router';
 
 @Component({components: {
     UserRegisterCard,
 }})
 export default class UserRegisterPage extends Vue {
     public store = Vue.$store;
-    public returnUrl: any;
+    public returnUrl = '';
 
     public register(status: Status) {
         this.store.notice.publish('Welcome to itemper!');

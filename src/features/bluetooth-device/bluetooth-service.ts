@@ -189,27 +189,8 @@ export class BtService {
 
   // handler to run when device successfully disconnects
 }
-async function run<T>(MaxRetries: number, fn: (...args: any[]) => Promise<T>, ...args: any[]): Promise<T> {
-  let retries = 0;
-  while (retries <= MaxRetries) {
-    try {
-      log.info('bluetooth-services.run, arguments: ' + JSON.stringify(fn.arguments));
-      return await fn(...args);
-    } catch (e) {
-      log.error('bluetooth-services.run: ' + JSON.stringify(e));
-      if (retries < MaxRetries) {
-        await delay(1000 * Math.pow(2, retries));
-      }
-      retries += 1;
-    }
-  }
-  throw Error('Cannot run async function');
-}
-async function delay(ms: number): Promise<boolean> {
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(true), ms);
-  });
-}
+
+
 // helper function to decode message sent from peripheral
 export function decode(buf: BufferSource): string {
   log.debug('bluetooth-service.decode');

@@ -1,5 +1,5 @@
 import { BaseStore } from '../../store/base-store';
-import { ISensorService, SensorService } from '@/services/sensor-service';
+import { ISensorService } from '@/services/sensor-service';
 import { Category, Descriptor, Sample, SensorData, SensorLog } from '@/models/sensor-data';
 import { store } from '@/store/store';
 

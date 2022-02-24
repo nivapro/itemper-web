@@ -17,7 +17,7 @@ export interface ILocationService {
 export class LocationService implements ILocationService {
 
     private api: IApiService;
-    private path: string = '/locations';
+    private path = '/locations';
 
     constructor(apiService: IApiService) {
         this.api = apiService;

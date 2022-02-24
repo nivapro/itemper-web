@@ -21,7 +21,7 @@ export default defineComponent({
             default: 'red--text',
         },
     },
-    setup(props, context): any {
+    setup(props) {
         const showMessage = computed(() => props.message !== '');
         log.info('error-message.setup');
         return { showMessage };

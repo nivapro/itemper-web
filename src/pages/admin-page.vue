@@ -12,13 +12,6 @@
 </template>
 <script lang="ts">
 
-// Config
-import { config } from '@/config';
-
-import * as moment from 'moment-timezone';
-// Models
-import { LogLevel } from '@/models/admin';
-
 // Services
 import { log } from '@/services/logger';
 

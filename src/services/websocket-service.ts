@@ -7,30 +7,28 @@ export interface Message {
     data?: unknown;
 }
 export interface IWebSocketService {
-    on(type: string, cb: (data: unknown) => void): void;
+    on(type: string, cb: (data?: unknown) => void): void;
     send(message: Message): void;
 }
-type callback = (data: unknown) => void;
+export type callback = (data: unknown) => void;
 
 export class WebSocketService implements IWebSocketService {
-    private socket: WebSocket;
+    private socket: WebSocket | undefined = undefined;
     private RECONNECT_DELAY = 30_000;
     private subscribers: Map<string, Set<callback>> = new Map();
-    private websocketAuthorized: boolean = false;
+    private websocketAuthorized = false;
 
     constructor(private apiService: IApiService) {
-        this.socket = this.setup();
         this.apiService.addListener((userLoggedIn) => {
-            if (userLoggedIn && !this.websocketAuthorized) {
-                this.authorizeWebSocket();
-            } else if (!userLoggedIn && (this.socket.readyState === this.socket.CONNECTING ||
-                this.socket.readyState === this.socket.OPEN)) {
-                    this.socket.close();
+            if (userLoggedIn) {
+                this.socket = this.setup();
+            } else {
+                this.socket = this.disconnect();
             }
         });
     }
     public authorizeWebSocket() {
-        if (this.apiService.isLoggedIn) {
+        if (this.apiService.isLoggedIn && this.socket) {
             log.debug('authorizeWebSocket: authorization');
             const authorization: Message = {
                 command: 'authorization',
@@ -50,7 +48,7 @@ export class WebSocketService implements IWebSocketService {
         callbackSet.add(cb);
     }
     public send(message: Message): void {
-        if (this.socket.readyState === WebSocket.OPEN) {
+        if (this.websocketAuthorized && this.socket && this.socket.readyState === WebSocket.OPEN) {
             const msg = JSON.stringify(message);
             log.info('websocket-service.send: msg=' + msg);
             this.socket.send(msg);
@@ -59,6 +57,7 @@ export class WebSocketService implements IWebSocketService {
     private setup(): WebSocket {
         const url = iTemperWS;
         const socket = new WebSocket(url);
+        this.websocketAuthorized = false;
 
         log.info('websocket-service.setup: url=' + url);
         socket.onopen = (event) => {
@@ -77,7 +76,6 @@ export class WebSocketService implements IWebSocketService {
                         this.websocketAuthorized = true;
                         const startMonitoring = {command: 'startMonitor'};
                         this.send(startMonitoring);
-
                     } else {
                         log.info('websocket-service.onmessage: ' + msg.command);
                         this.emit(msg.command, msg?.data);
@@ -92,6 +90,7 @@ export class WebSocketService implements IWebSocketService {
         };
         socket.onclose = (event) => {
             log.error('websocket-service.onclose: event=' + JSON.stringify(event));
+            this.websocketAuthorized = false;
             this.reconnect();
         };
         return socket;
@@ -100,6 +99,15 @@ export class WebSocketService implements IWebSocketService {
         this.subscribers.get(type)?.forEach((cb) => {
             cb(data);
         });
+    }
+
+    private disconnect() {
+        this.websocketAuthorized = false;
+        if (this.socket && (this.socket.readyState === this.socket.CONNECTING ||
+            this.socket.readyState === this.socket.OPEN)) {
+            this.socket.close();
+        }
+        return undefined;
     }
     private reconnect() {
         const delay = this.RECONNECT_DELAY * Math.random();

@@ -1,12 +1,11 @@
 import { Category } from '@/models/sensor-data';
 
-import { log } from '@/services/logger';
 export class Settings {
-    private mResolution: number = 1;
-    private mUnitSymbol: string = '°C';
-    private mLimit: number = 30;
-    private mInterval: number = 60;
-    private mZone: string = 'Europe/Stockholm';
+    private mResolution = 1;
+    private mUnitSymbol = '°C';
+    private mLimit = 30;
+    private mInterval = 60;
+    private mZone= 'Europe/Stockholm';
     private mDecimalComma = true;
 
     get resolution(): number {

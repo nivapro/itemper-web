@@ -2,7 +2,6 @@ import { UserCredentials } from '@/features/user/user-credentials';
 import { IApiService } from '@/services/api-service';
 import { Vue  } from 'vue-property-decorator';
 import { log } from '@/services/logger';
-import { useState } from '@/store/store';
 
 export enum Status {
     LOGGED_OUT,
@@ -10,8 +9,8 @@ export enum Status {
     LOGGED_IN,
 }
 export class User  {
-    public mFirstName: string = '';
-    public mLastName: string = '';
+    public mFirstName = '';
+    public mLastName = '';
     public credentials: UserCredentials;
     private mStatus: Status = Status.LOGGED_OUT;
     private api: IApiService;
@@ -44,11 +43,11 @@ export class User  {
         this.status = Status.LOGGING_IN;
         return new Promise<Status> ((resolve, reject) => {
             this.api.register(this.credentials.email, this.credentials.password, this.credentials.password)
-            .then((cred) => {
+            .then(() => {
                 this.status = Status.LOGGED_IN;
                 resolve(this.status);
             })
-            .catch((error: any) => {
+            .catch((error) => {
                 reject(error);
             });
         });
@@ -58,18 +57,18 @@ export class User  {
         this.status = Status.LOGGING_IN;
         return new Promise<Status> ((resolve, reject) => {
             this.api.login(this.credentials.email, this.credentials.password)
-            .then((cred) => {
+            .then(() => {
                 this.status = Status.LOGGED_IN;
                 resolve(this.status);
             })
-            .catch((error: any) => {
+            .catch((error) => {
                 reject(error);
             });
         });
     }
     public logout(): Promise<Status> {
         log.debug('user.logout');
-        return new Promise<Status> ((resolve, reject) => {
+        return new Promise<Status> ((resolve) => {
             this.status = Status.LOGGED_OUT;
             this.credentials.token = '';
             this.api.logout();

@@ -1,12 +1,11 @@
-import { Position } from '@/models/position';
 import { Descriptor } from '@/models/sensor-data';
 import { Sensor } from '@/models/sensor';
 import { Vue  } from 'vue-property-decorator';
 export class Location  {
-    public mId: string = '';
-    public mName: string = '';
-    public mColor: string = '';
-    public mPath: string = '';
+    public mId = '';
+    public mName = '';
+    public mColor = '';
+    public mPath = '';
     public mSensorDesc: Descriptor[] = [];
     public mSensors: Sensor[] = [];
     constructor(name: string, color: string) {

@@ -26,13 +26,11 @@
                 ></v-text-field>
             </v-form>
         </v-card-text>
-
-
         <v-divider></v-divider>
         <v-card-actions>
             <v-btn @click="submit" :disabled="!valid" :loading="submitted" color="info">Login</v-btn>
             <v-spacer>
-                <p v-if="error()"  class="red--text" align="center">{{errorMsg}}</p>
+                <p v-if="isError()"  class="red--text" align="center">{{errorMsg}}</p>
                 <p v-else align="center">Register if you don't have an account</p>
             </v-spacer>
             <v-btn @click="swap" :disabled="submitted">Register</v-btn>
@@ -42,13 +40,12 @@
 
 <script lang="ts">
 // Vue
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Prop, Component, Vue } from 'vue-property-decorator';
 
 // Store
 import { Status } from '@/store/user';
 // Services & helpers
 import {log} from '@/services/logger';
-import {json} from '@/helpers';
 
 // Validation types
 type BooleanOrString = boolean | string;
@@ -58,79 +55,71 @@ type ValidationFunction = (value: string) => BooleanOrString;
     components: {},
 })
 export default class UserLoginCard extends Vue {
-    public showPassword: boolean = false;
+    @Prop({type: String, default: ''}) readonly DefaultUser!: string;
+    @Prop({type: String, default: ''}) readonly DefaultPassword!: string;
+    public showPassword = false;
     public store = Vue.$store;
     public cred = Vue.$store.user.credentials;
     public status = Vue.$store.user.status;
     public user = Vue.$store.user;
 
-    public email = '';
-    public password = '';
-    public valid: boolean =  false;
-    public checkbox: boolean = false;
-    public select: string = '';
+    public email = this.DefaultUser;
+    public password = this.DefaultPassword;
+    public valid =  false;
+    public checkbox = false;
+    public select = '';
 
-    public submitted: boolean = false;
+    public submitted = false;
     public errorMsg = '';
-    public timeout: number = 2_000;
+    public timeout = 2_000;
     public passwordRules: ValidationFunction[] = [
           (v) => !!v || 'Enter password',
           (v) => v && v.length >= 7 || 'Password must be at least 7 characters',
         ];
-    public confirmPasswordRules: ValidationFunction[] = [
-          (v) => !!v || 'Please, re-enter password',
-          (v) => v && v === this.cred.password || 'Does not match password',
-        ];
-
     public emailRules: ValidationFunction[] = [
           (v) => !!v || 'Enter E-mail address',
-          (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Invalid E-mail address',
+          (v) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Invalid E-mail address',
         ];
-    public nameRules: ValidationFunction[] = [
-          (v) => !!v || 'Enter name',
-          (v) => /^\w/.test(v) && v.length >= 3 || 'Name must be at least 3 characters',
-        ];
-    public setEmail(email: string) {
-        this.cred.email = email;
-    }
-    public error(): boolean {
-        return this.errorMsg !== '';
-    }
     public login(email: string, password: string) {
         log.debug('login-card: login()');
         this.submitted = true;
+        this.cred.email = email;
+        this.cred.password = password;
         this.user.login()
         .then((status: Status) => {
             log.debug('login-card.login, status=' + Status[status]);
             this.submitted = false;
             this.$emit('onLogin', status);
         })
-        .catch((error: any) => {
+        .catch((error) => {
             this.submitted = false;
             this.displayError('(' + error.status + '): ' + error.message );
         });
     }
     public submit() {
         if (!this.valid) {
-            this.displayError('Login form not vallid');
+            this.displayError('Login form not valid');
             return;
         } else {
-            this.login(this.cred.mEmail, this.cred.mPassword);
+            this.login(this.email, this.password);
         }
     }
     public swap() {
         this.$emit('onRegister');
     }
-    private reset(): void {
+    public isError(): boolean {
+        return this.errorMsg !== '';
+    }
+    private resetError(): void {
         this.errorMsg = '';
     }
     private displayError(msg: string) {
         this.errorMsg = msg;
-        this.setTimer();
+        this.setErrorTimer();
     }
-    private setTimer() {
-        const timeout = 4_000;
-        setTimeout(() => {this.reset(); }, timeout);
+    private setErrorTimer() {
+        const timeout = 5_000;
+        setTimeout(() => {this.resetError(); }, timeout);
     }
 }
 </script>

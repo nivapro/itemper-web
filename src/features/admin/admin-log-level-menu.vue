@@ -38,9 +38,9 @@ import { Vue, Component } from 'vue-property-decorator';
 export default class AdminLogLevelMenu extends Vue {
 
     public state = Vue.$store;
-    public submitted: boolean = false;
+    public submitted = false;
     public errorMsg = '';
-    public timeout: number = 5_000;
+    public timeout = 5_000;
     public level: LogLevel = LogLevel.error;
 
     public created(): void {

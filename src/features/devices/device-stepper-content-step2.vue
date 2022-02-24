@@ -33,7 +33,7 @@
 </template>
 <script lang="ts">
 import { ref, defineComponent} from '@vue/composition-api';
-import { DeviceData, WiFiWriteData } from './device-data';
+import { WiFiWriteData } from './device-data';
 import { useBluetooth } from './use-bluetooth';
 import useDeviceState from './use-device-state';
 
@@ -55,9 +55,8 @@ export default defineComponent({
   },
 
   setup(props, context) {
-    const { deviceState, resetDeviceState } = useDeviceState();
-    const  { btStatus, connecting, connected, connect, disconnected,
-              disconnect, disconnecting, current, device, available } = useBluetooth();
+    const { deviceState } = useDeviceState();
+    const  { current, device, available } = useBluetooth();
     const loading = ref(false);
     const updated = ref(false);
 

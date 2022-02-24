@@ -47,7 +47,8 @@ export class AvailableWiFiCharacteristic {
   public unsubscribe(): void {
     this.characteristic.stopNotifications().then(() => this.listener = undefined);
   }
-  private handleNotifications(ev: any): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private handleNotifications(ev:any): void {
     const str = ble.decode(ev.target.value);
     log.info('available-wifi-characteristics.handleNotifications ' + str);
     try {
@@ -55,7 +56,7 @@ export class AvailableWiFiCharacteristic {
       if (isWiFiDataValid(data)) {
         const networks = data as WiFiNetwork;
         if (this.listener) {
-          this.listener(data);
+          this.listener(networks);
         }
       }
     } catch {

@@ -40,18 +40,16 @@
 </template>
 <script lang="ts">
 
-import * as moment from 'moment-timezone';
-
-import {Vue, Component, Watch, Prop} from 'vue-property-decorator';
+import {Vue} from 'vue-property-decorator';
 
 // Models
 // import * as locations from '@/models/locations'
 import { Device } from '@/features/devices';
 
 import { log } from '@/services/logger';
-import {json, copyToClipboard } from '@/helpers';
+import { copyToClipboard } from '@/helpers';
 
-import { computed, defineComponent, onMounted, reactive, Ref, ref, UnwrapRef, watch, watchEffect } from '@vue/composition-api';
+import { defineComponent, ref } from '@vue/composition-api';
 import BaseTextField from '@/components/base-text-field.vue';
 
 export default defineComponent({
@@ -61,11 +59,11 @@ export default defineComponent({
     props: {
         name: { type: String, required: true },
         color: { type: String, required: true },
-        value: { type: Boolean, default: false },
     },
     setup(props, context) {
         const deviceKey = ref('');
         const valid =  ref(false);
+        const value = false;
         const submitted = ref(false);
         const errorMsg = ref('');
         const submit = () => {
@@ -93,7 +91,7 @@ export default defineComponent({
                 context.emit('created', device);
                 close();
             })
-            .catch((err: any) => {
+            .catch((err) => {
                 submitted.value = false;
                 displayError('Something went wrong: (' + err.status + '): ' + err.message );
             });
@@ -123,6 +121,7 @@ export default defineComponent({
             valid,
             submit,
             close,
+            value
         };
     },
 });

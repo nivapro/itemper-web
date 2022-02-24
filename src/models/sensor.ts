@@ -14,19 +14,18 @@
 //     port: 7,
 // },
 // },
-import { log } from '@/services/logger';
 import {Category, Sample, Attributes, Descriptor, SensorData} from '@/models/sensor-data';
 import { Vue  } from 'vue-property-decorator';
 
 export class Sensor implements SensorData {
-    private mId: string = '';
-    private mDeviceID: string = '';
+    private mId = '';
+    private mDeviceID = '';
     private mDesc: Descriptor = { SN: '', port: 0 };
     private mAttr: Attributes = {
         model: '', category: Category.Other, accuracy: 0, resolution: 0, maxSampleRate: 0,
     };
     private mSamples: Sample[] = [];
-    private mLocationId: string = '';
+    private mLocationId = '';
 
     constructor(data: SensorData) {
             this.update(data);

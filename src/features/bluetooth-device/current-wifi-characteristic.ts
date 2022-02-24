@@ -1,6 +1,6 @@
 import { log } from '@/services/logger';
 import * as ble from './bluetooth-service';
-import { WiFiData, WiFiNetwork, WiFiWriteData } from '@/features/devices/device-data';
+import { WiFiNetwork, WiFiWriteData } from '@/features/devices/device-data';
 import { isWiFiDataValid } from '@/features/devices/device-data-validators';
 import { getUuid, UUID_Designator} from './ble-uuid';
 // SSID (read/write), Encryption (read/write), Password (write)

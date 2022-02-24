@@ -29,10 +29,8 @@
 
 <script lang="ts">
 import { ref, computed } from '@vue/composition-api';
-import { defineComponent, onMounted } from '@vue/composition-api';
-import { log } from '@/services/logger';
+import { defineComponent } from '@vue/composition-api';
 import useDeviceState from './use-device-state';
-import { DeviceState } from './device-data';
 import DeviceStepperContentStep1 from './device-stepper-content-step1.vue';
 import DeviceStepperContentStep2 from './device-stepper-content-step2.vue';
 enum SavedStatus { NotSaved, Saving, Saved}
@@ -76,5 +74,3 @@ export default defineComponent({
   },
 });
 </script>
-
-</style>

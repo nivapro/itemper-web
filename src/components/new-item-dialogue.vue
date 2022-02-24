@@ -18,13 +18,12 @@
     </v-dialog>
 </template>
 <script lang="ts">
-import { ref, defineComponent, watch, computed, watchEffect } from '@vue/composition-api';
-import { log } from '@/services/logger';
+import { ref, defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
     name: 'NewItemDialogue',
 
-    setup(props, context) {
+    setup() {
         const dialog =  ref(false);
         const showFabButton =  ref(true);
         const closeDialog = () => {

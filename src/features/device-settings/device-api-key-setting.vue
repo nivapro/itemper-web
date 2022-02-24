@@ -20,20 +20,20 @@
     </device-setting>
 </template>
 <script lang="ts">
-import { computed, defineComponent, onMounted, reactive, Ref, ref, UnwrapRef, watch, watchEffect } from '@vue/composition-api';
-import { log } from '@/services/logger';
+import { computed, defineComponent, ref } from '@vue/composition-api';
+
 import DeviceSetting from './device-setting.vue';
 import ErrorMessage from '@/components/error-message.vue';
 
 export type DeviceSettingValue = string | number;
 export type validatorFunction = (value: DeviceSettingValue) => boolean;
 
-import {json, copyToClipboard } from '@/helpers';
+import {copyToClipboard } from '@/helpers';
 
 const message = '';
 export function useErrorMessage() {
     const errorMsg = ref(message);
-    const displayError = (msg: string, ms: number = 2_000) => {
+    const displayError = (msg: string, ms = 2_000) => {
         errorMsg.value = msg;
         setTimeout(() => reset(), ms);
     };
@@ -52,7 +52,7 @@ export default defineComponent({
             },
             loading: { type: Boolean, default: false},
     },
-    setup(props, context) {
+    setup(props) {
         const setting = computed(() => props.value);
         const settingIcon = ref('fa-key');
         const isOn = computed(() => setting.value !== '');

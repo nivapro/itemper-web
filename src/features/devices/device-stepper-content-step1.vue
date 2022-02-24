@@ -96,24 +96,19 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, onBeforeUpdate, onUnmounted, onActivated } from '@vue/composition-api';
+import { ref, reactive } from '@vue/composition-api';
 import { Vue } from 'vue-property-decorator';
-import { defineComponent, onMounted, watchEffect, computed } from '@vue/composition-api';
+import { defineComponent, computed } from '@vue/composition-api';
 
-import { SensorData, Category } from '@/models/sensor-data';
-import { DeviceData, DeviceState, DeviceWiFiData, WiFiNetwork } from './device-data';
+import { WiFiNetwork } from './device-data';
 import { Device } from '@/features/devices/device';
 import useDeviceState from './use-device-state';
 import { useBluetooth } from './use-bluetooth';
 import { BtStatus } from '@/features/bluetooth-device/bluetooth-service';
 
 import { log } from '@/services/logger';
-import { error } from 'console';
 
 import CreateDeviceDialog from './create-device-dialog.vue';
-enum SavedStatus { NotSaved, Saving, Saved}
-type BooleanOrString = boolean | string;
-type ValidationFunction = (value: string) => BooleanOrString;
 
 export default defineComponent({
   name: 'DeviceStepperContentStep1',
@@ -121,7 +116,7 @@ export default defineComponent({
 
   setup(props, context) {
     const { deviceState, resetDeviceState } = useDeviceState();
-    const  { btStatus, btName, connecting, connected, connect, disconnected,
+    const  { btName, connecting, connected, connect, disconnected,
               disconnect, disconnecting, current, device, available } = useBluetooth();
     const newDevice = ref(false);
     const alert = ref(false);
@@ -141,12 +136,10 @@ export default defineComponent({
           loading: ref(false),
           done: ref(false),
           error: ref(false),
-          errorText: ref('Cannot retreive device configuration')},
+          errorText: ref('Cannot retrieve device configuration')},
         ),
       ]);
-    const currentActionValid = () => {
-      return 0 <= currentAction.value && currentAction.value  < actions.length;
-    };
+
     const resetActions = ()  => {
       currentAction.value = -1;
       actions.forEach((i) =>  {
