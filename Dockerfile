@@ -15,4 +15,4 @@ COPY . .
 # Build itemper-web
 RUN npm run build
 
-CMD ["echo", "cp -r -u /itemper-web/dist/* /usr/share/nginx/html/itemper-web"]
+CMD ["./deploy.sh", ""]
