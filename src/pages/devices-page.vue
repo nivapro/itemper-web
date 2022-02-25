@@ -1,8 +1,6 @@
 <template>
     <div>
-        <new-item-dialogue v-model="dialog">
-            <NewDeviceStepper @close="closeDialog"></NewDeviceStepper>
-        </new-item-dialogue>
+        <NewDeviceStepperDialog/>
         <v-container fluid grid-list-md>
             <v-layout row wrap>
                 <v-flex v-for="(item,id) in state.devices.all" :key="id">
@@ -19,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, defineComponent } from '@vue/composition-api';
+import { computed, defineComponent } from '@vue/composition-api';
 
 // Store
 import { useState } from '@/store/store';
@@ -28,23 +26,18 @@ import { useState } from '@/store/store';
 import { log } from '@/services/logger';
 // Child components
 import DeviceCard from '@/features/devices/device-card.vue';
-import NewItemDialogue from '@/components/new-item-dialogue.vue';
-import NewDeviceStepper from '@/features/devices/new-device-stepper.vue';
+import NewDeviceStepperDialog from '@/features/devices/new-device-stepper-dialog.vue';
 export default defineComponent({
   name: 'DevicesPage',
-  components: { DeviceCard, NewItemDialogue, NewDeviceStepper },
+  components: { DeviceCard, NewDeviceStepperDialog },
 
   setup() {
     const { state } = useState('device-page');
-    const dialog = ref(false);
 
     const deviceCount = computed (() => state.devices.all.length);
 
-    const closeDialog = () => {
-        dialog.value = false;
-    };
     log.debug('DevicePage.setup');
-    return { state, deviceCount, closeDialog, dialog };
+    return { state, deviceCount };
   },
 });
 </script>

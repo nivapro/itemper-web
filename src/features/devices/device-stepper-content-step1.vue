@@ -44,10 +44,10 @@
                     
                     <v-list flat>
                       <v-subheader>Progress</v-subheader>
-                      <v-list-item-group v-model="activity" color="primary">
                         <v-list-item
                           v-for="(action, i) in actions"
                           :key="i"
+                          inactive
                         >
                           <v-list-item-icon v-if="isActionStarted(i) && action.loading">
                             <v-progress-circular
@@ -68,14 +68,13 @@
                             <v-list-item-title v-text="action.errorText"></v-list-item-title>
                           </v-list-item-content>
                         </v-list-item>
-                      </v-list-item-group>
                     </v-list>
                 </v-card-text>
                 <v-card-actions>
                 </v-card-actions>
             </div>
           </v-card>
-          <v-btn @click="cancel" text>Cancel</v-btn>
+          <v-btn @click="cancel()" text>Cancel</v-btn>
           <v-btn :disabled="connecting" color="primary" @click="scan()">
               Scan
               <template v-slot:loader>
@@ -339,8 +338,14 @@ export default defineComponent({
     const ready = computed(() => isActionsDone && connected);
 
     const cancel = () => {
-      disconnect();
-      resetActions();
+      log.info('device-stepper-content-step1.cancel')
+      try {
+        disconnect();
+        resetActions();
+      } catch (e){
+        log.error('device-stepper-content-step1.cancel: ' + e as string);
+      }
+
       context.emit('cancel', deviceState);
     };
 

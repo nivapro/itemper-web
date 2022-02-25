@@ -22,7 +22,7 @@
 import { ref, defineComponent, watch, computed, watchEffect } from '@vue/composition-api';
 import { Vue } from 'vue-property-decorator';
 import { log } from '@/services/logger';
-import NewDeviceStepper from '@/features/devices/new-device-stepper.vue';
+import NewDeviceStepper from '@/features/devices/new-device-stepper-dialog.vue';
 import NewLocationCard from '@/features/locations/new-location-card.vue';
 
 enum Dialogue { Unknown, Locations, Devices }
