@@ -1,5 +1,5 @@
 import { Device, DeviceData } from '@/features/devices';
-import { isDeviceDataValid, isDeviceDataArrayValid} from '@/features/devices/device-data-validators'
+import { isDeviceDataArrayValid} from '@/features/devices/device-data-validators'
 
 import { IApiService, Method } from '@/services/api-service';
 

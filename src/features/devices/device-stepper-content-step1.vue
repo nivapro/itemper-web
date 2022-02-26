@@ -269,9 +269,9 @@ export default defineComponent({
         }
 
       } catch (e) {
+        actionError((e as string));
         showAlert(e as string);
-        actionError((e as string).replace('Error: ', ''));
-        log.info('device-stepper-content-step1.scan Cannot connect to BLE device, error=' + e);
+        log.info('device-stepper-content-step1.scan Cannot connect to BLE device, error=' + JSON.stringify(e, null, 2));
       }
     }
 
