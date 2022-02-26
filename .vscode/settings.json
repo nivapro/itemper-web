@@ -3,6 +3,7 @@
         "advertisementreceived",
         "availabilitychanged",
         "gattserverdisconnected",
+        "ifaces",
         "itemper",
         "onavailabilitychanged",
         "signup",
