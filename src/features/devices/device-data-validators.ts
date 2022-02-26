@@ -1,4 +1,4 @@
-import {DeviceData, DeviceName, DeviceWiFiData, WiFiData, DeviceState} from './device-data';
+import {DeviceData, DeviceName, DeviceWiFiData, WiFiData, DeviceState, DeviceStatus, NetworkInterfaceInfo} from './device-data';
 import { isObject, isSensorDataArrayValid } from '@/models/sensor-data-validators';
 import { log } from '@/services/logger';
 import { isArray } from 'util';
@@ -46,6 +46,22 @@ export function isDeviceKeyValid(raw: unknown): boolean {
     }
     return valid;
 }
+export function isDeviceDataArrayValid (raw: unknown): boolean {
+    let valid = isArray(raw);
+    if (!valid) {
+        log.error('device-data-validators.isDeviceDataArrayValid - not an array');
+    } else {
+        const data = raw as Partial<Array<DeviceData>>;
+        data.forEach((deviceData, index) => {
+            valid = valid
+            && isDeviceDataValid(deviceData);
+            if (!valid) {
+                log.error('device-data-validators.isDeviceDataArrayValid - not valid, index=' + index); 
+            }
+        })
+    }
+    return valid;
+}
 export function isDeviceDataValid(raw: unknown): boolean {
     let valid = isObject(raw);
     if (!valid) {
@@ -55,7 +71,13 @@ export function isDeviceDataValid(raw: unknown): boolean {
         valid = valid
         && 'deviceID' in data && typeof data.deviceID === 'string'
         && 'name' in data && typeof data.name === 'string'
+        && 'color' in data && typeof data.name === 'string'
         && 'key' in data && typeof data.key === 'string';
+        if ('statusTime' in data) {
+            valid = valid
+            && typeof data.statusTime === 'number'
+            && 'deviceData' in data && isValidDeviceDataLog(data.deviceData);
+        }
         if (!valid) {
             log.error('device-data-validators.isDeviceDataValid - not valid');
         }
@@ -128,6 +150,56 @@ export function isDeviceStateValid(raw: unknown): boolean {
         && 'sensors' in data && isSensorDataArrayValid(data.sensors);
         if (!valid) {
             log.error('device-data-validators.isDeviceStateValid - not valid');
+        }
+    }
+    return valid;
+}
+
+function isValidDeviceDataLog(raw: unknown):boolean {
+    let valid: boolean = typeof raw === 'string';
+    if (!valid) {
+        log.error('device-data-validators.isValidDeviceDataLog - not a string');
+    } else {
+        try {
+            const data: Partial<DeviceStatus> = JSON.parse(raw as string);
+            valid = valid
+            && 'timestamp' in data && typeof data.timestamp === 'number'
+            && 'hostname' in data && typeof data.hostname === 'string'
+            && 'uptime' in data && typeof data.uptime === 'number'
+            && 'networkInterfaces' in data && isValidNetworkInterfaces(data.networkInterfaces);
+        } catch {
+            log.error('device-data-validators.isValidDeviceDataLog - not parsable');
+            return false;
+        }
+    }
+    if (!valid) {
+        log.error('device-data-validators.isValidDeviceDataLog - not valid');
+    }
+    return valid;
+}
+function isValidNetworkInterfaces(raw: unknown): boolean {
+    let valid = typeof raw === 'object';
+    if (!valid) {
+        log.error('device-data-validators.isValidNetworkInterfaces - not an object');
+    } else {
+        const data = raw as { [ifaceName: string]: Partial<NetworkInterfaceInfo>[] };
+        for (const ifaceName in data) {
+            if (typeof ifaceName !== 'string')
+            {
+                log.error('device-data-validators.isValidNetworkInterfaces - ifaceName not a string'); 
+                return false;
+            }
+            for (const net of data[ifaceName]) {
+                valid = valid 
+                && 'address' in net && typeof net.address === 'string'
+                && 'netmask' in net && typeof net.internal === 'string'
+                && 'family' in net && typeof net.internal === 'string'
+                && 'mac' in net && typeof net.mac === 'string'
+                && 'internal' in net && typeof net.mac === 'boolean';
+                if (!valid) {
+                    log.error('device-data-validators.isValidNetworkInterfaces - not valid network' + ifaceName);
+                }
+            } 
         }
     }
     return valid;

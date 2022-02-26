@@ -14,7 +14,7 @@ export interface DeviceData {
      key: string;
      color: string;
      statusTime?: number;
-     uptime?: number;
+     deviceData?: DeviceStatus;
 }
 export type WiFiData = WiFiNetwork;
 
@@ -37,3 +37,18 @@ export interface DeviceState {
      networks: DeviceWiFiData;
      sensors: SensorData[];
 }
+
+export interface NetworkInterfaceInfo {
+     address: string;
+     netmask: string;
+     family: string;
+     mac: string;
+     internal: boolean;
+ }
+ export interface DeviceStatus {
+     timestamp: number;
+     hostname: string;
+     uptime: number;
+     networkInterfaces: { [index: string]: NetworkInterfaceInfo[] };
+ }
+ 

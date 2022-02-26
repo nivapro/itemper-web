@@ -1,4 +1,5 @@
 import { Device, DeviceData } from '@/features/devices';
+import { isDeviceDataValid, isDeviceDataArrayValid} from '@/features/devices/device-data-validators'
 
 import { IApiService, Method } from '@/services/api-service';
 
@@ -20,7 +21,13 @@ export class DeviceService implements IDeviceService {
 
     public getDevices(): Promise<DeviceData[]> {
         const method: Method = 'get';
-        return this.api.request(method, this.path);
+        return new Promise((resolve) => {
+            this.api.request(method, this.path).then((response) => {
+                if (isDeviceDataArrayValid(response)) {
+                    resolve (JSON.parse(response));
+                }
+            })
+        }) 
     }
     public createDevice(name: string, color: string): Promise<DeviceData> {
         const method: Method = 'post';
@@ -41,4 +48,5 @@ export class DeviceService implements IDeviceService {
         const method: Method = 'delete';
         return this.api.request(method, path);
     }
+
 }
