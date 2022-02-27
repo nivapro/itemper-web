@@ -165,7 +165,7 @@ export class BtService {
       const characteristic = await service.getCharacteristic(DeviceNameUUID);
       return new DeviceNameCharacteristic(characteristic);
     } catch {
-      log.info('bluetooth-service.getDeviceName: catched error');
+      log.info('bluetooth-service.getDeviceName: cached error');
       throw new Error ('Cannot get device name characteristic');
     }
   }
