@@ -15,4 +15,6 @@ COPY . .
 # Build itemper-web
 RUN npm run build
 
+RUN chmod 755 ./deploy.sh 
+
 ENTRYPOINT ./deploy.sh
