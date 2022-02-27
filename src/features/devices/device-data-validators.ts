@@ -71,12 +71,17 @@ export function isDeviceDataValid(raw: unknown): boolean {
         valid = valid
         && 'deviceID' in data && typeof data.deviceID === 'string'
         && 'name' in data && typeof data.name === 'string'
-        && 'color' in data && typeof data.name === 'string'
         && 'key' in data && typeof data.key === 'string';
+        if ('color' in data) {
+            valid = valid && typeof data.color === 'string';
+        } else {
+            data['color'] = '#00FF00AA' //TODO: Remove when all devices created with colors
+        }
         if ('statusTime' in data) {
-            valid = valid
-            && typeof data.statusTime === 'number'
-            && 'deviceData' in data && isValidDeviceDataLog(data.deviceData);
+            valid = valid && typeof data.statusTime === 'number';
+        }
+        if ('deviceData' in data) {
+            valid = valid && isValidDeviceDataLog(data.deviceData);
         }
         if (!valid) {
             log.error('device-data-validators.isDeviceDataValid - not valid');
