@@ -32,6 +32,8 @@
         </v-stepper-content>
 </template>
 <script lang="ts">
+import { Vue } from 'vue-property-decorator';
+
 import { ref, defineComponent} from '@vue/composition-api';
 import { WiFiWriteData } from './device-data';
 import { useBluetooth } from './use-bluetooth';
@@ -55,17 +57,19 @@ export default defineComponent({
   },
 
   setup(props, context) {
-    const { deviceState } = useDeviceState();
+    const { deviceState, getDevice } = useDeviceState();
     const  { current, deviceName, deviceColor, available } = useBluetooth();
     const loading = ref(false);
     const updated = ref(false);
 
     async function syncColor(event: string) {
       const cached = deviceState.deviceData.color.slice();
+      const dev = getDevice();
       try {
             loading.value = true;
             deviceState.deviceData.color = event.slice();
             await deviceColor().writeValue({color: deviceState.deviceData.color});
+            await Vue.$store.devices.updateColor (deviceState.deviceData.color, dev);
         } catch {
             deviceState.deviceData.color = cached;
         } finally {
@@ -74,37 +78,28 @@ export default defineComponent({
     }
     async function syncName(event: string) {
       const cached = deviceState.deviceData.name.slice();
+      const dev = getDevice();
       try {
             loading.value = true;
             deviceState.deviceData.name = event.slice();
             await deviceName().writeValue({name: deviceState.deviceData.name});
+            await Vue.$store.devices.renameDevice (deviceState.deviceData.name, dev);
         } catch {
             deviceState.deviceData.color = cached;
         } finally {
           loading.value = false;
         }
     }
-    async function retrieveCurrentWiFiNetwork() {
-      try {
-        const wifi = await current().readValue();
-        deviceState.networks.current.ssid = wifi.ssid;
-        deviceState.networks.current.security = wifi.security;
-        deviceState.networks.current.quality = wifi.quality;
-        deviceState.networks.current.channel = wifi.channel;
-        log.info('device-stepper-content-step2.retrieveCurrentWiFiNetwork deviceState=' +
-                  JSON.stringify(deviceState));
-      } catch (e) {
-        log.error('device-stepper-content-step2.retrieveCurrentWiFiNetwork: e=' + e);
-      }
-    }
     async function syncCurrentNetwork(newWiFi: WiFiWriteData) {
+      const cached = Object.assign({}, deviceState.networks.current);
       try {
           log.debug('device-stepper-content-step2.syncCurrentNetwork: newWiFi=' + JSON.stringify(newWiFi));
           loading.value = true;
           await current().writeValue(newWiFi);
-          await retrieveCurrentWiFiNetwork();
         } catch (e) {
+              deviceState.networks.current = cached;
              log.error('device-stepper-content-step2.syncCurrentNetwork: e=' + e);
+             log.debug('device-stepper-content-step2.syncCurrentNetwork: newWiFi=' + JSON.stringify(newWiFi, undefined, 2));
         } finally {
           loading.value = false;
         }

@@ -13,7 +13,7 @@
             >
               {{ alertMessage }}
             </v-alert>
-            <div v-if="connected && isActionsDone">
+            <div v-if="connected && isAllActionsDone">
                 <v-card-title  class="headline">
                     <v-row>
                       <v-col cols="1"><v-icon color="blue">fab fa-bluetooth</v-icon></v-col>
@@ -104,10 +104,11 @@ export default defineComponent({
   components: { },
 
   setup(props, context) {
-    const { deviceState, resetDeviceState } = useDeviceState();
+    const { deviceState, resetDeviceState, setDevice } = useDeviceState();
 
     const  { btName, connecting, connected, connect, disconnected,
-              disconnect, disconnecting, current, device, available } = useBluetooth();
+              disconnect, disconnecting, current, device, available,
+              deviceKey, deviceName, deviceColor } = useBluetooth();
 
     const newDevice = ref(false);
     const newDeviceKey = ref('');
@@ -186,7 +187,7 @@ export default defineComponent({
     const isFirstActionStarted = computed(() => {
       return actions[0].loading || actions[0].done || actions[0].error;
     });
-    const isActionsDone = computed(() => {
+    const isAllActionsDone = computed(() => {
       let done = true;
       actions.forEach((i) => done = done && i.done);
       return done;
@@ -225,53 +226,42 @@ export default defineComponent({
         actionDone();
         // Action 3: Create device if it does not exist
         nextAction();
-        const existingDevice = Vue.$store.devices.all
-        .filter((dev) => dev.deviceID === deviceState.deviceData.deviceID );
-        if (existingDevice.length !== 0) {
-            const dev = existingDevice[0];
-            deviceState.deviceData.deviceID = dev.deviceID;
-            deviceState.deviceData.key = dev.key;
-            deviceState.deviceData.name = dev.name;
-            deviceState.deviceData.color = dev.color;
+        const existingDevice = Vue.$store.devices.all.filter((dev) => dev.deviceID === deviceState.deviceData.deviceID );
+        if (existingDevice.length === 0) {
+          const name = deviceState.deviceData.name;
+          const color = deviceState.deviceData.color;
 
-            // Write back to the device. 
-            device().writeValue(deviceState.deviceData).then(() => {
-              Vue.$store.notice.publish('Device ' + deviceState.deviceData.name + ' created');
-              actionDone();
-              nextStep(); 
-            }).catch(() => actionError('A device with the same device id found. Cannot Write back to the device, continue configure anyway '))
+          // Create the device and write back to the device
+          const dev = await Vue.$store.devices.createDevice(name, color);
+          log.info('device-stepper-content-step1.scan: - create a new device!');
+          setDevice(dev);
+          deviceState.deviceData.deviceID = dev.deviceID;
+          deviceState.deviceData.key = dev.key;
+          deviceState.deviceData.name = dev.name;
+          deviceState.deviceData.color = dev.color;
 
         } else {
-          const name = deviceState.deviceData.name.length > 3 ? deviceState.deviceData.name : btName.value.replace(' ', '-');
-          const defaultColor = '#00AAAAFF';
-          const color = deviceState.deviceData.color.length === defaultColor.length ? deviceState.deviceData.color : defaultColor;
-          log.info('device-stepper-content-step1.scan: - create a new device!');
-
-            // Create the device and write back to the device
-            Vue.$store.devices.createDevice(name, color)
-            .then((dev: Device) => {
-                deviceState.deviceData.deviceID = dev.deviceID;
-                deviceState.deviceData.key = dev.key;
-                deviceState.deviceData.name = dev.name;
-                deviceState.deviceData.color = dev.color;
-
-                // Write back to the device. 
-                device().writeValue(deviceState.deviceData).then(() => {
-                  Vue.$store.notice.publish('Device ' + deviceState.deviceData.name + ' created');
-                  actionDone();
-                  nextStep(); 
-                })
-
-            })
-            .catch(() => {
-                actionError('Device key could not be created, continue configure anyway');
-            });
+          const dev = existingDevice[0];
+          setDevice(dev);
+          deviceState.deviceData.deviceID = dev.deviceID;
+          deviceState.deviceData.key = dev.key;
+          deviceState.deviceData.name = dev.name;
+          deviceState.deviceData.color = dev.color;
         }
+        // Write back API key to the device. 
+        await deviceKey().writeValue({ key: deviceState.deviceData.key});
+        log.debug('device-stepper-content-step1.scan: new device - writeValue Key ' + deviceState.deviceData.key);
+        await deviceName().writeValue({ name: deviceState.deviceData.name});
+        log.debug('device-stepper-content-step1.scan: new device - writeValue name ' + deviceState.deviceData.name);
+        await deviceColor().writeValue({ color: deviceState.deviceData.color});
+        log.debug('device-stepper-content-step1.scan: new device - writeValue color ' + deviceState.deviceData.color);
 
+        actionDone();
       } catch (e) {
-        actionError((e as string));
-        showAlert(e as string);
-        log.info('device-stepper-content-step1.scan Cannot connect to BLE device, error=' + JSON.stringify(e, null, 2));
+        const errorMsg = e as string;
+        actionError(errorMsg);
+        showAlert(errorMsg);
+        log.error('device-stepper-content-step1.scan Cannot connect to BLE device, error=' + JSON.stringify(e, null, 2));
       }
     }
 
@@ -288,7 +278,7 @@ export default defineComponent({
           deviceState.deviceData.key = deviceConfig.key;
           deviceState.deviceData.color = deviceConfig.color;
         } catch (e) {
-              log.error('device-stepper-content-step1.retriveDeviceData: invalid device data');
+              log.error('device-stepper-content-step1.retriveDeviceData: ' + e);
         }
     }
     async function retrieveCurrentWiFiNetwork() {
@@ -335,7 +325,7 @@ export default defineComponent({
       deviceState.deviceData.key = event.key;
       nextStep();
     }
-    const ready = computed(() => isActionsDone && connected);
+    const ready = computed(() => isAllActionsDone && connected);
 
     const cancel = () => {
       log.info('device-stepper-content-step1.cancel')
@@ -352,7 +342,7 @@ export default defineComponent({
     return {  alert, alertMessage, btName, connecting, connected, deviceState, disconnect, disconnecting,
               disconnected, showNewDeviceDiag,
               ready, scan, deviceCreated, newDeviceName, newDeviceColor, newDeviceKey,
-              cancel, nextStep, activity, actions, isActionsDone, isFirstActionStarted, isActionStarted };
+              cancel, nextStep, activity, actions, isAllActionsDone, isFirstActionStarted, isActionStarted };
   },
 });
 </script>
