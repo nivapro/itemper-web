@@ -9,10 +9,10 @@ COPY package*.json ./
 # install project dependencies
 RUN npm install
 
-# copy project files and folders to the current working directory
+# copy project files and folders to the current working directory, including deploy.sh
 COPY . .
 
 # Build itemper-web
 RUN npm run build
 
-CMD ["./deploy.sh", ""]
+ENTRYPOINT ./deploy.sh
