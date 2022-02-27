@@ -24,7 +24,10 @@ export class DeviceService implements IDeviceService {
         return new Promise((resolve) => {
             this.api.request(method, this.path).then((response) => {
                 if (isDeviceDataArrayValid(response)) {
-                    resolve (JSON.parse(response));
+                    resolve (response);
+                }
+                else {
+                    resolve([]);
                 }
             })
         }) 
