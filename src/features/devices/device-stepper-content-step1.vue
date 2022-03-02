@@ -226,8 +226,10 @@ export default defineComponent({
         actionDone();
         // Action 3: Create device if it does not exist
         nextAction();
-        const existingDevice = Vue.$store.devices.all.filter((dev) => dev.deviceID === deviceState.deviceData.deviceID );
+        const existingDevice = Vue.$store.devices.all.filter((dev) => dev.name === deviceState.deviceData.name );
         if (existingDevice.length === 0) {
+          // No device with the same name exists
+          // We create a new deice with the name (and color) we retrieved from the Bluetooth device.
           const name = deviceState.deviceData.name;
           const color = deviceState.deviceData.color;
 
