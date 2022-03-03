@@ -1,19 +1,5 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="800">
-        <template v-slot:activator="{ on }">
-            <v-fab-transition>
-                <v-btn class="mx-2 elevation-2" 
-                    v-on="on"
-                    fab 
-                    absolute
-                    small
-                    color="#2591E9"
-                    top
-                    left>
-                    <v-icon color="yellow--text">fa-plus</v-icon>
-                </v-btn>
-            </v-fab-transition>
-        </template>
         <v-stepper v-model="step" >
           <v-stepper-header>
             <v-stepper-step :complete="step > 1" step="1">Connect device</v-stepper-step>
@@ -44,29 +30,38 @@
 </template>
 
 <script lang="ts">
-import { ref, computed } from '@vue/composition-api';
+import { ref, computed, watchEffect } from '@vue/composition-api';
 import { defineComponent } from '@vue/composition-api';
 import { useDeviceState } from './use-device-state';
 import DeviceStepperContentStep1 from './device-stepper-content-step1.vue';
 import DeviceStepperContentStep2 from './device-stepper-content-step2.vue';
 
 export default defineComponent({
-  name: 'NewDeviceStepperDialog',
+  name: 'NewDeviceBluetoothDialog',
+  props: {
+    open: { type: Boolean, default: false }
+  },
   components: {
      DeviceStepperContentStep1,
      DeviceStepperContentStep2,
      },
-  setup() {
+  setup(props, context) {
     const step = ref(1);
     const { deviceState } = useDeviceState();
     const ssid = computed(() => deviceState.networks.current.ssid);
     const dialog = ref(false);
+
     const close = () => {
       dialog.value = false;
+      context.emit('close');
     };
+    watchEffect(() => {
+      dialog.value = props.open;
+    })
     const cancel = () => {
       dialog.value = false;
       step.value = 1;
+      context.emit('close');
     };
     const stepBack = () => {
         step.value--;
