@@ -6,10 +6,10 @@
         :iconColor="settingIconColor"
         :isOn="settingOn"
         @change="onChange"
+        off=''
     >
         <v-form v-model="settingValid" ref="form">
         <base-text-field
-            :readonly="!open"
             :label="settingLabel"
             :loading="loading"
             v-model="newSetting"
@@ -54,9 +54,11 @@ export default defineComponent({
           (v) => /^[a-zA-Z0-9-]+$/.test(v) && !!v && v.length >= 4  || 'Must be at least 4-32 characters, alphanumeric and hyphen characters allowed',
         ];
     const syncSetting = () => {
-        if (setting.value !== newSetting.value) {
+        // if (setting.value !== newSetting.value) {
+            // open.value = false;
             context.emit('input', newSetting.value);
-        }
+            context.emit('close');
+        // }
     };
     const onChange = () => {
         open.value = !open.value;

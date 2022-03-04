@@ -2,7 +2,10 @@
     <device-setting
         name="Shared access key"
         :icon="settingIcon"
-        :value=setting :isOn="isOn">
+        :value=setting
+        :isOn="isOn"
+        off=''
+    >
         <div v-if="isOn">
             <p>
                 <span   class="d-inline-block text-truncate" 

@@ -15,6 +15,7 @@ export class Device {
         this.mName = name;
         this.mDeviceID = id;
         this.mColorID = Math.floor(Math.random() * 6);
+        this.mColor = color;
         this.keyStorage = new Storage<string>('itemper-' + id);
         const item =  this.keyStorage.getItem();
         if (item) {

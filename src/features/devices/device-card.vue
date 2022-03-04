@@ -1,16 +1,15 @@
 <template>
-    <v-card>
-        <v-container fill-height fluid :class="color()">
+    <v-card :background-color="backgroundColor()">
+        <v-container fill-height fluid >
             <v-layout fill-height>
                 <v-flex  align-end flexbox>
-                    <span  v-if="!showConfiguration" class="display-1">{{ name() }} </span>
-                    <v-text-field v-else-if="!editName"  class="display-1"
-                                prepend-inner-icon="fa-edit"
-                                v-model="newName"
+                    <v-text-field v-if="!editName"  class="display-1"
+                                :value="name()"
                                 :rules="nameRules"
                                 dense
                                 required
                                 @focus="onEditName()"
+                                :background-color="backgroundColor()"
                     ></v-text-field>                
                     <v-text-field v-else  class="display-1"
                                 prepend-inner-icon="fa-edit"
@@ -23,6 +22,7 @@
                                 append-outer-icon="fa-times"
                                 @click:append="submitName()"
                                 @click:append-outer="cancelEditName()"
+                                :background-color="backgroundColor()"
                     ></v-text-field>
                 </v-flex>
             </v-layout>
@@ -150,9 +150,8 @@ export default class DeviceCard extends Vue {
     public filterSensors(sensors: Sensor[], deviceID: string): Sensor[] {
         return this.sensors.filterByDeviceID(deviceID);
     }
-    public color(): string {
-        const id = this.device.colorID;
-        return 'overlay-' + id.toString();
+    public backgroundColor(): string {
+        return this.device.color;
     }
     public time(date: number): string {
         return new Date(date).toLocaleTimeString();
@@ -162,6 +161,7 @@ export default class DeviceCard extends Vue {
     }
     public onEditName() {
         this.editName = true;
+        this.newName = this.name();
     }
     public cancelEditName() {
             this.newName = this.device.name.slice();

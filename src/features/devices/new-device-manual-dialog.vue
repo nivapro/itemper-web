@@ -22,14 +22,17 @@
               <v-card-text>
                   <device-settings-list>
                       <DeviceNameSetting
+                        off=""
                         :value="name"
                         @input="syncName"
                         />
                       <DeviceColorSetting 
+                        off=""
                         :value="color"
                         @input="syncColor"
                       />
                       <DeviceApiKeySetting
+                        off=""
                         :value="key"
                       />
                   </device-settings-list>
@@ -120,7 +123,7 @@ export default defineComponent({
         loading.value = false;
       } catch (e) {
         loading.value = false;
-        const errorMsg = "Cannot create device: " + e;
+        const errorMsg = "Cannot create device: " + JSON.stringify(e);
         showAlert(errorMsg);
         log.error('ne-device-manual-dialog: Cannot save device, error=' + JSON.stringify(e, null, 2));
       }

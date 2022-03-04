@@ -5,6 +5,7 @@
             v-bind="$attrs"
             dense
             required
+            readonly
             v-bind:value="value"
             @focus="onEdit"
         ></v-text-field>                
@@ -37,10 +38,9 @@ export default defineComponent({
         const data = ref('');
         const onEdit = () => {
             if (!props.readonly) {
-            log.debug('Base-text-field: onEdit');
-            edit.value = true;
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            cached = Object.assign({}, props.value);
+                edit.value = true;
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                cached = Object.assign({}, props.value);
             }
         };
         const showEdit = computed(() => edit.value && !props.readonly );

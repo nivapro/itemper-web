@@ -1,5 +1,5 @@
 <template>
-    <v-expansion-panel  @change="onChange">
+    <v-expansion-panel @change="onChange">
         <v-expansion-panel-header v-slot="{ open }">
             <v-row no-gutters>
                 <v-col cols="1">
@@ -17,7 +17,7 @@
             </v-row>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-                        <v-row no-gutters>
+            <v-row no-gutters>
                 <v-col cols="1"></v-col>
                 <v-col cols="11">
                     <slot>
@@ -29,8 +29,7 @@
     </v-expansion-panel>
 </template>
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
-import { log } from '@/services/logger';
+import { defineComponent, ref, watchEffect } from '@vue/composition-api';
 
 export default defineComponent({
     name: 'DeviceSetting',
@@ -69,8 +68,11 @@ export default defineComponent({
     const onChange = () => {
         context.emit('change');
     };
-    log.debug('DeviceSetting.setup');
-    return { onChange };
+    const offValue = ref('')
+
+    watchEffect(() => offValue.value = props.off);
+
+    return { offValue, onChange };
   },
 });
 </script>
