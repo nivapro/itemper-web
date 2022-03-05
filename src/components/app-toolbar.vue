@@ -26,7 +26,7 @@
             <v-app-bar-nav-icon v-if="state.user.isLoggedIn()" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
             <v-toolbar-title>iTemper</v-toolbar-title>
             <admin-node-env-label v-if="development"/>
-            <app-toolbar-label color="green">{{activeState}}</app-toolbar-label>
+            <app-toolbar-label color="green">{{activityStatus}}</app-toolbar-label>
             <v-spacer></v-spacer>
             <v-btn  v-if="state.user.isLoggedOut()" outlined class="signlog" @click="signup">Sign up</v-btn>
             <v-btn  v-if="state.user.isLoggedOut()" transition="scale-transition" outlined class="signlog" @click="login">Login</v-btn>
@@ -53,7 +53,7 @@
 </template>
 <script lang="ts">
 import {config} from '@/config';
-import { computed, defineComponent, ref } from '@vue/composition-api';
+import { computed, defineComponent, ref, watch } from '@vue/composition-api';
 import { router, isPublicPath } from '@/router';
 import { log } from '@/services/logger';
 
@@ -79,7 +79,7 @@ export default defineComponent({
         },
 
     setup(props, context) {
-        const { state, startRetrieveState, stopRetrieveState, retrievingState, resetState } = useState('toolbar');
+        const { state, startRetrieveState, stopRetrieveState, retrieving, resetState } = useState('toolbar');
         const development = config.development;
         const drawer = ref(false);
         const tabs = ref(-1);
@@ -104,8 +104,17 @@ export default defineComponent({
                 router.push({name: item.route});
             }
         };
-        const status = computed(() => Status[state.user.status].replace('_', ' ').toLocaleLowerCase());
-        const activeState = computed(() => retrievingState.value ? 'online' : 'offline' );
+        const userStatus = computed(() => Status[state.user.status].replace('_', ' ').toLocaleLowerCase());
+        const activityStatus = computed(() => retrieving.value ? 'online' : 'offline' );
+        watch([retrieving, () => state.user.status], ([retrievingValue, userStatusValue]) => {
+            if (userStatusValue === Status.LOGGED_IN && !retrievingValue) {
+                log.info('app-toolbar: startRetrieveState');
+                startRetrieveState();
+            } else if (retrievingValue) {
+                log.info('app-toolbar: stopRetrieveState');
+                stopRetrieveState();
+            }
+        })
         const signup = () => {
             state.user.status =  Status.LOGGING_IN;
             router.push({name: 'register'});
@@ -122,19 +131,13 @@ export default defineComponent({
                 });
             router.push({name: 'home'});
         };
-        router.beforeEach((to, from, next) => {
-            log.info('location-page: beforeEach' + context.root.$router.currentRoute.path);
-            log.info('location-page: isPublicPath: ' + isPublicPath(to.path));
-            log.info('location-page: retrievingState: ' + JSON.stringify(retrievingState.value));
-            log.info('location-page: state.user.status: ' + Status[state.user.status]);
 
-            if (state.user.status === Status.LOGGED_IN) {
-                if (!retrievingState.value) {
-                    startRetrieveState();
-                } else if (isPublicPath(to.path)) {
-                    stopRetrieveState();
-                }
-            }
+        router.beforeEach((to, from, next) => {
+            log.info('app-toolbar: beforeEach' + context.root.$router.currentRoute.path);
+            log.info('app-toolbar: isPublicPath: ' + isPublicPath(to.path));
+            log.info('app-toolbar: retrievingState: ' + JSON.stringify(retrieving.value));
+            log.info('app-toolbar: state.user.status: ' + Status[state.user.status]);
+
             next();
         });
         const showFab = computed(() => tabs.value === 1 || tabs.value === 2);
@@ -146,9 +149,8 @@ export default defineComponent({
             }
         });
         return  {
-                    activeFab, activeState, development, drawer, login, logout, menuItemClicked, menuItems, name,
-                    state, status, signup, showFab, tabs, tabItems,
-                    retrievingState,
+                    activeFab, activityStatus, development, drawer, login, logout, menuItemClicked, menuItems, name,
+                    state, signup, showFab, tabs, tabItems, userStatus
                 };
     },
 });
