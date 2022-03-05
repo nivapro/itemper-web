@@ -42,10 +42,9 @@ let timerStarted = false;
 export function useState(moduleName: string) {
     log.info('store.useState: reactive store in ' + moduleName);
     const state = reactive(store);
-    const started = ref(timerStarted);
+    const retrieving = ref(timerStarted);
     const counter = ref(0)
     const lastTime = ref(Date.now());
-    const retrievingState = computed (() => started.value);
     const Count = computed(() => counter.value)
     const Age = computed(() => Date.now() - lastTime.value)
 
@@ -65,7 +64,7 @@ export function useState(moduleName: string) {
 
     const startRetrieveState = () => {
         log.info('store.useState.startRetrieveState');
-        if (!started.value) {
+        if (!retrieving.value) {
             retrieveState();
             // And then do it at regular intervals
             timer = setInterval(() => retrieveState(), 1000 * state.settings.interval);
@@ -74,9 +73,9 @@ export function useState(moduleName: string) {
     };
     const stopRetrieveState = () => {
         log.info('store.useState.stopRetrieveState');
-        if (started.value) {
+        if (retrieving.value) {
             clearInterval(timer);
-            started.value = false;
+            retrieving.value = false;
         }
     };
 
@@ -88,7 +87,7 @@ export function useState(moduleName: string) {
         state.user.reset();
     };
 
-    return { Age, Count, state, startRetrieveState, stopRetrieveState, resetState, retrievingState };
+    return { Age, Count, state, startRetrieveState, stopRetrieveState, resetState, retrieving };
 }
 export function reset() {
     Vue.$store.admin.reset();
