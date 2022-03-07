@@ -124,7 +124,7 @@ export default class AdminLogLevelMenu extends Vue {
         });
     }
     private setLoggingTimeout() {
-        const timeout = 60_000;
+        const timeout = 300_000;
         setTimeout(() => {this.resetLogging(); }, timeout);
     }
     private resetErrorMsg(): void {
