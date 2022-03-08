@@ -58,6 +58,7 @@ import { Location } from '@/features/locations';
 
 type BooleanOrString = boolean | string;
 type ValidationFunction = (value: string) => BooleanOrString;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FileValidationFunction = (value: any) => BooleanOrString;
 @Component({})
 export default class NewLocationCard extends Vue {
@@ -96,7 +97,7 @@ export default class NewLocationCard extends Vue {
             locationImage: null,
         };
     }
-    public image(id: number): string {
+    public image(): string {
             return '/img/' + 'uterum' + '.jpg';
     }
     public rgba() {
