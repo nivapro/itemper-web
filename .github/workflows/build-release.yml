@@ -34,12 +34,12 @@ jobs:
       run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
     - name: Build docker image
       run: docker build . --file Dockerfile --tag itemper
-    - name: Tag image with github SHA and latest
+    - name: Tag image
       run: |
-          docker tag itemper ${{ secrets.DOCKER_USER }}/itemper-web:${{ github.sha }}
+          docker tag itemper ${{ secrets.DOCKER_USER }}/itemper-web:v$(node -p "require('./package.json').version")
           docker tag itemper ${{ secrets.DOCKER_USER }}/itemper-web:latest
     - name: Push image to Docker hub
       run: |
-          docker push ${{ secrets.DOCKER_USER }}/itemper-web:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USER }}/itemper-web:v$(node -p "require('./package.json').version")
           docker push ${{ secrets.DOCKER_USER }}/itemper-web:latest
 

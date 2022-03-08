@@ -1,20 +1,14 @@
 FROM node:lts-alpine
+RUN apk update && apk upgrade && apk add bash
 
 # Defines our working directory in container
-WORKDIR /itemper-web
-
-# copy both 'package.json' and 'package-lock.json' (if available)
-COPY package*.json ./
-
-# install project dependencies
-RUN npm install
+WORKDIR /itemper
 
 # copy project files and folders to the current working directory, including deploy.sh
-COPY . .
+COPY dist dist/
 
-# Build itemper-web
-RUN npm run build
+COPY deploy.sh .
 
-RUN chmod 755 ./deploy.sh 
+RUN chmod 755 deploy.sh
 
-ENTRYPOINT ./deploy.sh
+ENTRYPOINT [ "./deploy.sh" ]
