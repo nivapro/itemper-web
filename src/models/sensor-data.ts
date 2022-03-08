@@ -4,11 +4,15 @@ export enum Category {
     AbsoluteHumidity = 'AbsoluteHumidity',
     RelativeHumidity = 'RelativeHumidity',
     WindSpeed = 'WindSpeed',
+    rssi = 'rssi',
     Humidity = 'Humidity',
     AirPressure = 'AirPressure',
     AccelerationX = 'AccelerationX',
     AccelerationY = 'AccelerationY',
     AccelerationZ = 'AccelerationZ',
+    Battery = 'Battery',
+    TxPower = 'TxPower',
+    MovementCounter = 'MovementCounter',
     Other = 'Other',
 }
 export interface Sample {
@@ -42,23 +46,3 @@ export interface SensorData {
 export interface ISensorDesc {
     desc: Descriptor;
 }
-
-// deviceID: String,
-// desc: {
-//   SN: String,
-//   port: Number
-// },
-
-// attr: {
-//   model: String,
-//   category: String,
-//   accuracy: Number,
-//   resolution: Number,
-//   maxSampleRate: Number
-// },
-
-// samples: [{
-//   _id: false,  // if true, Mongodb creates _id implicitly. We do not want that here
-//   date: Number,
-//   value: Number
-// }]
