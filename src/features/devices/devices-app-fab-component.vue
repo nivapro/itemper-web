@@ -9,7 +9,7 @@
                     absolute
                     small
                     color="blue"
-                    top
+                    bottom
                     left>
                     <v-icon color="white">fa-plus</v-icon>
                 </v-btn>
@@ -47,11 +47,11 @@ interface MenuItem {
 export default defineComponent({
   name: 'NewDeviceMenu',
   components: { NewDeviceBluetoothDialog, NewDeviceManualDialog },
-  setup() {
+  setup(props, context) {
 
     const  menuItems = reactive([
       { action: 'fab fa-bluetooth', title: 'Hitta en enhet med Bluetooth',  color: 'blue', show: false},
-      { action: 'fa-home', title: 'Skapa en enhet manuellt',  color: 'blue-grey darken-2', show: false},
+      { action: 'fa-pen', title: 'Skapa en enhet manuellt',  color: 'blue-grey darken-2', show: false},
     ]);
 
     const openBluetoothDialog = computed(() => menuItems[0].show);
@@ -64,6 +64,7 @@ export default defineComponent({
 
     const close = () => { 
       menuItems.forEach((i) => i.show = false)
+      context.emit('close')
     };
 
     return { close, menuItems, menuItemClicked, openBluetoothDialog, openManualDialog} ;

@@ -47,7 +47,9 @@
                 </v-tab>
                 <v-tabs-slider color="pink"></v-tabs-slider>
                 </v-tabs>
+                <AppFabBtn :route ="currentRoute"/>
             </template>
+            
         </v-app-bar>
     </div>
 </template>
@@ -62,6 +64,7 @@ import { useState } from '@/store/store';
 
 import AdminNodeEnvLabel from '@/features/admin/admin-node-env-label.vue';
 import AppToolbarLabel from '@/components/app-toolbar-label.vue';
+import AppFabBtn from '@/components/app-fab-btn.vue';
 
 
 interface MenuItem {
@@ -75,6 +78,7 @@ export default defineComponent({
     name: 'AppToolbar',
     components: {
             AdminNodeEnvLabel,
+            AppFabBtn,
             AppToolbarLabel,
         },
 
@@ -97,6 +101,8 @@ export default defineComponent({
 
         const name = computed(() => state.user.credentials.mEmail);
 
+        const currentRoute = ref('');
+        
         const menuItemClicked = (item: MenuItem) => {
             if (item.route === 'logout') {
                 logout();
@@ -131,7 +137,9 @@ export default defineComponent({
                 });
             router.push({name: 'home'});
         };
-
+        router.afterEach((to)=> {
+            currentRoute.value = to.name || '';
+        })
         router.beforeEach((to, from, next) => {
             log.info('app-toolbar: beforeEach' + context.root.$router.currentRoute.path);
             log.info('app-toolbar: isPublicPath: ' + isPublicPath(to.path));
@@ -140,7 +148,6 @@ export default defineComponent({
 
             next();
         });
-        const showFab = computed(() => tabs.value === 1 || tabs.value === 2);
         const activeFab = computed (() => {
             switch (tabs.value) {
             case 1 : return { color: 'red', icon: 'fa-plus' };
@@ -149,8 +156,8 @@ export default defineComponent({
             }
         });
         return  {
-                    activeFab, activityStatus, development, drawer, login, logout, menuItemClicked, menuItems, name,
-                    state, signup, showFab, tabs, tabItems, userStatus
+                    activeFab, activityStatus, currentRoute, development, drawer, login, logout, menuItemClicked, menuItems, name,
+                    state, signup, tabs, tabItems, userStatus
                 };
     },
 });

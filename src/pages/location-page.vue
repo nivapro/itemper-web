@@ -1,6 +1,5 @@
 <template>
         <v-row>
-            <NewLocationDialog/>
             <v-col v-for="(item,id) in state.locations.all" :key="id">
                 <location-card  
                     :location="item"
@@ -24,12 +23,10 @@ import { log } from '@/services/logger';
 
 // Child components
 import LocationCard from '../features/locations/location-card.vue'
-import NewLocationDialog from '../features/locations/new-location-dialog.vue';
-
 
 export default defineComponent({
   name: 'LocationPage',
-  components: { LocationCard, NewLocationDialog },
+  components: { LocationCard },
 
   setup() {
 

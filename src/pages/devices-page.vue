@@ -1,6 +1,5 @@
 <template>
     <div>
-        <NewDeviceMenu/>
         <v-container fluid grid-list-md>
             <v-layout row wrap>
                 <v-flex v-for="(item,id) in state.devices.all" :key="id">
@@ -26,10 +25,9 @@ import { useState } from '@/store/store';
 import { log } from '@/services/logger';
 // Child components
 import DeviceCard from '@/features/devices/device-card.vue';
-import NewDeviceMenu from '@/features/devices/new-device-menu.vue';
 export default defineComponent({
   name: 'DevicesPage',
-  components: { DeviceCard, NewDeviceMenu },
+  components: { DeviceCard },
 
   setup() {
     const { state } = useState('device-page');

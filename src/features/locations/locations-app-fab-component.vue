@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" @close="closeDialog" @cancel="closeDialog" persistent max-width="800">
+    <v-dialog v-model="dialog"  persistent max-width="800">
         <template v-slot:activator="{ on }">
             <v-fab-transition>
                 <v-btn class="mx-2 elevation-2" 
@@ -7,34 +7,36 @@
                     fab 
                     absolute
                     small
-                    color="#2591E9"
-                    top
+                    color="blue"
+                    bottom
                     left>
-                    <v-icon color="yellow--text">fa-plus</v-icon>
+                    <v-icon color="white">fa-plus</v-icon>
                 </v-btn>
             </v-fab-transition>
         </template>
-        <slot></slot>
+        <new-location-card @close="closeDialog" />
     </v-dialog>
 </template>
 <script lang="ts">
 import { ref, defineComponent } from '@vue/composition-api';
-import {log} from '@/services/logger';
+
+import NewLocationCard from '@/features/locations/new-location-card.vue';
+
 export default defineComponent({
-    name: 'NewItemDialogue',
+    name: 'LocationsAppFabComponent',
+    components: {
+        NewLocationCard,
+    },
 
-    setup() {
+    setup(props, context) {
         const dialog =  ref(false);
+
         const closeDialog = () => {
-            log.info('new-item-dialog. closeDialog, dialog=false');
             dialog.value = false;
-        };
-        const cancelDialog = () => {
-            log.info('new-item-dialog. cancelDialog, dialog=false');
-            dialog.value = false;
+            context.emit('close')
         };
 
-        return { closeDialog, dialog, cancelDialog};
+        return { closeDialog, dialog };
     },
 });
 </script>
