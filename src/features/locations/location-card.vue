@@ -1,17 +1,11 @@
 <template>
 <div>
-    <v-card>
-        <v-container >
-            <v-img class="white--text" :src="locationImage()"  :height="height" >
+    <v-card :color="location.color">
+            <v-img  class="d-flex align-center white-text" :src="locationImage()"  :height="height" >
                     <v-fade-transition>
-                        <v-overlay
-                            absolute
-                            :color="location.color"
-                            opacity="0.8"
-                        >
-                            <v-container fluid>
+                            <v-container>
                                 <v-row>
-                                    <v-col align-self="start">
+                                    <v-col class="d-flex justify-center">
                                         <v-card light v-show="editSensors">
                                             <v-card-text transition="slide-y-transition">
                                             <v-list style="max-height: 300px" class="overflow-y-auto">
@@ -100,14 +94,14 @@
                                                 </v-btn>
                                             </v-card-actions>
                                         </v-card>
-                                        <div v-show="showConfiguration && !editFile && !editColor && !editSensors">
-                                            <v-btn  class="ma-2"  icon @click.native="onEditSensors()">
+                                        <div v-show="showConfiguration && !editFile && !editColor && !editSensors" :style="overlay()">
+                                            <v-btn  class="white--text"  icon @click.native="onEditSensors()">
                                                 <v-icon x-large>fa-biohazard</v-icon>
                                             </v-btn>
-                                            <v-btn  class="ma-2"  icon @click.native="onEditFile()">
+                                            <v-btn  class="white--text"  icon @click.native="onEditFile()">
                                                 <v-icon x-large>fa-file-image</v-icon>
                                             </v-btn>
-                                            <v-btn class="ma-2"  icon @click.native="onEditColor()">
+                                            <v-btn class="white--text"  icon @click.native="onEditColor()">
                                                 <v-icon x-large>fa-fill</v-icon>
                                             </v-btn>
                                         </div>
@@ -115,15 +109,13 @@
                                     </v-col>
                                 </v-row>
                             </v-container>
-                        </v-overlay>
                     </v-fade-transition>
             </v-img>
-            
-        </v-container>
-        <v-card-title primary-title>
+
+        <v-card-title primary-title class="white--text" :style="overlay()">
             <div>
                 <div v-if="!showConfiguration" class="headline">{{ location.name }}</div>
-                <v-text-field v-else-if="!editName"  class="headline"
+                <v-text-field v-else-if="!editName"  class="headline white--text"
                             prepend-inner-icon="fa-edit"
                             v-model="locationName"
                             :rules="nameRules"
@@ -131,7 +123,7 @@
                             required
                             @focus="onEditName()"
                 ></v-text-field>                
-                <v-text-field v-else  class="headline"
+                <v-text-field v-else  class="headline white--text"
                             prepend-inner-icon="fa-edit"
                             v-model="locationName"
                             :rules="nameRules"
@@ -146,13 +138,13 @@
             </div>
         </v-card-title>
         <v-card-actions v-if="showConfiguration">
-                <v-btn text :disabled="showConfiguration && (submitted || editSensors || editColor || editFile)" color="orange" @click.native="toggleConfiguration()">Stäng</v-btn>
+                <v-btn text :disabled="showConfiguration && (submitted || editSensors || editColor || editFile)" class="white--text" @click.native="toggleConfiguration()">Stäng</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn text :disabled="showConfiguration && (submitted || editSensors || editColor || editFile)" color="orange" @click.native="deleteLocation()">Radera</v-btn>
+                <v-btn text :disabled="showConfiguration && (submitted || editSensors || editColor || editFile)" class="white--text" @click.native="deleteLocation()">Radera</v-btn>
         </v-card-actions>
         <v-card-actions v-else>
             <div>
-                <v-btn text :disabled="showConfiguration && (submitted || editSensors || editColor || editFile)" color="orange" @click.native="toggleConfiguration()">Ändra</v-btn>
+                <v-btn text :disabled="showConfiguration && (submitted || editSensors || editColor || editFile)" class="white--text"  @click.native="toggleConfiguration()">Ändra</v-btn>
             </div>
         </v-card-actions>
     </v-card>
@@ -402,7 +394,7 @@ export default class LocationCard extends Vue {
          }
     }
     public overlay() {
-        return 'background-color: ' + hexToRgba(this.location.color, 0.3);
+        return 'background-color: ' + hexToRgba(this.location.color, 0.4);
     }
     public mounted() {
         log.debug('location-card.mounted');
