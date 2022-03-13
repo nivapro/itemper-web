@@ -31,20 +31,17 @@
             <template v-slot:default>
                 <thead>
                 <tr>
-                    <th class="text-left">Givare</th>
                     <th class="text-left">Modell</th>
                     <th class="text-left">Kategori</th>
                     <th class="text-left">Plats</th>
                     <th class="text-left">Senaste mätvärde</th>
                     <th class="text-left">Tidpunkt</th>
-                    <th class="text-left">Nogrannhet, decimaler</th>
-                    <th class="text-left">Max samplingsfrekv. (Hz)</th>
                     <th class="text-left">Antal mätvärden</th>
+                    <th class="text-left">Givare</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-for="(item,id) in state.sensors.filterByDeviceID(device.deviceID)" :key="id" >
-                    <td>{{ item.desc.SN + '/' +  item.desc.port }}</td>
                     <td>{{ item.attr.model }}</td>
                     <td>{{ item.attr.category }}</td>
                     <td>{{ locationName(item) }}</td>
@@ -56,9 +53,8 @@
                         <span v-if="item.samples.length > 0">{{ time(item.samples[item.samples.length-1].date) }}</span>
                         <span v-else>-</span>
                     </td>
-                    <td>{{ item.attr.accuracy }}</td>
-                    <td>{{ item.attr.maxSampleRate }}</td>
                     <td>{{ item.samples.length }}</td>
+                    <td>{{ item.desc.SN + '/' +  item.desc.port }}</td>
                 </tr>
                 </tbody>
             </template>
