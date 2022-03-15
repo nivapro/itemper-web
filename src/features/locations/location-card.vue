@@ -105,8 +105,8 @@
                                                 <v-icon x-large>fa-fill</v-icon>
                                             </v-btn>
                                         </div>
-                                        <SensorTable v-show="!editSensors" :sensors="location.sensors"
-                                                     :style="sensorTableStyle()"
+                                        <SensorTable v-show="!editSensors" :location="location"
+                                                     :backgroundStyle="sensorTableStyle()"
                                         ></SensorTable>
                                     </v-col>
                                 </v-row>
