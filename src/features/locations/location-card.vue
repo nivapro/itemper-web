@@ -2,13 +2,10 @@
 <div>
     <v-card>
         <v-container >
-            <v-img class="white--text" :src="locationImage()"  :height="height" >
+            <v-img class="white--text" :src="locationImage()"  :height="height"
+             :gradient="imageGradient()"
+            >
                     <v-fade-transition>
-                        <v-overlay
-                            absolute
-                            :color="location.color"
-                            opacity="0.8"
-                        >
                             <v-container fluid>
                                 <v-row>
                                     <v-col align-self="start">
@@ -111,11 +108,12 @@
                                                 <v-icon x-large>fa-fill</v-icon>
                                             </v-btn>
                                         </div>
-                                        <SensorTable v-show="!editSensors" :sensors="location.sensors"></SensorTable>
+                                        <SensorTable v-show="!editSensors" :sensors="location.sensors"
+                                                     :style="sensorTableStyle()"
+                                        ></SensorTable>
                                     </v-col>
                                 </v-row>
                             </v-container>
-                        </v-overlay>
                     </v-fade-transition>
             </v-img>
             
@@ -180,6 +178,7 @@ import { log } from '@/services/logger';
 import {json } from '@/helpers';
 
 import SensorTable from './location-sensor-table.vue';
+import highchart from '../../components/history-chart.vue';
 type BooleanOrString = boolean | string;
 type ValidationFunction = (value: string) => BooleanOrString;
 interface FileProperties {
@@ -189,7 +188,7 @@ interface FileProperties {
 }
 type FileValidationFunction = (value: FileProperties) => BooleanOrString;
 @Component({
-    components: { SensorTable },
+    components: { highchart, SensorTable },
 })
 export default class LocationCard extends Vue {
 
@@ -403,6 +402,12 @@ export default class LocationCard extends Vue {
     }
     public overlay() {
         return 'background-color: ' + hexToRgba(this.location.color, 0.3);
+    }
+    public imageGradient() {
+        return 'to top right, ' + hexToRgba(this.location.color, 0.7) + ', ' + hexToRgba(this.location.color, 0.7); 
+    }
+    public sensorTableStyle() {
+        return 'background-color: ' + hexToRgba(this.location.color, 0.9) +';'
     }
     public mounted() {
         log.debug('location-card.mounted');

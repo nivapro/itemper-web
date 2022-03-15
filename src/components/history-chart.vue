@@ -10,15 +10,14 @@ import VueHighcharts from 'vue-highcharts';
 Vue.use(VueHighcharts);
 import * as moment from 'moment-timezone';
 
-import hexToRgba from 'hex-to-rgba';
 
-import {Vue, Component, Watch, Prop} from 'vue-property-decorator';
+import {Vue, Component, Prop} from 'vue-property-decorator';
 
 
 
 // Models
 // import * as locations from '@/models/locations'
-import { SensorLog, Sample, Category } from '@/models/sensor-data';
+import { Sample, Category } from '@/models/sensor-data';
 import { Sensor } from '@/models/sensor';
 
 import { Settings } from '@/store/settings';
@@ -38,8 +37,8 @@ export default class HistoryChart extends Vue {
 
    // log.debug('locationCard sensor=' + JSON.stringify());
 
-    public showHistory: boolean = false;
-    public showMonitor: boolean = false;
+    public showHistory = false;
+    public showMonitor = false;
 
 
     public mounted() {
@@ -52,8 +51,8 @@ export default class HistoryChart extends Vue {
     }
 
     public options(): any {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         const self = this;
-
         return {
             chart: {
                 backgroundColor: 'rgba(255, 255, 255, 0.0)',

@@ -47,6 +47,9 @@ export class Sensors  {
     public set all(value: Sensor[]) {
         Vue.set(this, 'mAll', value);
     }
+    public get length(): number {
+        return this.mAll.length;
+    }
     public get error(): boolean {
         return this.mError;
     }

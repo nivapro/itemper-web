@@ -1,5 +1,5 @@
 <template>
-    <v-simple-table v-if="sensorCount() > 0"  style="background-color: rgba(100, 100, 100, 0.1);">
+    <v-simple-table v-if="sensorCount() > 0"  :style="style">
         <template v-slot:default>
             <tbody>
             <tr v-for="item in sensors" :key="item._id">
@@ -26,6 +26,7 @@ import * as utils from '@/helpers';
 export default class SensorTable extends Vue {
 
     @Prop() public sensors!: Sensor[];
+    @Prop() public style = 'background-color: rgba(100, 100, 100, 0.1);';
 
     public state = Vue.$store;
     public settings: Settings = Vue.$store.settings;
