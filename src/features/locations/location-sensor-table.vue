@@ -1,10 +1,9 @@
 <template>
     <v-simple-table v-if="sensorCount > 0"  >
         <template v-slot:default>
-            <tbody class="text--left text--white" :style="background" >
+            <tbody :style="background" >
             <tr v-for="item in sensors" :key="item._id">
-                <td class="text--left text--white">{{ sampleValue(item) }}</td>
-                <td class="text--left text--white">{{ sampleTime(item)}}</td>
+                <td class="text--left text-md-h3">{{ sampleValue(item) }}</td>
             </tr>
             </tbody>
         </template>
