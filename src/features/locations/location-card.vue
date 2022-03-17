@@ -6,19 +6,21 @@
         <v-card-title primary-title class="headline white--text" :style="overlay()">
             <div>
                 <div v-if="!showConfiguration">{{ location.name }}</div>
-                <v-text-field v-else-if="!editName"  class="headline white--text"
+                <v-text-field v-else-if="!editName"  class="headline"
                             prepend-inner-icon="fa-edit"
                             v-model="locationName"
                             :rules="nameRules"
                             dense
+                            dark
                             required
                             @focus="onEditName()"
                 ></v-text-field>                
-                <v-text-field v-else  class="headline white--text"
+                <v-text-field v-else  class="headline"  
                             prepend-inner-icon="fa-edit"
                             v-model="locationName"
                             :rules="nameRules"
                             dense
+                            dark
                             required
                             :loading="submitted"
                             append-icon="fa-check"
@@ -87,12 +89,12 @@
         <SensorTable v-show="!showConfiguration" :location="location"
                     :backgroundStyle="sensorTableStyle()"
         ></SensorTable>
-        <v-card-actions v-if="showConfiguration">
+        <v-card-actions v-if="showConfiguration" class="d-flex align-end">
                 <v-btn text :disabled="showConfiguration && (submitted || editSensors || editColor || editFile)" class="white--text" @click.native="toggleConfiguration()">Stäng</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn text :disabled="showConfiguration && (submitted || editSensors || editColor || editFile)" class="white--text" @click.native="deleteLocation()">Radera</v-btn>
         </v-card-actions>
-        <v-card-actions v-else>
+        <v-card-actions v-else class="d-flex align-end">
             <div>
                 <v-btn text :disabled="showConfiguration && (submitted || editSensors || editColor || editFile)" class="white--text"  @click.native="toggleConfiguration()">Ändra</v-btn>
             </div>
