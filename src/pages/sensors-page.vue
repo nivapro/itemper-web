@@ -9,7 +9,7 @@
 </template>
 <script lang="ts">
 import { Vue } from 'vue-property-decorator';
-import { computed, defineComponent, onMounted } from '@vue/composition-api';
+import { defineComponent, onMounted, reactive, ref, watchEffect } from '@vue/composition-api';
 
 import { SensorData, Category } from '@/models/sensor-data';
 import { useSensors } from '../features/sensors/sensors-store';
@@ -29,7 +29,7 @@ export default defineComponent({
 
   setup() {
     const state  = useSensors();
-    const sensors = state.sensors;
+    const sensors = reactive(state.sensors);
     const  headers = [
           {
             text: 'Givare',
@@ -42,8 +42,10 @@ export default defineComponent({
           { text: 'Ålder', value: 'age' },
           { text: 'Antal', value: 'count' },
         ];
-    const items = computed (() =>
-      sensors.map((s) => {
+    let items = ref([] as Item[]);
+
+    watchEffect (() =>
+      items.value = sensors.map((s) => {
             const item: Item = {
               name: name(s),
               category: category(s),
