@@ -46,21 +46,24 @@ export default defineComponent({
           { text: 'Antal', value: 'count' },
         ];
     let items = ref([] as Item[]);
-    const updateInterval = 10_000;
-    setInterval(() => {
-            items.value = state.sensors.all.map((s) => {
-            const item: Item = {
-              name: name(s),
-              category: category(s),
-              sample: sample(s),
-              time: time(s),
-              age: age(s),
-              count: count(s),
-            };
-            return item;
-      })
-    }, updateInterval)
 
+    const updateItems = () => {
+      items.value = state.sensors.all.map((s) => {
+        const item: Item = {
+            name: name(s),
+            category: category(s),
+            sample: sample(s),
+            time: time(s),
+            age: age(s),
+            count: count(s),
+        };
+        return item;
+      });
+    };
+    updateItems();
+    const updateInterval = 10_000;
+    setInterval(() => updateItems, updateInterval)
+    
     const name = (sensor: SensorData) => {
       return sensor.attr.model + ':' + sensor.desc.SN + '/' + sensor.desc.port;
     };
