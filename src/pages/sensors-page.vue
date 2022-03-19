@@ -1,24 +1,20 @@
 <template>
     <div>
         <v-container>
-            <v-layout row>
-                  <h1>Sensors</h1>
-                  <v-data-table
-                  :headers="headers"
-                  :items="items"
-                  />
-            </v-layout>
+          <h1>Sensors</h1>
+          <v-data-table
+            :headers="headers"
+            :items="items"
+          />
         </v-container>
     </div>
 </template>
 <script lang="ts">
-import { Vue } from 'vue-property-decorator';
-import { defineComponent, ref, watch } from '@vue/composition-api';
+import { defineComponent, ref } from '@vue/composition-api';
 
-import { SensorData, Category } from '@/models/sensor-data';
+import { SensorData } from '@/models/sensor-data';
 import { useState } from '@/store/store';
 
-import { log } from '@/services/logger';
 interface Item {
     name: string,
     category: string,
@@ -63,7 +59,7 @@ export default defineComponent({
     updateItems();
     const updateInterval = 10_000;
     setInterval(() => updateItems, updateInterval)
-    
+
     const name = (sensor: SensorData) => {
       return sensor.attr.model + ':' + sensor.desc.SN + '/' + sensor.desc.port;
     };
