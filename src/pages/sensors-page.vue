@@ -68,7 +68,7 @@ export default defineComponent({
       return sensor.attr.category.toString();
     }
     const sample = (sensor: SensorData) => {
-      const unitSymbol = Vue.$store.settings.unit(Category.Temperature);
+      const unitSymbol = state.settings.unit(sensor.attr.category);
       if (sensor.samples.length > 0) {
         const lastSample = sensor.samples[sensor.samples.length - 1];
         return lastSample.value.toPrecision(3) + unitSymbol;
