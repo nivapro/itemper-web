@@ -2,6 +2,7 @@
   <v-container>
     <h1>Sensors</h1>
     <v-data-table
+      dense 
       :headers="headers"
       :items="items"
     />
