@@ -1,13 +1,11 @@
 <template>
-    <div>
-        <v-container>
-          <h1>Sensors</h1>
-          <v-data-table
-            :headers="headers"
-            :items="items"
-          />
-        </v-container>
-    </div>
+  <v-container>
+    <h1>Sensors</h1>
+    <v-data-table
+      :headers="headers"
+      :items="items"
+    />
+  </v-container>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from '@vue/composition-api';
