@@ -1,18 +1,22 @@
 <template>
-  <div class="sensors">
-    <h1>Sensors</h1>
-    <v-data-table
-    :headers="headers"
-    :items="items"
-    />
-  </div>
+    <div>
+        <v-container>
+            <v-layout row>
+                  <h1>Sensors</h1>
+                  <v-data-table
+                  :headers="headers"
+                  :items="items"
+                  />
+            </v-layout>
+        </v-container>
+    </div>
 </template>
 <script lang="ts">
 import { Vue } from 'vue-property-decorator';
-import { defineComponent, onMounted, reactive, ref, watchEffect } from '@vue/composition-api';
+import { defineComponent, ref, watch } from '@vue/composition-api';
 
 import { SensorData, Category } from '@/models/sensor-data';
-import { useSensors } from '../features/sensors/sensors-store';
+import { useState } from '@/store/store';
 
 import { log } from '@/services/logger';
 interface Item {
@@ -28,8 +32,7 @@ export default defineComponent({
   components: {},
 
   setup() {
-    const state  = useSensors();
-    const sensors = reactive(state.sensors);
+    const { state }  = useState('sensor-page');
     const  headers = [
           {
             text: 'Givare',
@@ -43,9 +46,9 @@ export default defineComponent({
           { text: 'Antal', value: 'count' },
         ];
     let items = ref([] as Item[]);
-
-    watchEffect (() =>
-      items.value = sensors.map((s) => {
+    const updateInterval = 10_000;
+    setInterval(() => {
+            items.value = state.sensors.all.map((s) => {
             const item: Item = {
               name: name(s),
               category: category(s),
@@ -56,7 +59,8 @@ export default defineComponent({
             };
             return item;
       })
-    );
+    }, updateInterval)
+
     const name = (sensor: SensorData) => {
       return sensor.attr.model + ':' + sensor.desc.SN + '/' + sensor.desc.port;
     };
@@ -99,10 +103,6 @@ export default defineComponent({
     const count = (sensor: SensorData) => {
       return sensor.samples.length.toString();
     }
-    onMounted(() => {
-      state.getSensorsSamples(10);
-    });
-    log.debug('SensorPage.setup: sensors: ' + JSON.stringify(sensors));
     return { headers, items };
   },
 });
