@@ -21,7 +21,7 @@ export class Settings {
             case Category.Temperature:
                 return '°C';
             case Category.Humidity:
-                return '% RH';
+                return '%';
             case Category.AirPressure:
                 return 'hPA';
         }
