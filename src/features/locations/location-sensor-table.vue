@@ -3,7 +3,10 @@
         <template v-slot:default>
             <tbody :style="background" >
             <tr v-for="item in sensors" :key="item._id">
-                <td class="text--left text-md-h3">{{ sampleValue(item) }}</td>
+                <td>
+                    <span v-if="isTemperatureSensor(item)" class="text--left text-md-h3">{{ sampleValue(item) }}</span>
+                    <span v-else class="text--left text-md-h4">{{ categoryName(item) }} {{ sampleValue(item) }}</span> 
+                </td>
             </tr>
             </tbody>
         </template>
@@ -44,7 +47,11 @@ export default defineComponent({
         } else {
             return props.location.sensors.length;
         }
-    }); 
+    });
+    
+    const isTemperatureSensor = (sensor: Sensor) => {
+        return sensor.attr.category === Category.Temperature;
+    }
 
     const unit = (category: Category): string => {
         return settings.unit(category);
@@ -65,6 +72,16 @@ export default defineComponent({
         }
         return round(value, precision);
     }
+    const categoryName = (sensor: Sensor) => {
+        switch (sensor.attr.category) {
+            case Category.Humidity:
+                return 'Luftfukt. ';
+            case Category.AirPressure:
+                return 'Lufttr. ';
+        }
+        return '';
+    }
+
     const sampleValue = (sensor: Sensor): string => {
         const lastSample = sensor.samples.length;
         if (lastSample > 0) {
@@ -97,7 +114,7 @@ export default defineComponent({
         return Math.round(value * inverse) / inverse;
     }
 
-        return { background, sensors, sensorCount, sampleTime, sampleValue}
+        return { background, categoryName, isTemperatureSensor, sampleTime, sampleValue, sensors, sensorCount }
     }
 });
 

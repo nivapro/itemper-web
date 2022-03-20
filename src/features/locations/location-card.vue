@@ -1,141 +1,128 @@
 <template>
-    <v-card :color="location.color" dark :height="height"  @click.native="toggleConfiguration()">
+    <v-card :color="location.color" dark :height="height">
         <div class="d-flex flex-no-wrap justify-space-between">
             <div>
                 <v-card-title primary-title class="headline" :style="overlay()">
                     <div>
-                        <div v-if="!showConfiguration">{{ location.name }}</div>
-                        <v-text-field v-else-if="!editName"  class="headline"
-                                    prepend-inner-icon="fa-edit"
-                                    v-model="locationName"
-                                    :rules="nameRules"
-                                    dense
-                                    required
-                                    @focus="onEditName()"
-                        ></v-text-field>                
+                        <div v-if="!editName" @click.stop.prevent="onEditName()">{{ location.name }}</div>              
                         <v-text-field v-else  class="headline"
-                                    prepend-inner-icon="fa-edit"
-                                    v-model="locationName"
-                                    :rules="nameRules"
-                                    dense
-                                    required
-                                    :loading="submitted"
-                                    append-icon="fa-check"
-                                    append-outer-icon="fa-times"
-                                    @click:append="submitName()"
-                                    @click:append-outer="cancelEditName()"
+                            prepend-inner-icon="fa-edit"
+                            v-model="locationName"
+                            :rules="nameRules"
+                            dense
+                            required
+                            :loading="submitted"
+                            append-icon="fa-check"
+                            append-outer-icon="fa-times"
+                            @click:append="submitName()"
+                            @click:append-outer="cancelEditName()"
                         ></v-text-field>
                     </div>
                 </v-card-title>
-                <v-fade-transition>
-                    <v-container>
-                        <v-row>
+                <SensorTable @click.stop.prevent="onEditSensors()" :location="location"
+                            :backgroundStyle="sensorTableStyle()"
+                ></SensorTable>
+            </div>
+            <v-avatar :size="height" tile @click.stop.prevent="onEditFile">
+                <v-img  :src="locationImage()">
+                    <v-dialog v-model="editFile"  >
+                        <row class="d-flex align-center">
                             <v-col class="d-flex justify-center">
-                                <v-card light v-show="showConfiguration">
-                                    <v-card-text transition="slide-y-transition">
-                                        <v-list style="max-height: 300px" class="overflow-y-auto">
-                                        <v-list-item-group 
-                                            v-model="seletedSensors"
-                                            max="20"
-                                            multiple
-                                        >
-                                            <template v-for="(sensor, i) in availableSensors">
-                                                <v-list-item
-                                                    :key="`sensor-${i}`"
-                                                    :value="sensor"
-                                                    active-class="deep-purple--text text--accent-4"
-                                                >
-                                                    <v-list-item-content>
-                                                        <v-list-item-title >{{sensorName(sensor)}}</v-list-item-title>
-                                                    </v-list-item-content>
-
-                                                    <v-list-item-action>
-                                                        <v-checkbox
-                                                            :input-value="isSelected(sensor)"
-                                                            :true-value="seletedSensors"
-                                                            color="deep-purple accent-4"
-                                                            @click="toggleSensor(sensor)"
-                                                        ></v-checkbox>
-                                                    </v-list-item-action>
-                                                </v-list-item>
-                                            </template>
-                                        </v-list-item-group>
-                                        </v-list>
+                                <v-card max-width="400px">
+                                    <v-card-text>
+                                        <v-file-input
+                                            :label="'Bakgrundsbild till' + location.name"
+                                            :rules="Filerules"
+                                            accept="image/png, image/jpeg"
+                                            show-size
+                                            counter chips
+                                            v-model="newImage"
+                                            prepend-icon="fa-file-image"
+                                        ></v-file-input>
                                     </v-card-text>
                                     <v-card-actions>
-                                        <v-btn class="ma-2" color="blue" text @click.native="submitSensors()">
+                                        <v-btn class="ma-2" :disabled="!fileFormValid || !this.newImage" color="blue" text @click.stop.prevent="submitFile()">
                                             Spara
                                         </v-btn>
-                                        <v-btn class="ma-2" color="orange" text @click.native="cancelEditSensors()">
+                                        <v-btn class="ma-2" color="orange" text @click.stop.prevent="cancelEditFile()">
                                             Avbryt
                                         </v-btn>                               
                                     </v-card-actions>
                                 </v-card>
-                                <div v-show="showConfiguration && !editColor && !editSensors" :style="overlay()">
-                                    <v-btn icon @click.native="onEditColor()">
-                                        <v-icon x-large>fa-fill</v-icon>
-                                    </v-btn>
-                                    <v-btn icon @click.native="onEditSensors()">
-                                        <v-icon x-large>fa-biohazard</v-icon>
-                                    </v-btn>
-                                </div>
                             </v-col>
-                        </v-row>
-                    </v-container>
-                </v-fade-transition>
-                <SensorTable v-show="!showConfiguration" :location="location"
-                            :backgroundStyle="sensorTableStyle()"
-                ></SensorTable>
-            </div>
-            <v-avatar :size="height" tile class="d-flex align-center">
-                <v-img  class="d-flex align-center" :src="locationImage()" >
-                        <v-fade-transition>
-                                <v-container>
-                                    <v-row>
-                                        <v-col class="d-flex justify-center">
-                                            <v-card light v-show="editFile">
-                                                <v-card-text>
-                                                    <v-form v-model="fileFormValid" ref="locations">
-                                                        <v-file-input
-                                                            label="Bakgrundbild"
-                                                            :rules="Filerules"
-                                                            accept="image/png, image/jpeg"
-                                                            show-size
-                                                            counter chips
-                                                            v-model="newImage"
-                                                            prepend-icon="fa-file-image"
-                                                        ></v-file-input>
-                                                    </v-form>
-                                                </v-card-text>
-                                                <v-card-actions>
-                                                    <v-btn class="ma-2" :disabled="!fileFormValid || !this.newImage" color="blue" text @click.native="submitFile()">
-                                                        Spara
-                                                    </v-btn>
-                                                    <v-btn class="ma-2" color="orange" text @click.native="cancelEditFile()">
-                                                        Avbryt
-                                                    </v-btn>                               
-                                                </v-card-actions>
-                                            </v-card>
-                                            <div v-show="showConfiguration && !editFile" :style="overlay()">
-                                                <v-btn   icon @click.native="onEditFile()">
-                                                    <v-icon x-large>fa-file-image</v-icon>
-                                                </v-btn>
-                                            </div>
-                                        </v-col>
-                                    </v-row>
-                                </v-container>
-                        </v-fade-transition>
+                        </row>
+                    </v-dialog>
                 </v-img>
             </v-avatar>
         </div>
-        <v-card-actions v-if="showConfiguration">
-            <v-btn text :disabled="showConfiguration && (submitted || editSensors || editColor || editFile)" @click.native="toggleConfiguration()">Stäng</v-btn>
-            <v-spacer></v-spacer>
-            <v-btn text :disabled="showConfiguration && (submitted || editSensors || editColor || editFile)"  @click.native="deleteLocation()">Radera</v-btn>
-        </v-card-actions>
-        <v-card-actions v-else>
-            <v-btn text :disabled="showConfiguration && (submitted || editSensors || editColor || editFile)" class="white--text"  @click.native="toggleConfiguration()">Ändra</v-btn>
-        </v-card-actions>
+        <v-dialog v-model="editSensors" max-width="400px">
+            <v-card light>
+                <v-card-text transition="slide-y-transition">
+                <span>Välj givare för {{ location.name }}</span>
+                <v-list style="max-height: 200px" class="overflow-y-auto">
+                <v-list-item-group 
+                    v-model="seletedSensors"
+                    max="20"
+                    multiple
+                >
+                    <template v-for="(sensor, i) in availableSensors">
+                        <v-list-item
+                            :key="`sensor-${i}`"
+                            :value="sensor"
+                            active-class="deep-purple--text text--accent-4"
+                        >
+                            <v-list-item-content>
+                                <v-list-item-title >{{sensorName(sensor)}}</v-list-item-title>
+                            </v-list-item-content>
+
+                            <v-list-item-action>
+                                <v-checkbox
+                                    :input-value="isSelected(sensor)"
+                                    :true-value="seletedSensors"
+                                    color="deep-purple accent-4"
+                                    @click="toggleSensor(sensor)"
+                                ></v-checkbox>
+                            </v-list-item-action>
+                        </v-list-item>
+                    </template>
+                </v-list-item-group>
+                </v-list>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn class="ma-2" color="blue" text @click.stop.prevent="submitSensors()">
+                        Spara
+                    </v-btn>
+                    <v-btn class="ma-2" color="orange" text @click.stop.prevent="cancelEditSensors()">
+                        Avbryt
+                    </v-btn>                               
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="editColor" max-width="300px">
+            <v-card light>
+                <v-card-text>Välj bakgrundsfärg för {{ location.name }}</v-card-text>
+                <v-color-picker
+                        v-model="location.color"
+                        hide-canvas
+                        hide-inputs
+                        hide-mode-switch
+                        show-swatches
+                        light
+                        :swatches="swatches" 
+                        class="mx-auto"
+                        :disabled="submitted"
+                >
+                </v-color-picker>
+                <v-card-actions>
+                    <v-btn :disabled="submitted" class="ma-2" color="blue" text @click="submitColor()">
+                        Spara
+                    </v-btn>
+                    <v-btn class="ma-2" color="orange" text @click="cancelEditColor()">
+                        Avbryt
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-card>
 </template>
 
@@ -224,6 +211,21 @@ export default class LocationCard extends Vue {
             this.locationName = this.location.name.slice();
         }
     }
+    public toggleEditSensor() {
+        this.editSensors = !this.editSensors;
+    }
+    public toggleEditColor() {
+        this.editColor = !this.editColor;
+        if (this.editColor) {
+            this.locationColor = this.location.color.slice();
+        }
+    }
+    public toggleEditName() {
+        this.editName = !this.editName;
+        if (this.editName) {
+            this.locationName = this.location.name.slice();
+        }
+    }
     public fileSize(): number {
         return (this.newImage === undefined || this.newImage.size === undefined) ? 0 : this.newImage.size;
     }
@@ -252,10 +254,6 @@ export default class LocationCard extends Vue {
     //     log.debug('locationCard.updateLocationSensors ' + JSON.stringify(e));
     //     this.locationSensors();
     // }
-    public onEditName() {
-        this.editName = true;
-        this.locationName = this.location.name.slice();
-    }
     public onEditSensors() {
         this.availableSensors = [];
         this.seletedSensors = [];
@@ -312,6 +310,10 @@ export default class LocationCard extends Vue {
                 this.displayError('error (' + err.status + '): ' + err.message);
             });
         }
+    }
+    public onEditName() {
+        this.editName = true;
+        this.locationName = this.location.name.slice();
     }
     public cancelEditName() {
             this.locationName = this.location.name.slice();
