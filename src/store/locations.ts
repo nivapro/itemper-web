@@ -34,27 +34,32 @@ export class Locations {
     public set error(value: string) {
        Vue.set(this, 'mError', value);
     }
-    public getLocations(): void {
-        log.debug('Locations.getLocations');
-        this.resetError();
-        this.locationService.getLocations()
-        .then((received: LocationData[]) => {
-            log.debug('getLocations.received=' + JSON.stringify(received));
-            received.forEach((locationData) => {
-                const found = this.all.find((l) => l._id === locationData._id);
-                if (found) {
-                    this.mapSensorDesc(found, locationData);
-                } else {
-                    const newLocation = this.newLocation(locationData);
-                    this.mapSensorDesc(newLocation, locationData);
-                    this.all.push(newLocation);
-                }
+    public getLocations(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            log.debug('Locations.getLocations');
+            this.resetError();
+            this.locationService.getLocations()
+            .then((received: LocationData[]) => {
+                log.debug('getLocations.received=' + JSON.stringify(received));
+                received.forEach((locationData) => {
+                    const found = this.all.find((l) => l._id === locationData._id);
+                    if (found) {
+                        this.mapSensorDesc(found, locationData);
+                    } else {
+                        const newLocation = this.newLocation(locationData);
+                        this.mapSensorDesc(newLocation, locationData);
+                        this.all.push(newLocation);
+                    }
+                });
+                resolve();
+            })
+            .catch((e) => {
+                log.debug('ERROR getLocations.catch error=' + e);
+                this.handleError(e);
+                reject(e);
             });
-        })
-        .catch((e) => {
-            log.debug('ERROR getLocations.catch error=' + e);
-            this.handleError(e);
         });
+
     }
     public createLocation(form: FormData): Promise<Location> {
         this.resetError();

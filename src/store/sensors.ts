@@ -18,7 +18,6 @@ import { ISensorService } from '@/services/sensor-service';
 import { Descriptor, SensorData, SensorLog } from '@/models/sensor-data';
 import { Sensor } from '@/models/sensor';
 import { Location } from '@/features/locations/location';
-import { store } from '@/store/store';
 
 import { log } from '@/services/logger';
 import { Vue  } from 'vue-property-decorator';
@@ -62,12 +61,12 @@ export class Sensors  {
     public set errorMessage(value: string) {
         Vue.set(this, 'mErrorMessage', value);
     }
-    public loadSensors(samples: number): Promise<boolean> {
+    public loadSensors(samples: number): Promise<void> {
         return new Promise((resolve, reject) => {
             this.sensorService.getSensorsSamples(samples)
             .then((response: SensorData[]) => {
                 this.parseSensorData(response);
-                resolve(true);
+                resolve();
             })
             .catch((error) => {
                 this.error = true;
@@ -77,24 +76,32 @@ export class Sensors  {
 
         });
     }
-    public getSensorsFrom(from: number) {
-        this.sensorService.getSensorsFrom(from)
-        .then((response: SensorData[]) => {
-            this.parseSensorData(response);
-        })
-        .catch((error) => {
-            this.error = true;
-            this.errorMessage = error;
+    public getSensorsFrom(from: number): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.sensorService.getSensorsFrom(from)
+            .then((response: SensorData[]) => {
+                this.parseSensorData(response);
+                resolve();
+            })
+            .catch((error) => {
+                this.error = true;
+                this.errorMessage = error;
+                reject(error);
+            });
         });
     }
-    public getSensorsSamples(samples: number) {
-        this.sensorService.getSensorsSamples(samples)
-        .then((response: SensorData[]) => {
-            this.parseSensorData(response);
-        })
-        .catch((error) => {
-            this.error = true;
-            this.errorMessage = error;
+    public getSensorsSamples(samples: number): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.sensorService.getSensorsSamples(samples)
+            .then((response: SensorData[]) => {
+                this.parseSensorData(response);
+                resolve();
+            })
+            .catch((error) => {
+                this.error = true;
+                this.errorMessage = error;
+                reject(error);
+            });
         });
     }
     // getSensorSamples(desc: Descriptor): Promise<Data[]>
@@ -134,22 +141,26 @@ export class Sensors  {
         this.errorMessage = '';
         this.error = false;
     }
-    public getSensorsLast24h() {
+    public getSensorsLast24h(): Promise<void> {
         const ms = 1000;
-        const period = this.firstTime ? 24 * 60 * 60 * ms : store.settings.interval * ms ;
-        this.getSensorsLast(period);
+        const replaceEarlierSamples = true;
+        return this.getSensorsLast(24 * 60 * 60 * ms, replaceEarlierSamples);
     }
-    public getSensorsLast(period: number) {
-        this.sensorService.getSensorsFrom(Date.now() - period)
-        .then ((response: SensorData[]) => {
-            if (this.firstTime ) {
-                this.firstTime = false;
-            }
-            this.parseSensorData(response);
-        })
-        .catch((error) => {
-            log.debug('getSensorData' + JSON.stringify(error));
+    public getSensorsLast(period: number, replace = false): Promise<void> {
+        return new Promise((resolve, reject) => {
+            log.debug('sensors.getSensorsLast, lastPeriod:' + period + ' ms');
+            this.sensorService.getSensorsFrom(Date.now() - period)
+            .then ((response: SensorData[]) => {
+                log.debug('sensors.getSensorsLast, , response length:' + response.length);
+                this.parseSensorData(response, replace);
+                resolve();
+            })
+            .catch((error) => {
+                log.debug('sensors.getSensorsLast' + JSON.stringify(error));
+                reject(error);
+            });
         });
+
     }
     public AddLocation(location: Location) {
         location.sensors.forEach((s) => s.locationId = location._id);
@@ -170,11 +181,16 @@ export class Sensors  {
         this.all.push(newSensor);
         log.debug('Sensors.createSensor:: sensors.all=' + JSON.stringify(this.all));
     }
-    private parseSensorData(response: SensorData[]) {
+    private parseSensorData(response: SensorData[], replaceAllSamples = false) {
         response.forEach((sensorData) => {
             const found = this.find(sensorData.desc);
             if (!found) {
                 this.createSensor(sensorData);
+            } else if (replaceAllSamples) {
+                found.samples = [];
+                for (const sample of sensorData.samples) {
+                    found.samples.push(sample); 
+                }
             } else {
                 let pushedSamples = 0;
                 for (const sample of sensorData.samples) {
@@ -183,7 +199,8 @@ export class Sensors  {
                         found.samples.push(sample);
                     }
                 }
-                log.debug('Sensors.parseSensorData: pushed samples ' + pushedSamples);
+                log.debug('Sensors.parseSensorData: found samples ' + found.samples.length + 
+                          ', parsed samples ' + sensorData.samples.length + ', pushed samples ' + pushedSamples);
                 return;
             }
         });

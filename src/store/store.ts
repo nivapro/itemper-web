@@ -38,44 +38,63 @@ export function init() {
     Vue.$store = store;
 }
 let timer: NodeJS.Timer;
+// eslint-disable-next-line prefer-const
 let timerStarted = false;
+// eslint-disable-next-line prefer-const
+let count = 0;
+// eslint-disable-next-line prefer-const
+let time = Date.now();
 export function useState(moduleName: string) {
     log.info('store.useState: reactive store in ' + moduleName);
     const state = reactive(store);
     const retrieving = ref(timerStarted);
-    const counter = ref(0)
-    const lastTime = ref(Date.now());
+    const counter = ref(count);
+    const lastTime = ref(time);
     const Count = computed(() => counter.value)
     const Age = computed(() => Date.now() - lastTime.value)
 
-    const retrieveState = () => {
-        log.info('store.useState.retrieveState');
-            // Make sure we have some values from all sensors before loading locations
-        const sampleCount = 2;
-        state.sensors.loadSensors(sampleCount)
-        .then(() => {
-            lastTime.value = Date.now(); 
-            counter.value++;
-            state.locations.getLocations();
-            state.devices.getDevices();
-            state.sensors.getSensorsLast24h();
-        });
+    const reset = () => {
+        counter.value = 0;
+        lastTime.value = Date.now();
+        retrieving.value = false;
+    }
+    const updateState = async () => {
+        log.info('store.useState.updateState');
+        const ms = 1000;
+        const period = counter.value === 0
+            ? 24 * 60 * 60 * ms
+            : state.settings.interval * ms;
+        lastTime.value = Date.now(); 
+        await state.locations.getLocations();
+        await state.devices.getDevices();
+        await state.sensors.getSensorsLast(period);
+        counter.value++;
     };
 
-    const startRetrieveState = () => {
+    const startRetrieveState = async () => {
         log.info('store.useState.startRetrieveState');
+
         if (!retrieving.value) {
-            retrieveState();
+            // Make sure we have some values from all sensors before loading locations 
+            // (and devices)
+            lastTime.value = Date.now(); 
+            const sampleCount = 2;
+            await state.sensors.loadSensors(sampleCount)
+            await state.locations.getLocations();
+            await state.devices.getDevices();
+            await state.sensors.getSensorsLast24h();
             // And then do it at regular intervals
-            timer = setInterval(() => retrieveState(), 1000 * state.settings.interval);
-            timerStarted = true;
+            const ms = 1000;
+            timer = setInterval(() => updateState(), state.settings.interval * ms);
+            counter.value++;
+            retrieving.value = true;
         }
     };
     const stopRetrieveState = () => {
         log.info('store.useState.stopRetrieveState');
         if (retrieving.value) {
             clearInterval(timer);
-            retrieving.value = false;
+            reset();
         }
     };
 

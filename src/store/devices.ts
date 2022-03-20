@@ -31,20 +31,26 @@ export class Devices  {
     public set  error(value: string) {
         Vue.set(this, 'mError', value);
     }
-    public getDevices(): void {
-        this.resetError();
-        this.deviceService.getDevices()
-        .then((response: DeviceData[]) => {
-            response.forEach((device) => {
-                const deviceFound = this.mDevices.find((d) => d.deviceID === device.deviceID);
-                if (!deviceFound) {
-                    const newDevice = new Device(device.name, device.color, device.deviceID);
-                    newDevice.key = device.key;
-                    this.mDevices.push(newDevice);
-                }
+    public getDevices(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.resetError();
+            this.deviceService.getDevices()
+            .then((response: DeviceData[]) => {
+                response.forEach((device) => {
+                    const deviceFound = this.mDevices.find((d) => d.deviceID === device.deviceID);
+                    if (!deviceFound) {
+                        const newDevice = new Device(device.name, device.color, device.deviceID);
+                        newDevice.key = device.key;
+                        this.mDevices.push(newDevice);
+                    }
+                });
+                resolve();
+            })
+            .catch((e) => {
+                this.handleError(e)
+                reject(e);
             });
-        })
-        .catch((e) => this.handleError(e));
+        });
     }
     public createDevice(name: string, color: string): Promise<Device> {
         this.resetError();

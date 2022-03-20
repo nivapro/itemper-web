@@ -108,8 +108,11 @@ export function isSamplesValid(raw: unknown): boolean {
         const data = raw as Partial<Sample[]>;
         data.forEach((sample) => {
             valid = valid && !!sample
-            && !!sample.date && typeof sample.date === 'number' && sample.date >= 0
-            && !!sample.value && typeof sample.value === 'number';
+            && 'date' in sample && typeof sample.date === 'number' && sample.date >= 0
+            && 'value' in sample && typeof sample.value === 'number';
+            if (!valid) {
+                log.error('sensor-data-validators.isSamplesValid - not valid' + JSON.stringify(sample));
+            }
         });
         if (!valid) {
             log.error('sensor-data-validators.isSamplesValid - not valid');

@@ -1,72 +1,89 @@
 <template>
   <v-container>
-    <h1>Sensors</h1>
     <v-data-table
-      dense 
+      :dense="sensorCount > 15" 
       :headers="headers"
-      :items="items"
-    />
+      :items="state.sensors.all"
+      :search="search"
+      :expanded.sync="expanded"
+      show-expand
+      item-key="name"
+      sort-by="name"
+    >
+      <template v-slot:top>
+        <v-text-field
+          v-model="search"
+          label="Sök givare"
+          class="mx-4"
+        ></v-text-field>
+      </template>
+      <template v-slot:[`item.name`]="{ item }">
+          {{ name(item) }}
+      </template>
+      <template v-slot:[`item.location`]="{ item }">
+          {{ location(item) }}
+      </template>
+      <template v-slot:[`item.category`]="{ item }">
+          {{ category(item) }}
+      </template>
+      <template v-slot:[`item.sample`]="{ item }">
+          {{ sample(item) }}
+      </template>
+      <template v-slot:[`item.time`]="{ item }">
+          {{ time(item) }}
+      </template>
+      <template v-slot:[`item.count`]="{ item }">
+          {{ count(item) }}
+      </template>
+      <template v-slot:expanded-item="{ headers, item }">
+        <td :colspan="headers.length">
+          <history-chart title="Historik" :sensor="item"/>
+        </td>
+      </template>
+    </v-data-table>
   </v-container>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api';
-
-import { SensorData } from '@/models/sensor-data';
+import { computed, defineComponent, ref } from '@vue/composition-api';
+import { Sensor } from '@/models/sensor';
 import { useState } from '@/store/store';
 
-interface Item {
-    name: string,
-    category: string,
-    sample: string,
-    time: string,
-    age: string,
-    count: string
-}
+import HistoryChart from '@/components/history-chart.vue';
+
 export default defineComponent({
   name: 'SensorPage',
-  components: {},
+  components: { HistoryChart },
 
   setup() {
     const { state }  = useState('sensor-page');
-    const  headers = [
+    const expanded = ref([]);
+    const search = ref('');
+    const  headers = ref([
           {
             text: 'Givare',
             align: 'start',
             value: 'name',
           },
+          { text: 'Plats', value: 'location' },
           { text: 'Kategori', value: 'category' },
           { text: 'Värde', value: 'sample' },
           { text: 'Tidpunkt', value: 'time' },
-          { text: 'Ålder', value: 'age' },
           { text: 'Antal', value: 'count' },
-        ];
-    let items = ref([] as Item[]);
+        ]);
+    const sensorCount = computed(() => state.sensors.all.length);
 
-    const updateItems = () => {
-      items.value = state.sensors.all.map((s) => {
-        const item: Item = {
-            name: name(s),
-            category: category(s),
-            sample: sample(s),
-            time: time(s),
-            age: age(s),
-            count: count(s),
-        };
-        return item;
-      });
+    const name = (sensor: Sensor) => {
+      return sensor.model + ':' + sensor.desc.SN + '/' + sensor.desc.port;
     };
-    updateItems();
-    const updateInterval = 10_000;
-    setInterval(() => updateItems, updateInterval)
-
-    const name = (sensor: SensorData) => {
-      return sensor.attr.model + ':' + sensor.desc.SN + '/' + sensor.desc.port;
-    };
-    const category = (sensor: SensorData) => {
-      return sensor.attr.category.toString();
+    const location = (sensor: Sensor) => {
+        const location = state.locations.locationOf(sensor.locationId);
+        return location ? location.name : '-';
     }
-    const sample = (sensor: SensorData) => {
-      const unitSymbol = state.settings.unit(sensor.attr.category);
+    const category = (sensor: Sensor) => {
+      return sensor.category.toString();
+    }
+    const sample = (sensor: Sensor) => {
+      const unitSymbol = state.settings.unit(sensor.category);
       if (sensor.samples.length > 0) {
         const lastSample = sensor.samples[sensor.samples.length - 1];
         return lastSample.value.toPrecision(3) + unitSymbol;
@@ -74,7 +91,7 @@ export default defineComponent({
         return '- ' + unitSymbol;
       }
     };
-    const time = (sensor: SensorData) => {
+    const time = (sensor: Sensor) => {
        if (sensor.samples.length > 0) {
         const lastSample = sensor.samples[sensor.samples.length - 1];
         const lastDate = new Date(lastSample.date);
@@ -83,25 +100,12 @@ export default defineComponent({
         return '- ';
       } 
     }
-    const age = (sensor: SensorData) => {
-      if (sensor.samples.length > 0) {
-        const lastSample = sensor.samples[sensor.samples.length - 1];
-        const age =  Date.now() - lastSample.date;
-        const OneDay = 24 * 60 * 60 * 1000;
-        const ageText = age > OneDay
-          ? Math.floor(age/OneDay).toString() + ' day(s)'
-          : age > 1_000
-            ? age / 1000 + ' s'
-            : age + ' ms';
-        return ageText;
-      } else {
-        return '- ';
-      }
-    };
-    const count = (sensor: SensorData) => {
+    const count = (sensor: Sensor) => {
       return sensor.samples.length.toString();
     }
-    return { headers, items };
+
+    return { category, count, expanded, location, headers, name, sample, search, sensorCount, state,
+             time };
   },
 });
 </script>
