@@ -2,7 +2,7 @@
     <v-simple-table v-if="sensorCount > 0">
         <template v-slot:default>
             <tbody :style="background" class="d-flex flex-column">
-            <tr v-for="item in sensors" :key="item._id" :class="order(item)" >
+            <tr v-for="item in sensors" :key="item._id" :class="order(item)">
                 <td v-if="isTemperatureSensor(item)" class="text--left text-md-h3">
                     {{ sampleValue(item) }}
                 </td>

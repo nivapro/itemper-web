@@ -1,34 +1,77 @@
 <template>
     <v-card :color="location.color" dark :height="height">
         <div class="d-flex flex-no-wrap justify-space-between">
-            <div>
-                <v-card-title primary-title class="headline" :style="overlay()">
-                    <div>
-                        <div v-if="!editName" @click.stop.prevent="onEditName()">{{ location.name }}</div>              
+            <div class="d-flex flex-column">
+                <v-card-title primary-title class="headline">
+                        <div v-if="!showConfiguration">{{ location.name }}</div>              
                         <v-text-field v-else  class="headline"
                             prepend-inner-icon="fa-edit"
                             v-model="locationName"
                             :rules="nameRules"
                             dense
                             required
+                            :disabled="editFile || editColor || editSensors || deleteLocationDialog"
                             :loading="submitted"
-                            append-icon="fa-check"
-                            append-outer-icon="fa-times"
+                            :append-icon="editName ? 'fa-check' : ''"
+                            :append-outer-icon="editName ? 'fa-times' : ''"
+                            @focus="onEditName()"
                             @click:append="submitName()"
                             @click:append-outer="cancelEditName()"
                         ></v-text-field>
-                    </div>
                 </v-card-title>
+                <v-spacer></v-spacer>
                 <SensorTable @click.stop.prevent="onEditSensors()" :location="location"
                             :backgroundStyle="sensorTableStyle()"
                 ></SensorTable>
+                <v-container>
+                        <v-row>
+                            <v-col>
+                                <v-btn v-if="showConfiguration"
+                                    icon
+                                    :disabled="isConfigurating()"
+                                    @click="onEditSensors()"
+                                >
+                                    <v-icon small>fa-cog</v-icon>
+                                </v-btn>
+                                <v-btn v-if="showConfiguration"
+                                    icon
+                                    :disabled="isConfigurating()"
+                                    @click="onEditColor()"
+                                >
+                                    <v-icon small>fa-fill</v-icon>
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                </v-container>
+                <v-spacer></v-spacer>
+                <v-card-actions  class="mt-auto">
+                <v-btn icon :disabled="editColor||editFile||editName||editSensors" color="white" @click="toggleConfiguration()">
+                    <v-icon small v-if="showConfiguration">fa-unlock</v-icon>
+                    <v-icon small v-else>fa-pen</v-icon>
+                </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn v-if="showConfiguration"
+                    icon
+                    :disabled="isConfigurating()"
+                    @click="onDeleteLocation()"
+                >
+                    <v-icon small>fa-trash</v-icon>
+                </v-btn>
+                </v-card-actions>
             </div>
-            <v-avatar :size="height" tile @click.stop.prevent="onEditFile">
-                <v-img  :src="locationImage()">
-                    <v-dialog v-model="editFile"  >
-                        <v-row class="d-flex align-center">
-                            <v-col class="d-flex justify-center">
-                                <v-card max-width="400px">
+            <v-avatar :size="height" tile>
+                <v-img  :src="locationImage()" >
+                    <v-container>
+                        <v-row>
+                            <v-col>
+                                <v-btn class="edit-file-btn" v-if="showConfiguration"
+                                    icon
+                                    :disabled="isConfigurating()"
+                                    @click="onEditFile()"
+                                >
+                                    <v-icon x-large>fa-file-image</v-icon>
+                                </v-btn>
+                                <v-card v-if="editFile" max-width="400px">
                                     <v-card-text>
                                          <v-form v-model="fileFormValid" ref="locations">
                                         <v-file-input
@@ -53,15 +96,15 @@
                                 </v-card>
                             </v-col>
                         </v-row>
-                    </v-dialog>
+                    </v-container>
                 </v-img>
             </v-avatar>
         </div>
-        <v-dialog v-model="editSensors" max-width="400px">
+        <v-dialog v-model="editSensors" max-width="500px">
             <v-card light>
+                <v-card-title>Givare: {{ location.name }}</v-card-title>
                 <v-card-text transition="slide-y-transition">
-                <span>Välj givare för {{ location.name }}</span>
-                <v-list style="max-height: 200px" class="overflow-y-auto">
+                <v-list style="max-height: 300px" class="overflow-y-auto">
                 <v-list-item-group 
                     v-model="seletedSensors"
                     max="20"
@@ -102,7 +145,7 @@
         </v-dialog>
         <v-dialog v-model="editColor" max-width="300px">
             <v-card light>
-                <v-card-text>Välj bakgrundsfärg för {{ location.name }}</v-card-text>
+                <v-card-title>Bakgrundsfärg: {{ location.name }}</v-card-title>
                 <v-color-picker
                         v-model="location.color"
                         hide-canvas
@@ -120,6 +163,20 @@
                         Spara
                     </v-btn>
                     <v-btn class="ma-2" color="orange" text @click="cancelEditColor()">
+                        Avbryt
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="deleteLocationDialog" max-width="300px">
+            <v-card light>
+                <v-card-title>Radera: {{ location.name }}</v-card-title>
+                <v-card-text>OBS! Platsen och alla inställningar raderas!</v-card-text>
+                <v-card-actions>
+                    <v-btn :disabled="submitted" class="ma-2" color="blue" text @click="deleteLocation()">
+                        Radera
+                    </v-btn>
+                    <v-btn class="ma-2" color="orange" text @click="cancelDeleteLocation()">
                         Avbryt
                     </v-btn>
                 </v-card-actions>
@@ -191,12 +248,13 @@ export default class LocationCard extends Vue {
     public sensors: Sensors = Vue.$store.sensors;
     public locations: Locations =  Vue.$store.locations;
 
-    public showConfiguration= false;
+    public showConfiguration = false;
     public editName = false;
     public editColor = false;
     public editFile = false;
     public fileFormValid = false;
     public editSensors = false;
+    public deleteLocationDialog = false;
 
     public locationName = '';
     public locationColor = '';
@@ -249,6 +307,9 @@ export default class LocationCard extends Vue {
     //         }
     //     }
     // }
+    public isConfigurating() {
+        return this.editSensors || this.editColor || this.editFile || this.editName || this.deleteLocationDialog;
+    }
     public isSelected(sensor: Sensor) {
         return this.seletedSensors.find((s) => s.desc === sensor.desc);
     }
@@ -257,17 +318,19 @@ export default class LocationCard extends Vue {
     //     this.locationSensors();
     // }
     public onEditSensors() {
-        this.availableSensors = [];
-        this.seletedSensors = [];
-        this.sensors.all.forEach((sensor) => {
-            if (sensor.locationId === this.location._id) {
-                this.seletedSensors.push(sensor);
-                this.availableSensors.push(sensor);
-            } else if (sensor.locationId === '') {
-                this.availableSensors.push(sensor);
-            }
-        });
-        this.editSensors = true;
+        if (this.showConfiguration) {
+            this.availableSensors = [];
+            this.seletedSensors = [];
+            this.sensors.all.forEach((sensor) => {
+                if (sensor.locationId === this.location._id) {
+                    this.seletedSensors.push(sensor);
+                    this.availableSensors.push(sensor);
+                } else if (sensor.locationId === '') {
+                    this.availableSensors.push(sensor);
+                }
+            });
+            this.editSensors = true;
+        }
     }
     public cancelEditSensors() {
             this.editSensors = false;
@@ -286,7 +349,9 @@ export default class LocationCard extends Vue {
         });
     }
     public onEditFile() {
-        this.editFile = true;
+        if (this.showConfiguration) {
+            this.editFile = true;
+        }
     }
     public cancelEditFile() {
         this.editFile = false;
@@ -314,8 +379,10 @@ export default class LocationCard extends Vue {
         }
     }
     public onEditName() {
-        this.editName = true;
-        this.locationName = this.location.name.slice();
+        if(this.showConfiguration) {
+            this.editName = true;
+            this.locationName = this.location.name.slice();
+        }
     }
     public cancelEditName() {
             this.locationName = this.location.name.slice();
@@ -359,17 +426,28 @@ export default class LocationCard extends Vue {
             }
     }
     public onEditColor() {
-        this.editColor = true;
-        this.locationColor = this.location.color.slice();
+        if (this.showConfiguration) {
+            this.editColor = true;
+            this.locationColor = this.location.color.slice();
+        }
     }
     public cancelEditColor() {
             this.editColor = false;
             this.location.color = this.locationColor.slice();
     }
+    public onDeleteLocation() {
+        if (this.showConfiguration) {
+            this.deleteLocationDialog = true;
+        }
+    }
+    public cancelDeleteLocation() {
+            this.deleteLocationDialog = false;
+    }
     public deleteLocation() {
             this.locations.deleteLocation(this.location)
             .then(() => {
                 this.submitted = false;
+                this.deleteLocationDialog = false;
             })
             .catch((err) => {
                 this.submitted = false;
@@ -386,7 +464,7 @@ export default class LocationCard extends Vue {
              this.seletedSensors.push(sensor);
          }
     }
-    public overlay() {
+    public background() {
         return 'background-color: ' + hexToRgba(this.location.color, 0.4);
     }
     public imageGradient() {
@@ -425,7 +503,10 @@ export default class LocationCard extends Vue {
 
 </script>
 <style scoped>
-
+.edit-file-btn {
+    background-color: rgba(0,0,0,0.2);
+    padding: 30px;
+}
 .overlay-0 {
     background-color: rgba(227, 153, 0, 0.7);
 }
