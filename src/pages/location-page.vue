@@ -1,6 +1,6 @@
 <template>
         <v-row>
-            <v-col v-for="(item,id) in state.locations.all" :key="id" cols="6">
+            <v-col v-for="(item,id) in state.locations.all" :key="id" cols="12" lg="6">
                 <location-card  
                     :location="item"
                     :id="id"
