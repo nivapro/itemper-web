@@ -2,6 +2,7 @@
   <v-container>
     <v-data-table
       :dense="sensorCount > 15" 
+      items-per-page="-1"
       :headers="headers"
       :items="state.sensors.all"
       :search="search"
