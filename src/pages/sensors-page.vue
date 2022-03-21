@@ -6,9 +6,11 @@
       :items="state.sensors.all"
       :search="search"
       :expanded.sync="expanded"
+      @item-expanded="handleSubscription"
       show-expand
       item-key="name"
       sort-by="name"
+      hide-default-footer
     >
       <template v-slot:top>
         <v-text-field
@@ -37,6 +39,9 @@
       </template>
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
+          <p v-if="item.desc.SN === latest.desc.SN && item.desc.port === latest.desc.port ">
+            Senast: {{ sample(latest) }}, tidpunkt: {{ time(latest) }}
+          </p>
           <history-chart title="Historik" :sensor="item"/>
         </td>
       </template>
@@ -44,11 +49,14 @@
   </v-container>
 </template>
 <script lang="ts">
-import { computed, defineComponent, ref } from '@vue/composition-api';
+import { computed, defineComponent, reactive, ref } from '@vue/composition-api';
 import { Sensor } from '@/models/sensor';
+import { SensorLog, Descriptor, Sample } from '@/models/sensor-data';
+import { callback } from '@/services/sensor-log-monitor';
 import { useState } from '@/store/store';
-
 import HistoryChart from '@/components/history-chart.vue';
+
+import { log } from '@/services/logger';
 
 export default defineComponent({
   name: 'SensorPage',
@@ -70,6 +78,10 @@ export default defineComponent({
           { text: 'Tidpunkt', value: 'time' },
           { text: 'Antal', value: 'count' },
         ]);
+    const desc: Descriptor = {SN: '', port: 0 };
+    const samples: Sample[] = [{value: 0.0, date: 0}];
+    const latest = reactive({ desc, samples } as SensorLog)
+
     const sensorCount = computed(() => state.sensors.all.length);
 
     const name = (sensor: Sensor) => {
@@ -104,8 +116,30 @@ export default defineComponent({
       return sensor.samples.length.toString();
     }
 
-    return { category, count, expanded, location, headers, name, sample, search, sensorCount, state,
-             time };
+    const logLatest: callback = (log: SensorLog) => {
+      latest.desc = log.desc;
+      const latestSample = log.samples[log.samples.length - 1];
+      if (latest.samples.length === 0 ) {
+        latest.samples.push(latestSample);
+      } else {
+        latest.samples[0] = latestSample;
+      }
+    }
+    interface ItemExpandedEvent {
+      item: Sensor;
+      value: boolean;
+    }
+    const handleSubscription = (event: ItemExpandedEvent) =>  {
+      if (event.value) {
+        log.debug('sensor-page.handleSubscription: Expanded-subscribe '  + JSON.stringify(event.item.desc));
+        state.itemper.logMonitorService.subscribe(event.item.desc, logLatest);
+      } else {
+        log.debug('sensor-page.handleSubscription: Unsubscribe ' + JSON.stringify(event.item.desc));
+        state.itemper.logMonitorService.unSubscribe(event.item.desc, logLatest)
+      }
+    }
+    return { category, count, expanded, latest, location, handleSubscription, headers, name, sample,
+             search, sensorCount, state, time };
   },
 });
 </script>

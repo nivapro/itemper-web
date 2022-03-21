@@ -4,6 +4,7 @@ import { DeviceService } from './device-service';
 import { EventService } from './event-service';
 import { LocationService } from '../features/locations';
 import { SensorService } from './sensor-service';
+import { SensorLogMonitor } from './sensor-log-monitor';
 import { WebSocketService } from './websocket-service';
 
 export interface IiTemper {
@@ -21,4 +22,5 @@ export class Itemper implements IiTemper {
     public locationService =  new LocationService(this.apiService);
     public websocketService = new WebSocketService(this.apiService);
     public sensorService =  new SensorService(this.apiService, this.websocketService);
+    public logMonitorService = new SensorLogMonitor(this.websocketService);
 }

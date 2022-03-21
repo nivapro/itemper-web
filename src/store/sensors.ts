@@ -208,10 +208,10 @@ export class Sensors  {
     private parseSensorLog(sensorLog: SensorLog) {
         const found = this.find(sensorLog.desc);
         if (found) {
-            log.info('Sensors.parseSensorLog: received samples=' + sensorLog.samples.length);
-            for (const sample of sensorLog.samples) {
-                found.samples.push(sample);
-            }
+            log.info('Sensors.parseSensorLog: NOT IMPLEMENTED, samples=' + sensorLog.samples.length);
+            // for (const sample of sensorLog.samples) {
+            //     found.samples.push(sample);
+            // }
         } else {
             log.error('Sensors.parseSensorLog: no sensor found, desc=' + JSON.stringify(sensorLog.desc));
         }

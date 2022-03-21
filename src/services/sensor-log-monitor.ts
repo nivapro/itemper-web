@@ -27,6 +27,14 @@ export class SensorLogMonitor implements ISensorLogMonitor {
         }
         callbackSet.add(publish);
     }
+    public unSubscribe(desc: Descriptor, callback: callback): void {
+        const sensorDesc = this.sensorDesc(desc);
+        const callbackSet: Set<callback> | undefined =  this.subscribers.get(sensorDesc);
+        if (callbackSet && callbackSet.has(callback)) {
+            callbackSet.add(callback);
+            log.info('sensor-log-monitor.unSubscribe: sensorDesc=' + sensorDesc);
+        }
+    }
     private parseSensorLog(data?: unknown) {
         log.debug('sensor-log-monitor.parseSensorLog: received message data=: ' + JSON.stringify(data));
         if (data) {
