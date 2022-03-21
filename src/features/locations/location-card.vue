@@ -26,10 +26,11 @@
             <v-avatar :size="height" tile @click.stop.prevent="onEditFile">
                 <v-img  :src="locationImage()">
                     <v-dialog v-model="editFile"  >
-                        <row class="d-flex align-center">
+                        <v-row class="d-flex align-center">
                             <v-col class="d-flex justify-center">
                                 <v-card max-width="400px">
                                     <v-card-text>
+                                         <v-form v-model="fileFormValid" ref="locations">
                                         <v-file-input
                                             :label="'Bakgrundsbild till' + location.name"
                                             :rules="Filerules"
@@ -39,18 +40,19 @@
                                             v-model="newImage"
                                             prepend-icon="fa-file-image"
                                         ></v-file-input>
+                                         </v-form>
                                     </v-card-text>
                                     <v-card-actions>
-                                        <v-btn class="ma-2" :disabled="!fileFormValid || !this.newImage" color="blue" text @click.stop.prevent="submitFile()">
+                                        <v-btn class="ma-2" :disabled="!this.newImage" color="blue" text @click="submitFile()">
                                             Spara
                                         </v-btn>
-                                        <v-btn class="ma-2" color="orange" text @click.stop.prevent="cancelEditFile()">
+                                        <v-btn class="ma-2" color="orange" text @click="cancelEditFile()">
                                             Avbryt
                                         </v-btn>                               
                                     </v-card-actions>
                                 </v-card>
                             </v-col>
-                        </row>
+                        </v-row>
                     </v-dialog>
                 </v-img>
             </v-avatar>

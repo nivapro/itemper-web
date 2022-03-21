@@ -1,12 +1,14 @@
 <template>
-    <v-simple-table v-if="sensorCount > 0"  >
+    <v-simple-table v-if="sensorCount > 0">
         <template v-slot:default>
-            <tbody :style="background" >
-            <tr v-for="item in sensors" :key="item._id">
-                <td>
-                    <span v-if="isTemperatureSensor(item)" class="text--left text-md-h3">{{ sampleValue(item) }}</span>
-                    <span v-else class="text--left text-md-h4">{{ categoryName(item) }} {{ sampleValue(item) }}</span> 
+            <tbody :style="background" class="d-flex flex-column">
+            <tr v-for="item in sensors" :key="item._id" :class="order(item)" >
+                <td v-if="isTemperatureSensor(item)" class="text--left text-md-h3">
+                    {{ sampleValue(item) }}
                 </td>
+                <td v-else class="text--left text-md-h4">
+                    {{ categoryName(item) }} {{ sampleValue(item) }}
+                </td> 
             </tr>
             </tbody>
         </template>
@@ -14,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@vue/composition-api';
+import { computed, defineComponent, ref } from '@vue/composition-api';
 import {Vue } from 'vue-property-decorator';
 
 import { Location } from '@/features/locations';
@@ -38,6 +40,19 @@ export default defineComponent({
     setup(props) {
     const settings = Vue.$store.settings;
 
+    const  headers = ref([
+        {
+        text: 'Givare',
+        align: 'start',
+        value: 'name',
+        },
+        { text: 'Plats', value: 'location' },
+        { text: 'Kategori', value: 'category' },
+        { text: 'Värde', value: 'sample' },
+        { text: 'Tidpunkt', value: 'time' },
+        { text: 'Antal', value: 'count' },
+    ]);
+
     const background = computed (() => props.backgroundStyle);
     const sensors = computed(() => props.location.sensors);
 
@@ -52,7 +67,17 @@ export default defineComponent({
     const isTemperatureSensor = (sensor: Sensor) => {
         return sensor.attr.category === Category.Temperature;
     }
-
+    const order = (sensor: Sensor) => {
+        if (sensor.category === Category.Temperature) {
+            return 'first-sensor';
+        } else if (sensor.category === Category.AbsoluteHumidity ||
+                   sensor.category === Category.RelativeHumidity ||
+                   sensor.category === Category.Humidity) {
+            return 'second-sensor';
+        } else {
+            return 'third-sensor'
+        }
+    }
     const unit = (category: Category): string => {
         return settings.unit(category);
     }
@@ -114,7 +139,8 @@ export default defineComponent({
         return Math.round(value * inverse) / inverse;
     }
 
-        return { background, categoryName, isTemperatureSensor, sampleTime, sampleValue, sensors, sensorCount }
+        return { background, categoryName, headers, isTemperatureSensor, order,
+                 sampleTime, sampleValue, sensors, sensorCount }
     }
 });
 
@@ -215,4 +241,9 @@ export default defineComponent({
 //     }
 // }
 </script>
+<style scoped>
+.first-sensor  {order: 0;}
+.second-sensor  {order: 1;}
+.third-sensor  {order: 2;}
+</style>
 

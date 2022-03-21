@@ -113,10 +113,12 @@ export default defineComponent({
         const userStatus = computed(() => Status[state.user.status].replace('_', ' ').toLocaleLowerCase());
         const activityStatus = computed(() => retrieving.value ? 'online' : 'offline' );
         watch([retrieving, () => state.user.status], async ([retrievingValue, userStatusValue]) => {
-            if (userStatusValue === Status.LOGGED_IN && !retrievingValue) {
+           log.info('[retrievingValue, userStatusValue]=[' +
+                    JSON.stringify(retrievingValue) +', ' +JSON.stringify(userStatusValue) +']');
+           if (userStatusValue === Status.LOGGED_IN && !retrievingValue) {
                 log.info('app-toolbar: startRetrieveState');
                 await startRetrieveState();
-            } else if (retrievingValue) {
+            } else if (userStatusValue !== Status.LOGGED_IN && retrievingValue) {
                 log.info('app-toolbar: stopRetrieveState');
                 stopRetrieveState();
             }
