@@ -1,10 +1,14 @@
 <template>
     <v-card :color="location.color" dark :height="height">
-        <div class="d-flex flex-no-wrap justify-space-between">
+        <div class="d-flex flex-no-wrap">
             <div class="d-flex flex-column">
-                <v-card-title primary-title class="headline">
-                        <div v-if="!showConfiguration">{{ location.name }}</div>              
-                        <v-text-field v-else  class="headline"
+                <v-card-title primary-title class="text-h5">
+                        <v-text-field v-if="!showConfiguration"
+                            v-model="location.name"
+                            dense
+                            required
+                        ></v-text-field>
+                        <v-text-field v-else
                             prepend-inner-icon="fa-edit"
                             v-model="locationName"
                             :rules="nameRules"
@@ -59,11 +63,12 @@
                 </v-btn>
                 </v-card-actions>
             </div>
-            <v-avatar :size="height" tile>
-                <v-img  :src="locationImage()" >
-                    <v-container>
                         <v-row>
                             <v-col>
+                                <v-img :src="locationImage()"
+                                :height="height"
+                                :aspect-ratio="1"
+                                >
                                 <v-btn class="edit-file-btn" v-if="showConfiguration"
                                     icon
                                     :disabled="isConfigurating()"
@@ -71,7 +76,7 @@
                                 >
                                     <v-icon x-large>fa-file-image</v-icon>
                                 </v-btn>
-                                <v-card v-if="editFile" max-width="400px">
+                                <v-card v-if="editFile" class="d-flex align-center" max-height="400px">
                                     <v-card-text>
                                          <v-form v-model="fileFormValid" ref="locations">
                                         <v-file-input
@@ -94,11 +99,9 @@
                                         </v-btn>                               
                                     </v-card-actions>
                                 </v-card>
+                                </v-img>
                             </v-col>
                         </v-row>
-                    </v-container>
-                </v-img>
-            </v-avatar>
         </div>
         <v-dialog v-model="editSensors" max-width="500px">
             <v-card light>

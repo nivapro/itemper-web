@@ -3,10 +3,10 @@
         <template v-slot:default>
             <tbody :style="background" class="d-flex flex-column">
             <tr v-for="item in sensors" :key="item._id" :class="order(item)">
-                <td v-if="isTemperatureSensor(item)" class="text--left text-md-h3">
+                <td v-if="isTemperatureSensor(item)" class="text--left text-sm-h4 text-md-h3">
                     {{ sampleValue(item) }}
                 </td>
-                <td v-else class="text--left text-md-h4">
+                <td v-else class="text--left text-sm-h5 text-md-h4">
                     {{ categoryName(item) }} {{ sampleValue(item) }}
                 </td> 
             </tr>
