@@ -2,14 +2,16 @@
     <v-card :color="location.color" dark :height="height">
         <div class="d-flex flex-no-wrap">
             <div class="d-flex flex-column" >
-                <v-card-title primary-title width="100%">
-                        <p v-if="!showConfiguration" class="text-h5">{{location.name}}</p>
-                        <v-text-field v-else
+                <v-card-title primary-title>
+                        <v-text-field
                             class="text-h5"
-                            prepend-inner-icon="fa-edit"
-                            v-model="locationName"
+                            :prepend-inner-icon="showConfiguration ? 'fa-edit' : ''"
+                            v-model="location.name"
                             :rules="nameRules"
                             dense
+                            :solo="!showConfiguration"
+                            :flat="!showConfiguration"
+                            :background-color="location.color"
                             required
                             :disabled="editFile || editColor || editSensors || deleteLocationDialog"
                             :loading="submitted"
@@ -60,45 +62,45 @@
                 </v-btn>
                 </v-card-actions>
             </div>
-                        <v-row>
-                            <v-col>
-                                <v-img :src="locationImage()"
-                                :height="height"
-                                :aspect-ratio="1"
-                                >
-                                <v-btn class="edit-file-btn" v-if="showConfiguration"
-                                    icon
-                                    :disabled="isConfigurating()"
-                                    @click="onEditFile()"
-                                >
-                                    <v-icon x-large>fa-file-image</v-icon>
-                                </v-btn>
-                                <v-card v-if="editFile" class="d-flex align-center" max-height="400px">
-                                    <v-card-text>
-                                         <v-form v-model="fileFormValid" ref="locations">
-                                        <v-file-input
-                                            :label="'Bakgrundsbild till' + location.name"
-                                            :rules="Filerules"
-                                            accept="image/png, image/jpeg"
-                                            show-size
-                                            counter chips
-                                            v-model="newImage"
-                                            prepend-icon="fa-file-image"
-                                        ></v-file-input>
-                                         </v-form>
-                                    </v-card-text>
-                                    <v-card-actions>
-                                        <v-btn class="ma-2" :disabled="!this.newImage" color="blue" text @click="submitFile()">
-                                            Spara
-                                        </v-btn>
-                                        <v-btn class="ma-2" color="orange" text @click="cancelEditFile()">
-                                            Avbryt
-                                        </v-btn>                               
-                                    </v-card-actions>
-                                </v-card>
-                                </v-img>
-                            </v-col>
-                        </v-row>
+            <v-row>
+                <v-col>
+                <v-img :src="locationImage()"
+                :height="height"
+                :aspect-ratio="1"
+                >
+                <v-btn class="edit-file-btn" v-if="showConfiguration"
+                    icon
+                    :disabled="isConfigurating()"
+                    @click="onEditFile()"
+                >
+                    <v-icon x-large>fa-file-image</v-icon>
+                </v-btn>
+                <v-card v-if="editFile" class="d-flex align-center" max-height="400px">
+                    <v-card-text>
+                            <v-form v-model="fileFormValid" ref="locations" light>
+                        <v-file-input
+                            :label="'Bakgrundsbild till' + location.name"
+                            :rules="Filerules"
+                            accept="image/png, image/jpeg"
+                            show-size
+                            counter chips
+                            v-model="newImage"
+                            prepend-icon="fa-file-image"
+                        ></v-file-input>
+                            </v-form>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn class="ma-2" :disabled="!this.newImage" color="blue" text @click="submitFile()">
+                            Spara
+                        </v-btn>
+                        <v-btn class="ma-2" color="orange" text @click="cancelEditFile()">
+                            Avbryt
+                        </v-btn>                               
+                    </v-card-actions>
+                </v-card>
+                </v-img>
+                </v-col>
+            </v-row>
         </div>
         <v-dialog v-model="editSensors" max-width="500px">
             <v-card light>
@@ -385,19 +387,19 @@ export default class LocationCard extends Vue {
         }
     }
     public cancelEditName() {
-            this.locationName = this.location.name.slice();
+            this.location.name = this.locationName.slice();
             this.editName = false;
     }
     public submitName() {
         if (this.location.name === this.locationName) {
             log.debug('location-card.submitName: no changes');
+            this.editName = false;
             return;
         } else {
             log.debug('location-card.submitName: update location name');
             this.submitted = true;
-            this.locations.updateName(this.locationName, this.location)
-            .then((received) => {
-                this.location.name = received.name;
+            this.locations.updateName(this.location.name, this.location)
+            .then(() => {
                 this.submitted = false;
                 this.editName = false;
             })
