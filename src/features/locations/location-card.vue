@@ -46,6 +46,7 @@
                             </v-col>
                         </v-row>
                 </v-container>
+                <HistorySparkline :sensor="sparklineSensor()"/>
                 <v-spacer></v-spacer>
                 <v-card-actions  class="mt-auto">
                 <v-btn icon :disabled="editColor||editFile||editName||editSensors" color="white" @click="toggleConfiguration()">
@@ -195,7 +196,7 @@ import {Vue, Component, Prop} from 'vue-property-decorator';
 
 // Models
 // import * as locations from '@/models/locations'
-import { Descriptor } from '@/models/sensor-data';
+import { Category, Descriptor } from '@/models/sensor-data';
 import { Sensor } from '@/models/sensor';
 import { Location, Locations } from '@/features/locations';
 import { Settings } from '@/store/settings';
@@ -209,6 +210,7 @@ import {json } from '@/helpers';
 
 import SensorTable from './location-sensor-table.vue';
 import highchart from '../../components/history-chart.vue';
+import HistorySparkline from '../../components/history-sparkline.vue';
 type BooleanOrString = boolean | string;
 type ValidationFunction = (value: string) => BooleanOrString;
 interface FileProperties {
@@ -218,7 +220,7 @@ interface FileProperties {
 }
 type FileValidationFunction = (value: FileProperties) => BooleanOrString;
 @Component({
-    components: { highchart, SensorTable },
+    components: { highchart, SensorTable, HistorySparkline },
 })
 export default class LocationCard extends Vue {
 
@@ -465,6 +467,15 @@ export default class LocationCard extends Vue {
              // add
              this.seletedSensors.push(sensor);
          }
+    }
+    public sparklineSensor() {
+        const sensor = this.location.sensors.find((s) => s.attr.category === Category.Temperature)
+        if (sensor) {
+            return sensor
+        } else if (this.location.sensors.length > 0){
+            return this.location.sensors[0];
+        } else
+        return undefined;
     }
     public background() {
         return 'background-color: ' + hexToRgba(this.location.color, 0.4);

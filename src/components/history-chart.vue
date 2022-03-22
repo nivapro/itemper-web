@@ -14,7 +14,7 @@ import { Sensor } from '@/models/sensor';
 import { useState } from '@/store/store';
 
 export default defineComponent({
-  name: 'SensorPage',
+  name: 'HistoryChart',
   components: { highcharts: Chart },
     props: {
         title: {type: String, required: true },
