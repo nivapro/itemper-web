@@ -46,7 +46,9 @@
                             </v-col>
                         </v-row>
                 </v-container>
-                <HistorySparkline :sensor="sparklineSensor()"/>
+                <v-container max-width="50%">
+                    <HistorySparkline max-width="100px" :sensor="sparklineSensor()"/>
+                </v-container>
                 <v-spacer></v-spacer>
                 <v-card-actions  class="mt-auto">
                 <v-btn icon :disabled="editColor||editFile||editName||editSensors" color="white" @click="toggleConfiguration()">
