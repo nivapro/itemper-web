@@ -1,14 +1,11 @@
 <template>
     <v-card :color="location.color" dark :height="height">
         <div class="d-flex flex-no-wrap">
-            <div class="d-flex flex-column">
-                <v-card-title primary-title class="text-h5">
-                        <v-text-field v-if="!showConfiguration"
-                            v-model="location.name"
-                            dense
-                            required
-                        ></v-text-field>
+            <div class="d-flex flex-column" >
+                <v-card-title primary-title width="100%">
+                        <p v-if="!showConfiguration" class="text-h5">{{location.name}}</p>
                         <v-text-field v-else
+                            class="text-h5"
                             prepend-inner-icon="fa-edit"
                             v-model="locationName"
                             :rules="nameRules"
