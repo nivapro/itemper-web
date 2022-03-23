@@ -522,6 +522,9 @@ export default class LocationCard extends Vue {
     background-color: rgba(0,0,0,0.2);
     padding: 30px;
 }
+.v-text-field {
+    width: 200px;
+}
 .overlay-0 {
     background-color: rgba(227, 153, 0, 0.7);
 }
