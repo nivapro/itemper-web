@@ -22,5 +22,5 @@ export class Itemper implements IiTemper {
     public locationService =  new LocationService(this.apiService);
     public websocketService = new WebSocketService(this.apiService);
     public sensorService =  new SensorService(this.apiService, this.websocketService);
-    public logMonitorService = new SensorLogMonitor(this.websocketService);
+    public logMonitor = new SensorLogMonitor(this.websocketService);
 }

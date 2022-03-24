@@ -2,8 +2,8 @@
   <v-row>
     <v-col>
       <v-data-table
+        :items-per-page="-1"
         :dense="sensorCount > 15" 
-        items-per-page="-1"
         :headers="headers"
         :items="state.sensors.all"
         :search="search"
@@ -15,6 +15,11 @@
         hide-default-footer
       >
         <template v-slot:top>
+          <v-chip class="ma-2" color="primary" label>
+            <v-icon left>fa-sensor</v-icon>
+            Subscribers: {{subscribersCount}}, samples: {{sampleCount}}
+          </v-chip>
+          <p>{{subscribers}}</p>
           <v-text-field
             v-model="search"
             label="Sök givare"
@@ -89,9 +94,17 @@ export default defineComponent({
     const desc: Descriptor = {SN: '', port: 0 };
     const samples: Sample[] = [{value: 0.0, date: 0}];
     const latest = reactive({ desc, samples } as SensorLog)
+    const sampleCount = ref(0);
 
     const sensorCount = computed(() => state.sensors.all.length);
 
+    const subscribersCount = computed (() => {
+      return state.itemper.logMonitor.Count;
+    })
+    const subscribers = computed (() => {
+      const keys = state.itemper.logMonitor.Subscribers.keys;
+      return JSON.stringify(keys);
+    });
     const name = (sensor: Sensor) => {
       return sensor.model + ':' + sensor.desc.SN + '/' + sensor.desc.port;
     };
@@ -124,9 +137,11 @@ export default defineComponent({
       return sensor.samples.length.toString();
     }
 
-    const logLatest: callback = (log: SensorLog) => {
-      latest.desc = log.desc;
-      const latestSample = log.samples[log.samples.length - 1];
+    const logLatest: callback = (sensorLog: SensorLog) => {
+      log.debug('sensor-page.logLatest: ' + JSON.stringify(sensorLog.desc));
+      sampleCount.value++;
+      latest.desc = sensorLog.desc;
+      const latestSample = sensorLog.samples[sensorLog.samples.length - 1];
       if (latest.samples.length === 0 ) {
         latest.samples.push(latestSample);
       } else {
@@ -140,14 +155,14 @@ export default defineComponent({
     const handleSubscription = (event: ItemExpandedEvent) =>  {
       if (event.value) {
         log.debug('sensor-page.handleSubscription: Expanded-subscribe '  + JSON.stringify(event.item.desc));
-        state.itemper.logMonitorService.subscribe(event.item.desc, logLatest);
+        state.itemper.logMonitor.subscribe(event.item.desc, logLatest);
       } else {
         log.debug('sensor-page.handleSubscription: Unsubscribe ' + JSON.stringify(event.item.desc));
-        state.itemper.logMonitorService.unSubscribe(event.item.desc, logLatest)
+        state.itemper.logMonitor.unSubscribe(event.item.desc, logLatest)
       }
     }
-    return { category, count, expanded, latest, location, handleSubscription, headers, name, sample,
-             search, sensorCount, state, time };
+    return { category, count, expanded, latest, location, handleSubscription, headers, name, sample, sampleCount,
+             search, sensorCount, state, subscribers, subscribersCount, time };
   },
 });
 </script>

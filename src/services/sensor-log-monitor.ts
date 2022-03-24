@@ -1,15 +1,26 @@
+import { reactive } from '@vue/composition-api';
 import { log } from '@/services/logger';
 import { IWebSocketService } from '@/services/websocket-service';
 import { Descriptor, SensorLog } from '@/models/sensor-data';
 
 export type callback = (log: SensorLog) => void;
 
+export type SubscribersMap = Map<string, Set<(log: SensorLog) => void>>;
+
 export interface ISensorLogMonitor {
     subscribe (desc: Descriptor, publish: callback): void;
 }
 export class SensorLogMonitor implements ISensorLogMonitor {
-    private subscribers: Map<string, Set<(log: SensorLog) => void>>= new Map();
+    private subscribers: SubscribersMap = reactive(new Map());
+    private count = 0;
 
+    public get Subscribers(): SubscribersMap {
+        return this.subscribers;
+    }
+
+    public get Count(): number{
+        return this.count;
+    }
     constructor(private socket: IWebSocketService) {
         socket.on('log', this.parseSensorLog);
     }
@@ -26,12 +37,14 @@ export class SensorLogMonitor implements ISensorLogMonitor {
             this.subscribers.set(sensorDesc, callbackSet);
         }
         callbackSet.add(publish);
+        this.count++;
     }
     public unSubscribe(desc: Descriptor, callback: callback): void {
         const sensorDesc = this.sensorDesc(desc);
         const callbackSet: Set<callback> | undefined =  this.subscribers.get(sensorDesc);
         if (callbackSet && callbackSet.has(callback)) {
-            callbackSet.add(callback);
+            callbackSet.delete(callback);
+            this.count--;
             log.info('sensor-log-monitor.unSubscribe: sensorDesc=' + sensorDesc);
         }
     }
