@@ -22,7 +22,7 @@ export class SensorLogMonitor implements ISensorLogMonitor {
         return this.count;
     }
     constructor(private socket: IWebSocketService) {
-        socket.on('log', this.parseSensorLog);
+        socket.on('log', this.parseSensorLog.bind(this));
     }
     public sensorDesc(desc: Descriptor): string {
         return desc.SN + '/' + desc.port;

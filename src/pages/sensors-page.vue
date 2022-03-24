@@ -155,10 +155,10 @@ export default defineComponent({
     const handleSubscription = (event: ItemExpandedEvent) =>  {
       if (event.value) {
         log.debug('sensor-page.handleSubscription: Expanded-subscribe '  + JSON.stringify(event.item.desc));
-        state.itemper.logMonitor.subscribe(event.item.desc, logLatest);
+        state.itemper.logMonitor.subscribe(event.item.desc, logLatest.bind(this));
       } else {
         log.debug('sensor-page.handleSubscription: Unsubscribe ' + JSON.stringify(event.item.desc));
-        state.itemper.logMonitor.unSubscribe(event.item.desc, logLatest)
+        state.itemper.logMonitor.unSubscribe(event.item.desc, logLatest.bind(this));
       }
     }
     return { category, count, expanded, latest, location, handleSubscription, headers, name, sample, sampleCount,

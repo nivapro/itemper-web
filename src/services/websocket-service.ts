@@ -17,6 +17,7 @@ export class WebSocketService implements IWebSocketService {
     private RECONNECT_DELAY = 30_000;
     private subscribers: Map<string, Set<callback>> = new Map();
     private websocketAuthorized = false;
+    private messageCount = 0;
 
     constructor(private apiService: IApiService) {
         this.apiService.addListener((userLoggedIn) => {
@@ -53,6 +54,9 @@ export class WebSocketService implements IWebSocketService {
             log.info('websocket-service.send: msg=' + msg);
             this.socket.send(msg);
         }
+    }
+    public get MessageCount() {
+        return this.messageCount;
     }
     private setup(): WebSocket {
         const url = iTemperWS;
@@ -96,6 +100,7 @@ export class WebSocketService implements IWebSocketService {
         return socket;
     }
     private emit(type: string, data: unknown) {
+        this.messageCount++;
         this.subscribers.get(type)?.forEach((cb) => {
             cb(data);
         });
