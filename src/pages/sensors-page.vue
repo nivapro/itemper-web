@@ -19,7 +19,6 @@
             <v-icon left>fa-sensor</v-icon>
             Subscribers: {{subscribersCount}}, samples: {{sampleCount}}
           </v-chip>
-          <p>{{subscribers}}</p>
           <v-text-field
             v-model="search"
             label="Sök givare"
@@ -167,7 +166,7 @@ export default defineComponent({
       }
     }
     return { category, count, expanded, latest, location, handleSubscription, headers, name, sample, sampleCount,
-             search, sensorCount, state, subscribers, subscriptions, subscribersCount, time };
+             search, sensorCount, state, subscribers, subscribersCount, time };
   },
 });
 </script>
