@@ -1,14 +1,14 @@
 <template>
-<div >
-    <v-container fluid grid-list-md>
-        <v-layout row wrap>
+<v-row>
+    <v-col>
+        <v-layout grid-list-md row wrap>
             <v-flex>
                 <admin-log-level-card></admin-log-level-card>
                 <admin-config-card></admin-config-card>
             </v-flex>
         </v-layout>
-    </v-container>
-</div>
+    </v-col>
+</v-row>
 </template>
 <script lang="ts">
 

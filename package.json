@@ -15,6 +15,7 @@
   "dependencies": {
     "@vue/composition-api": "^1.4.6",
     "axios": "^0.26.0",
+    "color-convert": "^2.0.1",
     "hex-to-rgba": "^2.0.1",
     "highcharts": "^10.0.0",
     "highcharts-vue": "^1.4.0",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
+    "@types/color-convert": "^2.0.0",
     "@types/jest": "^27.0.1",
     "@types/node": "^17.0.19",
     "@types/winston": "^2.4.4",

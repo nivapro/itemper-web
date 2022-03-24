@@ -1,15 +1,15 @@
 <template>
-        <v-row>
-            <v-col v-for="(item,id) in state.locations.all" :key="id" cols="12" md="6">
-                <location-card  
-                    :location="item"
-                    :id="id"
-                    :height=400
-                >
-                </location-card> 
-               <v-chip v-if="locationCount === 0" transition="scale-transition" >Det finns inga platser.</v-chip>
-            </v-col>
-        </v-row>
+  <v-row>
+      <v-col v-for="(item,id) in state.locations.all" :key="id" cols="12" md="6">
+          <location-card  
+              :location="item"
+              :id="id"
+              :height=400
+          >
+          </location-card> 
+          <v-chip v-if="locationCount === 0" transition="scale-transition" >Det finns inga platser.</v-chip>
+      </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">

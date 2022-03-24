@@ -1,9 +1,11 @@
 
 <template>
-    <div>
-        <h1>Välkommen till itemper.io</h1>
-        <admin-config-card v-if="development"></admin-config-card>
-    </div>
+    <v-row>
+        <v-col>
+            <h1>Välkommen till itemper.io</h1>
+            <admin-config-card v-if="development"></admin-config-card>
+        </v-col>
+    </v-row>
 </template>
 <script lang='ts'>
 

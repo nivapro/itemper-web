@@ -1,53 +1,60 @@
 <template>
-  <v-container>
-    <v-data-table
-      :dense="sensorCount > 15" 
-      items-per-page="-1"
-      :headers="headers"
-      :items="state.sensors.all"
-      :search="search"
-      :expanded.sync="expanded"
-      @item-expanded="handleSubscription"
-      show-expand
-      item-key="name"
-      sort-by="name"
-      hide-default-footer
-    >
-      <template v-slot:top>
-        <v-text-field
-          v-model="search"
-          label="Sök givare"
-          class="mx-4"
-        ></v-text-field>
-      </template>
-      <template v-slot:[`item.name`]="{ item }">
-          {{ name(item) }}
-      </template>
-      <template v-slot:[`item.location`]="{ item }">
-          {{ location(item) }}
-      </template>
-      <template v-slot:[`item.category`]="{ item }">
-          {{ category(item) }}
-      </template>
-      <template v-slot:[`item.sample`]="{ item }">
-          {{ sample(item) }}
-      </template>
-      <template v-slot:[`item.time`]="{ item }">
-          {{ time(item) }}
-      </template>
-      <template v-slot:[`item.count`]="{ item }">
-          {{ count(item) }}
-      </template>
-      <template v-slot:expanded-item="{ headers, item }">
-        <td :colspan="headers.length">
-          <p v-if="item.desc.SN === latest.desc.SN && item.desc.port === latest.desc.port ">
-            Senast: {{ sample(latest) }}, tidpunkt: {{ time(latest) }}
-          </p>
-          <history-chart title="Historik" :sensor="item"/>
-        </td>
-      </template>
-    </v-data-table>
-  </v-container>
+  <v-row>
+    <v-col>
+      <v-data-table
+        :dense="sensorCount > 15" 
+        items-per-page="-1"
+        :headers="headers"
+        :items="state.sensors.all"
+        :search="search"
+        :expanded.sync="expanded"
+        @item-expanded="handleSubscription"
+        show-expand
+        item-key="name"
+        sort-by="name"
+        hide-default-footer
+      >
+        <template v-slot:top>
+          <v-text-field
+            v-model="search"
+            label="Sök givare"
+            class="mx-4"
+          ></v-text-field>
+        </template>
+        <template v-slot:[`item.name`]="{ item }">
+            {{ name(item) }}
+        </template>
+        <template v-slot:[`item.location`]="{ item }">
+            {{ location(item) }}
+        </template>
+        <template v-slot:[`item.category`]="{ item }">
+            {{ category(item) }}
+        </template>
+        <template v-slot:[`item.sample`]="{ item }">
+            {{ sample(item) }}
+        </template>
+        <template v-slot:[`item.time`]="{ item }">
+            {{ time(item) }}
+        </template>
+        <template v-slot:[`item.count`]="{ item }">
+            {{ count(item) }}
+        </template>
+        <template v-slot:expanded-item="{ headers, item }">
+          <td :colspan="headers.length">
+            <p v-if="item.desc.SN === latest.desc.SN && item.desc.port === latest.desc.port ">
+              Senast: {{ sample(latest) }}, tidpunkt: {{ time(latest) }}
+            </p>
+            <p v-else>
+              item.desc.SN: {{item.desc.SN}},  latest.desc.SN: {{ latest.desc.SN }}
+              , item.desc.port: {{item.desc.port}},  latest.desc.port: {{latest.desc.port}}
+              , Senast: {{ sample(latest) }}, tidpunkt: {{ time(latest) }}
+            </p>
+            <history-chart title="Historik" :sensor="item"/>
+          </td>
+        </template>
+      </v-data-table>
+    </v-col>
+  </v-row>
 </template>
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from '@vue/composition-api';

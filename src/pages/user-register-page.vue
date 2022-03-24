@@ -1,5 +1,9 @@
 <template>
-    <user-register-card  @onRegister="register" @onLogin="swap"></user-register-card>
+    <v-row>
+        <v-col>
+            <user-register-card  @onRegister="register" @onLogin="swap"></user-register-card>
+        </v-col>
+    </v-row>
 </template>
 
 <script lang="ts">

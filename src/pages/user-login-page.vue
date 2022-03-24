@@ -1,9 +1,13 @@
 <template>
-<div height="1500">
-    <user-login-card    :DefaultUser="defaultUser" :DefaultPassword="defaultPassword" 
-                        @onLogin="login" @onRegister="swap">
-    </user-login-card>
-</div>
+    <v-row>
+        <v-col>
+            <div height="1500">
+                <user-login-card    :DefaultUser="defaultUser" :DefaultPassword="defaultPassword" 
+                                    @onLogin="login" @onRegister="swap">
+                </user-login-card>
+            </div>
+        </v-col>
+    </v-row>
 </template>
 
 <script lang="ts">
