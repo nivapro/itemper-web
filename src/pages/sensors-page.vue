@@ -65,7 +65,7 @@
 import { computed, defineComponent, reactive, ref } from '@vue/composition-api';
 import { Sensor } from '@/models/sensor';
 import { SensorLog, Descriptor, Sample } from '@/models/sensor-data';
-import { callback } from '@/services/sensor-log-monitor';
+import { Callback, CallbackObject } from '@/services/sensor-log-monitor';
 import { useState } from '@/store/store';
 import HistoryChart from '@/components/history-chart.vue';
 
@@ -137,7 +137,7 @@ export default defineComponent({
       return sensor.samples.length.toString();
     }
 
-    const logLatest: callback = (sensorLog: SensorLog) => {
+    const logLatest: Callback = (sensorLog: SensorLog) => {
       log.debug('sensor-page.logLatest: ' + JSON.stringify(sensorLog.desc));
       sampleCount.value++;
       latest.desc = sensorLog.desc;
@@ -152,17 +152,22 @@ export default defineComponent({
       item: Sensor;
       value: boolean;
     }
+    const subscriptions: Map<string, CallbackObject> = reactive(new Map());
     const handleSubscription = (event: ItemExpandedEvent) =>  {
       if (event.value) {
-        log.debug('sensor-page.handleSubscription: Expanded-subscribe '  + JSON.stringify(event.item.desc));
-        state.itemper.logMonitor.subscribe(event.item.desc, logLatest.bind(this));
-      } else {
-        log.debug('sensor-page.handleSubscription: Unsubscribe ' + JSON.stringify(event.item.desc));
-        state.itemper.logMonitor.unSubscribe(event.item.desc, logLatest.bind(this));
+        const subscription = state.itemper.logMonitor.subscribe(event.item.desc, logLatest.bind(this));
+        subscriptions.set(state.itemper.logMonitor.sensorDesc(event.item.desc), subscription);
+    } else {
+         const subscription = subscriptions.get(state.itemper.logMonitor.sensorDesc(event.item.desc));
+         if (subscription) {
+          state.itemper.logMonitor.unSubscribe(subscription);
+         } else {
+            log.error('sensor-page.handleSubscription: No subscription ' + JSON.stringify(event.item.desc));
+         }
       }
     }
     return { category, count, expanded, latest, location, handleSubscription, headers, name, sample, sampleCount,
-             search, sensorCount, state, subscribers, subscribersCount, time };
+             search, sensorCount, state, subscribers, subscriptions, subscribersCount, time };
   },
 });
 </script>
