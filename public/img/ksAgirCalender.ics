@@ -1,0 +1,336 @@
+BEGIN:VCALENDAR
+PRODID:-//Microsoft Corporation//Outlook 16.0 MIMEDIR//EN
+VERSION:2.0
+METHOD:PUBLISH
+X-CALSTART:20220502T160000Z
+X-CALEND:20221113T110000Z
+X-CLIPSTART:20220421T220000Z
+X-CLIPEND:20221231T230000Z
+X-WR-RELCALID:{0000002E-34A1-C2BA-6BB2-D0F5B361DD82}
+X-WR-CALNAME:KS Ägir
+BEGIN:VTIMEZONE
+TZID:W. Europe Standard Time
+BEGIN:STANDARD
+DTSTART:16011028T030000
+RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART:16010325T020000
+RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+END:DAYLIGHT
+END:VTIMEZONE
+BEGIN:VEVENT
+CLASS:PUBLIC
+CREATED:20220422T025039Z
+DESCRIPTION: \n
+DTEND;TZID="W. Europe Standard Time":20220502T200000
+DTSTAMP:20220422T034917Z
+DTSTART;TZID="W. Europe Standard Time":20220502T180000
+LAST-MODIFIED:20220422T030733Z
+PRIORITY:5
+RRULE:FREQ=WEEKLY;COUNT=20;BYDAY=MO
+SEQUENCE:0
+SUMMARY;LANGUAGE=en-us:Motionsträning-alla
+TRANSP:OPAQUE
+UID:040000008200E00074C5B7101A82E00800000000F8E0F7BFF355D801000000000000000
+	010000000E14E4433CD24DE4C980B177F26B952A6
+X-ALT-DESC;FMTTYPE=text/html:<html xmlns:v="urn:schemas-microsoft-com:vml" 
+	xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-mic
+	rosoft-com:office:word" xmlns:m="http://schemas.microsoft.com/office/2004/
+	12/omml" xmlns="http://www.w3.org/TR/REC-html40"><head><meta name="Generat
+	or" content="Microsoft Word 15 (filtered medium)"><style><!--\n/* Font Def
+	initions */\n@font-face\n	{font-family:"Cambria Math"\;\n	panose-1:2 4 5 3
+	 5 4 6 3 2 4\;}\n@font-face\n	{font-family:Calibri\;\n	panose-1:2 15 5 2 2
+	 2 4 3 2 4\;}\n/* Style Definitions */\np.MsoNormal\, li.MsoNormal\, div.M
+	soNormal\n	{margin:0cm\;\n	font-size:11.0pt\;\n	font-family:"Calibri"\,san
+	s-serif\;\n	mso-fareast-language:EN-US\;}\nspan.EmailStyle17\n	{mso-style-
+	type:personal-compose\;\n	font-family:"Calibri"\,sans-serif\;\n	color:wind
+	owtext\;}\n.MsoChpDefault\n	{mso-style-type:export-only\;\n	font-family:"C
+	alibri"\,sans-serif\;\n	mso-fareast-language:EN-US\;}\n@page WordSection1\
+	n	{size:612.0pt 792.0pt\;\n	margin:70.85pt 70.85pt 70.85pt 70.85pt\;}\ndiv
+	.WordSection1\n	{page:WordSection1\;}\n--></Style><!--[if gte mso 9]><xml>
+	\n<o:shapedefaults v:ext="edit" spidmax="1026" />\n</xml><![endif]--><!--[
+	if gte mso 9]><xml>\n<o:shapelayout v:ext="edit">\n<o:idmap v:ext="edit" d
+	ata="1" />\n</o:shapelayout></xml><![endif]--></Head><body lang="SV" link=
+	"#0563C1" vlink="#954F72" style="word-wrap:break-word"><div class="WordSec
+	tion1"><p class="MsoNormal"><o:p> </o:p></P></Div></Body></Html>
+X-MICROSOFT-CDO-BUSYSTATUS:BUSY
+X-MICROSOFT-CDO-IMPORTANCE:1
+END:VEVENT
+BEGIN:VEVENT
+CLASS:PUBLIC
+CREATED:20220422T025703Z
+DESCRIPTION: \n
+DTEND;TZID="W. Europe Standard Time":20220518T200000
+DTSTAMP:20220422T034917Z
+DTSTART;TZID="W. Europe Standard Time":20220518T180000
+LAST-MODIFIED:20220422T025703Z
+PRIORITY:5
+RRULE:FREQ=WEEKLY;COUNT=18;BYDAY=WE
+SEQUENCE:0
+SUMMARY;LANGUAGE=en-us:Motionspaddling-havskajak
+TRANSP:OPAQUE
+UID:040000008200E00074C5B7101A82E00800000000D7B9E4A4F455D801000000000000000
+	010000000C52A50801ADDBE4BBA6AD00FB29A2C7D
+X-ALT-DESC;FMTTYPE=text/html:<html xmlns:v="urn:schemas-microsoft-com:vml" 
+	xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-mic
+	rosoft-com:office:word" xmlns:m="http://schemas.microsoft.com/office/2004/
+	12/omml" xmlns="http://www.w3.org/TR/REC-html40"><head><meta name="Generat
+	or" content="Microsoft Word 15 (filtered medium)"><style><!--\n/* Font Def
+	initions */\n@font-face\n	{font-family:"Cambria Math"\;\n	panose-1:2 4 5 3
+	 5 4 6 3 2 4\;}\n@font-face\n	{font-family:Calibri\;\n	panose-1:2 15 5 2 2
+	 2 4 3 2 4\;}\n/* Style Definitions */\np.MsoNormal\, li.MsoNormal\, div.M
+	soNormal\n	{margin:0cm\;\n	font-size:11.0pt\;\n	font-family:"Calibri"\,san
+	s-serif\;\n	mso-fareast-language:EN-US\;}\nspan.EmailStyle17\n	{mso-style-
+	type:personal-compose\;\n	font-family:"Calibri"\,sans-serif\;\n	color:wind
+	owtext\;}\n.MsoChpDefault\n	{mso-style-type:export-only\;\n	font-family:"C
+	alibri"\,sans-serif\;\n	mso-fareast-language:EN-US\;}\n@page WordSection1\
+	n	{size:612.0pt 792.0pt\;\n	margin:70.85pt 70.85pt 70.85pt 70.85pt\;}\ndiv
+	.WordSection1\n	{page:WordSection1\;}\n--></Style><!--[if gte mso 9]><xml>
+	\n<o:shapedefaults v:ext="edit" spidmax="1026" />\n</xml><![endif]--><!--[
+	if gte mso 9]><xml>\n<o:shapelayout v:ext="edit">\n<o:idmap v:ext="edit" d
+	ata="1" />\n</o:shapelayout></xml><![endif]--></Head><body lang="SV" link=
+	"#0563C1" vlink="#954F72" style="word-wrap:break-word"><div class="WordSec
+	tion1"><p class="MsoNormal"><o:p> </o:p></P></Div></Body></Html>
+X-MICROSOFT-CDO-BUSYSTATUS:BUSY
+X-MICROSOFT-CDO-IMPORTANCE:1
+END:VEVENT
+BEGIN:VEVENT
+CLASS:PUBLIC
+CREATED:20220422T030130Z
+DESCRIPTION: \n\n
+DTEND;TZID="W. Europe Standard Time":20220621T173000
+DTSTAMP:20220422T034917Z
+DTSTART;TZID="W. Europe Standard Time":20220621T160000
+LAST-MODIFIED:20220422T030208Z
+PRIORITY:5
+SEQUENCE:0
+SUMMARY;LANGUAGE=en-us:Prova-på-dag
+TRANSP:OPAQUE
+UID:040000008200E00074C5B7101A82E00800000000C52CE143F555D801000000000000000
+	010000000A9555B289E98CA44926479D843F03B2F
+X-ALT-DESC;FMTTYPE=text/html:<html xmlns:v="urn:schemas-microsoft-com:vml" 
+	xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-mic
+	rosoft-com:office:word" xmlns:m="http://schemas.microsoft.com/office/2004/
+	12/omml" xmlns="http://www.w3.org/TR/REC-html40">\n<head>\n<meta http-equi
+	v="Content-Type" content="text/html\; charset=iso-8859-1">\n<meta name="Ge
+	nerator" content="Microsoft Word 15 (filtered medium)">\n<style><!--\n/* F
+	ont Definitions */\n@font-face\n	{font-family:"Cambria Math"\;\n	panose-1:
+	2 4 5 3 5 4 6 3 2 4\;}\n@font-face\n	{font-family:Calibri\;\n	panose-1:2 1
+	5 5 2 2 2 4 3 2 4\;}\n/* Style Definitions */\np.MsoNormal\, li.MsoNormal\
+	, div.MsoNormal\n	{margin:0cm\;\n	font-size:11.0pt\;\n	font-family:"Calibr
+	i"\,sans-serif\;\n	mso-fareast-language:EN-US\;}\nspan.EmailStyle17\n	{mso
+	-style-type:personal-compose\;\n	font-family:"Calibri"\,sans-serif\;\n	col
+	or:windowtext\;}\n.MsoChpDefault\n	{mso-style-type:export-only\;\n	font-fa
+	mily:"Calibri"\,sans-serif\;\n	mso-fareast-language:EN-US\;}\n@page WordSe
+	ction1\n	{size:612.0pt 792.0pt\;\n	margin:70.85pt 70.85pt 70.85pt 70.85pt\
+	;}\ndiv.WordSection1\n	{page:WordSection1\;}\n--></style><!--[if gte mso 9
+	]><xml>\n<o:shapedefaults v:ext="edit" spidmax="1026" />\n</xml><![endif]-
+	-><!--[if gte mso 9]><xml>\n<o:shapelayout v:ext="edit">\n<o:idmap v:ext="
+	edit" data="1" />\n</o:shapelayout></xml><![endif]-->\n</head>\n<body lang
+	="SV" link="#0563C1" vlink="#954F72" style="word-wrap:break-word">\n<div c
+	lass="WordSection1">\n<p class="MsoNormal"><o:p>&nbsp\;</o:p></p>\n</div>\
+	n</body>\n</html>\n
+X-MICROSOFT-CDO-BUSYSTATUS:BUSY
+X-MICROSOFT-CDO-IMPORTANCE:1
+END:VEVENT
+BEGIN:VEVENT
+CLASS:PUBLIC
+CREATED:20220422T030406Z
+DESCRIPTION: \n\n
+DTEND;TZID="W. Europe Standard Time":20220628T173000
+DTSTAMP:20220422T034917Z
+DTSTART;TZID="W. Europe Standard Time":20220628T160000
+LAST-MODIFIED:20220422T030407Z
+ORGANIZER;CN="KS Ägir":mailto:KSagir@nivapro.com
+PRIORITY:5
+SEQUENCE:0
+SUMMARY;LANGUAGE=en-us:Prova-på-dag
+TRANSP:OPAQUE
+UID:040000008200E00074C5B7101A82E00800000000D0C759A1F555D801000000000000000
+	010000000379E7817216E9D45931BF33735A072A0
+X-ALT-DESC;FMTTYPE=text/html:<html xmlns:v="urn:schemas-microsoft-com:vml" 
+	xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-mic
+	rosoft-com:office:word" xmlns:m="http://schemas.microsoft.com/office/2004/
+	12/omml" xmlns="http://www.w3.org/TR/REC-html40">\n<head>\n<meta http-equi
+	v="Content-Type" content="text/html\; charset=iso-8859-1">\n<meta name="Ge
+	nerator" content="Microsoft Word 15 (filtered medium)">\n<style><!--\n/* F
+	ont Definitions */\n@font-face\n	{font-family:"Cambria Math"\;\n	panose-1:
+	2 4 5 3 5 4 6 3 2 4\;}\n@font-face\n	{font-family:Calibri\;\n	panose-1:2 1
+	5 5 2 2 2 4 3 2 4\;}\n/* Style Definitions */\np.MsoNormal\, li.MsoNormal\
+	, div.MsoNormal\n	{margin:0cm\;\n	font-size:11.0pt\;\n	font-family:"Calibr
+	i"\,sans-serif\;\n	mso-fareast-language:EN-US\;}\nspan.EmailStyle17\n	{mso
+	-style-type:personal-compose\;\n	font-family:"Calibri"\,sans-serif\;\n	col
+	or:windowtext\;}\n.MsoChpDefault\n	{mso-style-type:export-only\;\n	font-fa
+	mily:"Calibri"\,sans-serif\;\n	mso-fareast-language:EN-US\;}\n@page WordSe
+	ction1\n	{size:612.0pt 792.0pt\;\n	margin:70.85pt 70.85pt 70.85pt 70.85pt\
+	;}\ndiv.WordSection1\n	{page:WordSection1\;}\n--></style><!--[if gte mso 9
+	]><xml>\n<o:shapedefaults v:ext="edit" spidmax="1026" />\n</xml><![endif]-
+	-><!--[if gte mso 9]><xml>\n<o:shapelayout v:ext="edit">\n<o:idmap v:ext="
+	edit" data="1" />\n</o:shapelayout></xml><![endif]-->\n</head>\n<body lang
+	="SV" link="#0563C1" vlink="#954F72" style="word-wrap:break-word">\n<div c
+	lass="WordSection1">\n<p class="MsoNormal"><o:p>&nbsp\;</o:p></p>\n</div>\
+	n</body>\n</html>\n
+X-MICROSOFT-CDO-BUSYSTATUS:BUSY
+X-MICROSOFT-CDO-IMPORTANCE:1
+X-MICROSOFT-ISDRAFT:TRUE
+END:VEVENT
+BEGIN:VEVENT
+CLASS:PUBLIC
+CREATED:20220422T030653Z
+DESCRIPTION: \n
+DTEND;TZID="W. Europe Standard Time":20220613T170000
+DTSTAMP:20220422T034917Z
+DTSTART;TZID="W. Europe Standard Time":20220613T130000
+LAST-MODIFIED:20220422T030836Z
+PRIORITY:5
+RRULE:FREQ=WEEKLY;COUNT=5;BYDAY=MO,TU,WE,TH,FR
+SEQUENCE:0
+SUMMARY;LANGUAGE=en-us:Kanotskola: Läger 1
+TRANSP:OPAQUE
+UID:040000008200E00074C5B7101A82E0080000000043C08804F655D801000000000000000
+	01000000047DD23BC4D3E7E41989F9853C7F87BA4
+X-ALT-DESC;FMTTYPE=text/html:<html xmlns:v="urn:schemas-microsoft-com:vml" 
+	xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-mic
+	rosoft-com:office:word" xmlns:m="http://schemas.microsoft.com/office/2004/
+	12/omml" xmlns="http://www.w3.org/TR/REC-html40"><head><meta name="Generat
+	or" content="Microsoft Word 15 (filtered medium)"><style><!--\n/* Font Def
+	initions */\n@font-face\n	{font-family:"Cambria Math"\;\n	panose-1:2 4 5 3
+	 5 4 6 3 2 4\;}\n@font-face\n	{font-family:Calibri\;\n	panose-1:2 15 5 2 2
+	 2 4 3 2 4\;}\n/* Style Definitions */\np.MsoNormal\, li.MsoNormal\, div.M
+	soNormal\n	{margin:0cm\;\n	font-size:11.0pt\;\n	font-family:"Calibri"\,san
+	s-serif\;\n	mso-fareast-language:EN-US\;}\nspan.EmailStyle17\n	{mso-style-
+	type:personal-compose\;\n	font-family:"Calibri"\,sans-serif\;\n	color:wind
+	owtext\;}\n.MsoChpDefault\n	{mso-style-type:export-only\;\n	font-family:"C
+	alibri"\,sans-serif\;\n	mso-fareast-language:EN-US\;}\n@page WordSection1\
+	n	{size:612.0pt 792.0pt\;\n	margin:70.85pt 70.85pt 70.85pt 70.85pt\;}\ndiv
+	.WordSection1\n	{page:WordSection1\;}\n--></Style><!--[if gte mso 9]><xml>
+	\n<o:shapedefaults v:ext="edit" spidmax="1026" />\n</xml><![endif]--><!--[
+	if gte mso 9]><xml>\n<o:shapelayout v:ext="edit">\n<o:idmap v:ext="edit" d
+	ata="1" />\n</o:shapelayout></xml><![endif]--></Head><body lang="SV" link=
+	"#0563C1" vlink="#954F72" style="word-wrap:break-word"><div class="WordSec
+	tion1"><p class="MsoNormal"><o:p> </o:p></P></Div></Body></Html>
+X-MICROSOFT-CDO-BUSYSTATUS:BUSY
+X-MICROSOFT-CDO-IMPORTANCE:1
+END:VEVENT
+BEGIN:VEVENT
+CLASS:PUBLIC
+CREATED:20220422T030923Z
+DESCRIPTION: \n
+DTEND;TZID="W. Europe Standard Time":20220620T170000
+DTSTAMP:20220422T034917Z
+DTSTART;TZID="W. Europe Standard Time":20220620T130000
+LAST-MODIFIED:20220422T030923Z
+PRIORITY:5
+RRULE:FREQ=WEEKLY;COUNT=5;BYDAY=MO,TU,WE,TH,FR
+SEQUENCE:0
+SUMMARY;LANGUAGE=en-us:Kanotskola: Läger 2
+TRANSP:OPAQUE
+UID:040000008200E00074C5B7101A82E008000000007B0D3A5EF655D801000000000000000
+	0100000009CA63D64788E7A4BBAE8515C9C342693
+X-ALT-DESC;FMTTYPE=text/html:<html xmlns:v="urn:schemas-microsoft-com:vml" 
+	xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-mic
+	rosoft-com:office:word" xmlns:m="http://schemas.microsoft.com/office/2004/
+	12/omml" xmlns="http://www.w3.org/TR/REC-html40"><head><meta name="Generat
+	or" content="Microsoft Word 15 (filtered medium)"><style><!--\n/* Font Def
+	initions */\n@font-face\n	{font-family:"Cambria Math"\;\n	panose-1:2 4 5 3
+	 5 4 6 3 2 4\;}\n@font-face\n	{font-family:Calibri\;\n	panose-1:2 15 5 2 2
+	 2 4 3 2 4\;}\n/* Style Definitions */\np.MsoNormal\, li.MsoNormal\, div.M
+	soNormal\n	{margin:0cm\;\n	font-size:11.0pt\;\n	font-family:"Calibri"\,san
+	s-serif\;\n	mso-fareast-language:EN-US\;}\nspan.EmailStyle17\n	{mso-style-
+	type:personal-compose\;\n	font-family:"Calibri"\,sans-serif\;\n	color:wind
+	owtext\;}\n.MsoChpDefault\n	{mso-style-type:export-only\;\n	font-family:"C
+	alibri"\,sans-serif\;\n	mso-fareast-language:EN-US\;}\n@page WordSection1\
+	n	{size:612.0pt 792.0pt\;\n	margin:70.85pt 70.85pt 70.85pt 70.85pt\;}\ndiv
+	.WordSection1\n	{page:WordSection1\;}\n--></Style><!--[if gte mso 9]><xml>
+	\n<o:shapedefaults v:ext="edit" spidmax="1026" />\n</xml><![endif]--><!--[
+	if gte mso 9]><xml>\n<o:shapelayout v:ext="edit">\n<o:idmap v:ext="edit" d
+	ata="1" />\n</o:shapelayout></xml><![endif]--></Head><body lang="SV" link=
+	"#0563C1" vlink="#954F72" style="word-wrap:break-word"><div class="WordSec
+	tion1"><p class="MsoNormal"><o:p> </o:p></P></Div></Body></Html>
+X-MICROSOFT-CDO-BUSYSTATUS:BUSY
+X-MICROSOFT-CDO-IMPORTANCE:1
+END:VEVENT
+BEGIN:VEVENT
+CLASS:PUBLIC
+CREATED:20220422T031351Z
+DESCRIPTION: \n\n
+DTEND;TZID="W. Europe Standard Time":20221113T120000
+DTSTAMP:20220422T034917Z
+DTSTART;TZID="W. Europe Standard Time":20221113T100000
+LAST-MODIFIED:20220422T031351Z
+PRIORITY:5
+SEQUENCE:0
+SUMMARY;LANGUAGE=en-us:Bryggupptaging & städdag
+TRANSP:OPAQUE
+UID:040000008200E00074C5B7101A82E00800000000798ABDFDF655D801000000000000000
+	0100000001CB27625794A6347BAF73B35EC8DA5DE
+X-ALT-DESC;FMTTYPE=text/html:<html xmlns:v="urn:schemas-microsoft-com:vml" 
+	xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-mic
+	rosoft-com:office:word" xmlns:m="http://schemas.microsoft.com/office/2004/
+	12/omml" xmlns="http://www.w3.org/TR/REC-html40">\n<head>\n<meta http-equi
+	v="Content-Type" content="text/html\; charset=iso-8859-1">\n<meta name="Ge
+	nerator" content="Microsoft Word 15 (filtered medium)">\n<style><!--\n/* F
+	ont Definitions */\n@font-face\n	{font-family:"Cambria Math"\;\n	panose-1:
+	2 4 5 3 5 4 6 3 2 4\;}\n@font-face\n	{font-family:Calibri\;\n	panose-1:2 1
+	5 5 2 2 2 4 3 2 4\;}\n/* Style Definitions */\np.MsoNormal\, li.MsoNormal\
+	, div.MsoNormal\n	{margin:0cm\;\n	font-size:11.0pt\;\n	font-family:"Calibr
+	i"\,sans-serif\;\n	mso-fareast-language:EN-US\;}\nspan.EmailStyle17\n	{mso
+	-style-type:personal-compose\;\n	font-family:"Calibri"\,sans-serif\;\n	col
+	or:windowtext\;}\n.MsoChpDefault\n	{mso-style-type:export-only\;\n	font-fa
+	mily:"Calibri"\,sans-serif\;\n	mso-fareast-language:EN-US\;}\n@page WordSe
+	ction1\n	{size:612.0pt 792.0pt\;\n	margin:70.85pt 70.85pt 70.85pt 70.85pt\
+	;}\ndiv.WordSection1\n	{page:WordSection1\;}\n--></style><!--[if gte mso 9
+	]><xml>\n<o:shapedefaults v:ext="edit" spidmax="1026" />\n</xml><![endif]-
+	-><!--[if gte mso 9]><xml>\n<o:shapelayout v:ext="edit">\n<o:idmap v:ext="
+	edit" data="1" />\n</o:shapelayout></xml><![endif]-->\n</head>\n<body lang
+	="SV" link="#0563C1" vlink="#954F72" style="word-wrap:break-word">\n<div c
+	lass="WordSection1">\n<p class="MsoNormal"><o:p>&nbsp\;</o:p></p>\n</div>\
+	n</body>\n</html>\n
+X-MICROSOFT-CDO-BUSYSTATUS:BUSY
+X-MICROSOFT-CDO-IMPORTANCE:1
+END:VEVENT
+BEGIN:VEVENT
+CLASS:PUBLIC
+CREATED:20220422T031441Z
+DESCRIPTION: \n\n
+DTEND;TZID="W. Europe Standard Time":20220515T160000
+DTSTAMP:20220422T034917Z
+DTSTART;TZID="W. Europe Standard Time":20220515T150000
+LAST-MODIFIED:20220422T031441Z
+PRIORITY:5
+SEQUENCE:0
+SUMMARY;LANGUAGE=en-us:Städdag
+TRANSP:OPAQUE
+UID:040000008200E00074C5B7101A82E00800000000140EBD1BF755D801000000000000000
+	010000000681835C2E8EFEB4F9A101B187A3C7E33
+X-ALT-DESC;FMTTYPE=text/html:<html xmlns:v="urn:schemas-microsoft-com:vml" 
+	xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-mic
+	rosoft-com:office:word" xmlns:m="http://schemas.microsoft.com/office/2004/
+	12/omml" xmlns="http://www.w3.org/TR/REC-html40">\n<head>\n<meta http-equi
+	v="Content-Type" content="text/html\; charset=iso-8859-1">\n<meta name="Ge
+	nerator" content="Microsoft Word 15 (filtered medium)">\n<style><!--\n/* F
+	ont Definitions */\n@font-face\n	{font-family:"Cambria Math"\;\n	panose-1:
+	2 4 5 3 5 4 6 3 2 4\;}\n@font-face\n	{font-family:Calibri\;\n	panose-1:2 1
+	5 5 2 2 2 4 3 2 4\;}\n/* Style Definitions */\np.MsoNormal\, li.MsoNormal\
+	, div.MsoNormal\n	{margin:0cm\;\n	font-size:11.0pt\;\n	font-family:"Calibr
+	i"\,sans-serif\;\n	mso-fareast-language:EN-US\;}\nspan.EmailStyle17\n	{mso
+	-style-type:personal-compose\;\n	font-family:"Calibri"\,sans-serif\;\n	col
+	or:windowtext\;}\n.MsoChpDefault\n	{mso-style-type:export-only\;\n	font-fa
+	mily:"Calibri"\,sans-serif\;\n	mso-fareast-language:EN-US\;}\n@page WordSe
+	ction1\n	{size:612.0pt 792.0pt\;\n	margin:70.85pt 70.85pt 70.85pt 70.85pt\
+	;}\ndiv.WordSection1\n	{page:WordSection1\;}\n--></style><!--[if gte mso 9
+	]><xml>\n<o:shapedefaults v:ext="edit" spidmax="1026" />\n</xml><![endif]-
+	-><!--[if gte mso 9]><xml>\n<o:shapelayout v:ext="edit">\n<o:idmap v:ext="
+	edit" data="1" />\n</o:shapelayout></xml><![endif]-->\n</head>\n<body lang
+	="SV" link="#0563C1" vlink="#954F72" style="word-wrap:break-word">\n<div c
+	lass="WordSection1">\n<p class="MsoNormal"><o:p>&nbsp\;</o:p></p>\n</div>\
+	n</body>\n</html>\n
+X-MICROSOFT-CDO-BUSYSTATUS:BUSY
+X-MICROSOFT-CDO-IMPORTANCE:1
+END:VEVENT
+END:VCALENDAR
