@@ -20,7 +20,7 @@
     "highcharts": "^10.0.0",
     "highcharts-vue": "^1.4.0",
     "kalmanjs": "^1.1.0",
-    "moment-timezone": "^0.5.28",
+    "moment-timezone": "^0.5.35",
     "util": "^0.12.4",
     "vue": "^2.6.14",
     "vue-axios": "^3.4.1",
